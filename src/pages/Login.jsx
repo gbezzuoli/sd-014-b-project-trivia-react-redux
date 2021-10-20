@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 // Requisito 1
 class Login extends React.Component {
@@ -8,11 +9,20 @@ class Login extends React.Component {
 
     this.handleInput = this.handleInput.bind(this);
     this.configButton = this.configButton.bind(this);
+    this.getTokenFromAPI = this.getTokenFromAPI.bind(this);
 
     this.state = {
       playerName: '',
       playerEmail: '',
     };
+  }
+
+  async getTokenFromAPI() {
+    const URL = 'https://opentdb.com/api_token.php?command=request';
+    const result = await fetch(URL);
+    const response = await result.json();
+    const { token } = response;
+    localStorage.setItem('token', token);
   }
 
   handleInput(event) {
@@ -52,14 +62,17 @@ class Login extends React.Component {
             onChange={ this.handleInput }
           />
         </label>
-        <button
-          className="button-login"
-          type="button"
-          data-testid="btn-play"
-          disabled={ playerEmail === '' || playerName === '' }
-        >
-          Jogar
-        </button>
+        <Link to="/game">
+          <button
+            className="button-login"
+            type="button"
+            data-testid="btn-play"
+            disabled={ playerEmail === '' || playerName === '' }
+            onClick={ this.getTokenFromAPI }
+          >
+            Jogar
+          </button>
+        </Link>
         <button
           className="button-settings"
           type="button"
