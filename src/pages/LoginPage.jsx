@@ -19,9 +19,9 @@ class LoginPage extends React.Component {
     this.setLocalStorage = this.setLocalStorage.bind(this);
   }
 
-  onSubmit() {
+  async onSubmit() {
     const { history, dispatchUser, result } = this.props;
-    result();
+    await result();
     dispatchUser(this.state);
     this.setLocalStorage();
     history.push('/game');
