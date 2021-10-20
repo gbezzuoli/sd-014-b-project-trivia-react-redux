@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { savePlayerAction } from '../Redux/actions';
+import { Link } from 'react-router-dom';
 
 class Login extends React.Component {
   constructor() {
@@ -73,6 +74,13 @@ class Login extends React.Component {
         >
           Jogar
         </button>
+        <Link to="/configuration" data-testid="btn-settings">
+          <button 
+        type = "button"
+        onClick=''
+        >Confiurções</button>
+        </Link>
+        
       </form>
     );
   }
