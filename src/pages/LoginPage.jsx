@@ -1,4 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { setUser } from '../actions/actionTypes';
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -16,7 +19,8 @@ class LoginPage extends React.Component {
   }
 
   onSubmit() {
-    const { history } = this.props;
+    const { history, dispatchUser } = this.props;
+    dispatchUser(this.state);
     history.push('/game');
   }
 
@@ -82,4 +86,13 @@ class LoginPage extends React.Component {
   }
 }
 
-export default LoginPage;
+const mapDispatchToProps = (dispatch) => ({
+  dispatchUser: (emailAndName) => dispatch(setUser(emailAndName)),
+});
+
+LoginPage.propTypes = {
+  history: PropTypes.objectOf(PropTypes.any),
+
+}.isRequired;
+
+export default connect(null, mapDispatchToProps)(LoginPage);
