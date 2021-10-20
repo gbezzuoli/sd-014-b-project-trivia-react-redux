@@ -8,6 +8,7 @@ class Login extends Component {
       emailInput: '',
     };
     this.handleChange = this.handleChange.bind(this);
+    this.getTokenOnClick = this.getTokenOnClick.bind(this);
   }
 
   handleChange({ target }) {
@@ -16,6 +17,16 @@ class Login extends Component {
     this.setState({
       [name]: value,
     });
+  }
+
+  async getTokenOnClick(){ 
+    const { history } = this.props;
+    const URL = 'https://opentdb.com/api_token.php?command=request';
+    const requestToken = await fetch(URL);
+    const responseToken = await requestToken.json();
+    console.log(responseToken.token);
+    localStorage.setItem('token', JSON.stringify(responseToken.token))
+    history.push('/paginadojogo');
   }
 
   // isEmailValid = (email) => {
@@ -50,6 +61,7 @@ class Login extends Component {
           type="button"
           disabled={ !validInput }
           data-testid="btn-play"
+          onClick={ this.getTokenOnClick }
         >
           Jogar
         </button>
