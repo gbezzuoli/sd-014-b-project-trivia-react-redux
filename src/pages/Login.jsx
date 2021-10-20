@@ -50,6 +50,7 @@ class Login extends React.Component {
           type="button"
           data-testid="btn-play"
           disabled={ playerEmail === '' || playerName === '' }
+          // onClick={ }
         >
           Jogar
         </button>
