@@ -1,7 +1,7 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import fetchToken from '../services';
+import React from 'react';
 import ButtonConfig from '../components/ButtonConfig';
+import fetchToken from '../services';
 
 class Login extends React.Component {
   constructor() {
@@ -35,8 +35,19 @@ class Login extends React.Component {
   async handleClick() {
     const { history } = this.props;
     const { token } = await fetchToken();
+    const { email, name } = this.state;
+    const player = {
+      player: {
+        name,
+        assertions: '',
+        score: 0,
+        gravatarEmail: email,
+      },
+    };
 
-    localStorage.setItem('token', JSON.stringify(token.toString()));
+    localStorage.setItem('token', JSON.stringify(token));
+    localStorage.setItem('state', JSON.stringify(player));
+
     history.push('/game');
   }
 
