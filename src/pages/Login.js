@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { fetchTrivia } from '../services/triviaAPI';
+import { fetchTrivia } from '../services/triviaAPI';
 import { submitPlayerAction } from '../redux/actions';
 
 const REGEX_EMAIL = /\S+@\S+\.\S+/;
@@ -38,13 +38,13 @@ class Login extends Component {
 
   submitPlayer() {
     const { dispatchSetValue } = this.props;
+    fetchTrivia();
     const token = localStorage.getItem('token');
     dispatchSetValue(this.state, token);
   }
 
   render() {
     const { disabled } = this.state;
-    // fetchTrivia();
     return (
       <form>
         <input
