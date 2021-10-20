@@ -1,7 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 class Login extends React.Component {
   constructor() {
@@ -57,17 +54,15 @@ class Login extends React.Component {
             />
             <div className="underline" />
           </div>
-          <Link>
-            <button
-              data-testid="btn-play"
-              type="button"
-              className="buttonLogin"
-              disabled={ !this.validateForms() }
-              onClick={ () => this.submitemail(email) }
-            >
-              Jogar
-            </button>
-          </Link>
+          <button
+            data-testid="btn-play"
+            type="button"
+            className="buttonLogin"
+            disabled={ !this.validateForms() }
+            onClick={ () => this.submitemail(email) }
+          >
+            Jogar
+          </button>
         </form>
       </main>
     );
