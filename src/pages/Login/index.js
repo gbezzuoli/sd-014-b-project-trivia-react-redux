@@ -9,7 +9,6 @@ class Login extends Component {
     this.state = {
       name: '',
       email: '',
-      token: '',
     };
 
     this.disabledButton = this.disabledButton.bind(this);
