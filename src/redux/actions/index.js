@@ -1,7 +1,7 @@
-import { FAILED_REQUEST, GET_TOKEN, REQUEST_API, SAVE_USER } from './actionTypes';
+import { FAILED_REQUEST, GET_TOKEN, REQUEST_API, SAVE_PLAYER } from './actionTypes';
 
-export const saveUser = (email, name) => ({
-  type: SAVE_USER,
+export const savePlayer = (email, name) => ({
+  type: SAVE_PLAYER,
   email,
   name,
 });

@@ -1,5 +1,5 @@
 import { FAILED_REQUEST,
-  GET_TOKEN, REQUEST_API, SAVE_USER } from '../actions/actionTypes';
+  GET_TOKEN, REQUEST_API, SAVE_PLAYER } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
   name: '',
@@ -8,9 +8,9 @@ const INITIAL_STATE = {
   isLoading: false,
 };
 
-const user = (state = INITIAL_STATE, action) => {
+const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case SAVE_USER:
+  case SAVE_PLAYER:
     return {
       ...state,
       name: action.name,
@@ -38,4 +38,4 @@ const user = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default user;
+export default player;
