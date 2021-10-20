@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import Switcher from './Components/Switcher';
 
 export default function App() {
