@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import fetchToken from '../services/token';
 
 class Login extends React.Component {
   constructor() {
@@ -9,6 +11,7 @@ class Login extends React.Component {
       email: '',
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange({ target }) {
@@ -16,6 +19,13 @@ class Login extends React.Component {
     this.setState({
       [name]: value,
     });
+  }
+
+  async handleClick() {
+    const { history } = this.props;
+    const token = await fetchToken();
+    localStorage.setItem('token', JSON.stringify(token));
+    history.push('/game');
   }
 
   validate(name, email) {
@@ -48,6 +58,7 @@ class Login extends React.Component {
           type="button"
           data-testid="btn-play"
           disabled={ !this.validate(name, email) }
+          onClick={ this.handleClick }
         >
           Jogar
         </button>
@@ -63,5 +74,7 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = { history: PropTypes.shape({ push: PropTypes.func }).isRequired };
 
 export default Login;
