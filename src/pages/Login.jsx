@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import getToken from '../services/fetchTokenAPI';
 
 class Login extends React.Component {
   constructor(props) {
@@ -17,8 +18,10 @@ class Login extends React.Component {
     this.setState({ [name]: value });
   }
 
-  handleClick() {
+  async handleClick() {
     const { history } = this.props;
+    const token = await getToken();
+    localStorage.setItem('token', token);
     history.push('/game');
   }
 
