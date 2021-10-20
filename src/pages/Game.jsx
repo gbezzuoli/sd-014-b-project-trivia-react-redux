@@ -7,7 +7,6 @@ class Game extends Component {
 /*   constructor(props) {
     super(props);
     this.state = {
-
     };
   } */
 
@@ -47,6 +46,7 @@ Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  email: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps)(Game);
