@@ -75,7 +75,6 @@ const mapDipatchToProps = (dispatch) => ({
   },
 });
 
-
 Login.propTypes = {
   dispatchSetValue: PropTypes.func,
 }.isRequired;
