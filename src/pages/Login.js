@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchTrivia } from '../services/triviaAPI';
 import { submitPlayerAction } from '../redux/actions';
@@ -69,6 +70,14 @@ class Login extends Component {
         >
           Jogar
         </button>
+        <Link to="/settings">
+          <button
+            type="button"
+            data-testid="btn-settings"
+          >
+            Configurações
+          </button>
+        </Link>
       </form>
     );
   }
