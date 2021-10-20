@@ -23,7 +23,7 @@ class Login extends React.Component {
     const { playerEmail, playerName } = this.state;
 
     return (
-      <form>
+      <form className="login-form">
         <label htmlFor="input-player-name">
           <input
             id="input-player-name"
