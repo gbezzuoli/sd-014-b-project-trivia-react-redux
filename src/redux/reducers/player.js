@@ -1,18 +1,16 @@
 const INITIAL_STATE = {
-    name:'',
-    assertions:'',
-    score:'',
-    gravatarEmail:''
-  
+  name: '',
+  assertions: '',
+  score: '',
+  gravatarEmail: '',
+
 };
 
 const playerReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    
-   default:
-    return state; 
+  default:
+    return state;
   }
-  
-}
+};
 
-export default playerReducer ;
+export default playerReducer;
