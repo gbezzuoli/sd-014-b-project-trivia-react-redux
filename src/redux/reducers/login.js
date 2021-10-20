@@ -1,4 +1,4 @@
-import ACTION_LOGIN from '../actions/actions';
+import { ACTION_LOGIN, SAVE_TOKEN } from '../actions/actions';
 
 const INITIAL_STATE = {
   email: '',
@@ -8,7 +8,15 @@ const INITIAL_STATE = {
 const login = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case ACTION_LOGIN:
-    return state;
+    return {
+      ...state,
+      triviaQuest: action.json,
+    };
+  case SAVE_TOKEN:
+    return {
+      ...state,
+      token: action.token,
+    };
 
   default:
     return state;
