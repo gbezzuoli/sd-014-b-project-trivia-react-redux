@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 // Requisito 1
 class Login extends React.Component {
@@ -6,6 +7,7 @@ class Login extends React.Component {
     super();
 
     this.handleInput = this.handleInput.bind(this);
+    this.configButton = this.configButton.bind(this);
 
     this.state = {
       playerName: '',
@@ -17,6 +19,11 @@ class Login extends React.Component {
     this.setState({
       [event.target.name]: event.target.value,
     });
+  }
+
+  configButton() {
+    const { history } = this.props;
+    history.push('/settings');
   }
 
   render() {
@@ -53,9 +60,23 @@ class Login extends React.Component {
         >
           Jogar
         </button>
+        <button
+          className="button-settings"
+          type="button"
+          data-testid="btn-settings"
+          onClick={ this.configButton }
+        >
+          Configurações
+        </button>
       </form>
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+}.isRequired;
 
 export default Login;
