@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setUser } from '../actions/actionTypes';
+import { setUser, resultApi } from '../actions/actionTypes';
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -16,17 +16,26 @@ class LoginPage extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.validateForm = this.validateForm.bind(this);
     this.onSubmitConfig = this.onSubmitConfig.bind(this);
+    this.setLocalStorage = this.setLocalStorage.bind(this);
   }
 
   onSubmit() {
-    const { history, dispatchUser } = this.props;
+    const { history, dispatchUser, result } = this.props;
+    result();
     dispatchUser(this.state);
+    this.setLocalStorage();
     history.push('/game');
   }
 
   onSubmitConfig() {
     const { history } = this.props;
     history.push('/config');
+  }
+
+  setLocalStorage() {
+    const { token } = this.props;
+    console.log(token);
+    localStorage.setItem('token', JSON.stringify(token));
   }
 
   handleChange({ target }) {
@@ -88,11 +97,17 @@ class LoginPage extends React.Component {
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchUser: (emailAndName) => dispatch(setUser(emailAndName)),
+  result: () => dispatch(resultApi()),
 });
+
+function mapStateToProps(state) {
+  console.log(state.userReducer);
+  return { token: state.userReducer.apiToken.token };
+}
 
 LoginPage.propTypes = {
   history: PropTypes.objectOf(PropTypes.any),
 
 }.isRequired;
 
-export default connect(null, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
