@@ -9,6 +9,7 @@ class Login extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.verifyLogin = this.verifyLogin.bind(this);
+    this.renderForm = this.renderForm.bind(this);
   }
 
   verifyLogin() {
@@ -26,8 +27,8 @@ class Login extends Component {
     });
   }
 
-  render() {
-    const { nameInput, emailInput } = this.state;
+  renderForm() {
+    const { emailInput, nameInput } = this.state;
     return (
       <form>
         <label htmlFor="input-player-name">
@@ -58,6 +59,14 @@ class Login extends Component {
           Jogar
         </button>
       </form>
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        { this.renderForm() }
+      </div>
     );
   }
 }
