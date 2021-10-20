@@ -10,6 +10,7 @@ class Login extends React.Component {
       name: '',
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange({ target: { name, value } }) {
@@ -22,6 +23,7 @@ class Login extends React.Component {
   }
 
   isEmailValid(email) {
+    // função feita a partir de dica do Michael Caxias
     const regexEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     return regexEmail.test(email);
   }
@@ -39,6 +41,7 @@ class Login extends React.Component {
             name="name"
             value={ name }
             id="name"
+            onChange={ this.handleChange }
           />
         </label>
         <label htmlFor="email">
@@ -49,6 +52,7 @@ class Login extends React.Component {
             name="email"
             value={ email }
             id="email"
+            onChange={ this.handleChange }
           />
         </label>
         <button
