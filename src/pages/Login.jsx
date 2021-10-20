@@ -1,4 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import md5 from 'crypto-js/md5';
+import { setInfo } from '../redux/actions';
 
 // Requisito 1
 class Login extends React.Component {
@@ -6,11 +10,29 @@ class Login extends React.Component {
     super();
 
     this.handleInput = this.handleInput.bind(this);
+    this.setUserInfo = this.setUserInfo.bind(this);
 
     this.state = {
       playerName: '',
       playerEmail: '',
     };
+  }
+
+  setUserInfo() {
+    const { playerName, playerEmail } = this.state;
+    const { userInfo } = this.props;
+
+    const gravatarEmail = md5(playerEmail).toString();
+    const imgAvatar = `https://www.gravatar.com/avatar/${gravatarEmail}`;
+
+    const info = {
+      name: playerName,
+      avatar: imgAvatar,
+      score: 0,
+    };
+
+    // a função do onclick chama a action que seta o email para o estado global
+    userInfo(info);
   }
 
   handleInput(event) {
@@ -50,7 +72,7 @@ class Login extends React.Component {
           type="button"
           data-testid="btn-play"
           disabled={ playerEmail === '' || playerName === '' }
-          // onClick={ }
+          onClick={ this.setUserInfo }
         >
           Jogar
         </button>
@@ -59,4 +81,12 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  userInfo: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  userInfo: (info) => dispatch(setInfo(info)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);

@@ -1,9 +1,9 @@
-// Aqui ficarão os reducers
 import { combineReducers } from 'redux';
+import saveInfoReducer from './saveInfoReducer';
 
 const rootReducer = combineReducers(
   {
-    userEmail,
+    saveInfoReducer,
   },
 );
 
