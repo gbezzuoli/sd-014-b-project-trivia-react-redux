@@ -1,4 +1,9 @@
 import React from 'react';
+/* import md5 from 'crypto-js/md5'; */
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { saveTokenAction } from '../redux/actions/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -11,6 +16,7 @@ class Login extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.validateForms = this.validateForms.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleInputChange({ target: { name, value } }) {
@@ -26,13 +32,22 @@ class Login extends React.Component {
     return emailValidate.test(email) && name.length > minLength;
   }
 
+  async handleClick() {
+    const { triviaAction } = this.props;
+    const urlToken = await fetch('https://opentdb.com/api_token.php?command=request');
+    const response = await urlToken.json();
+    const { token } = response;
+    console.log(token);
+    triviaAction(token);
+    localStorage.setItem('token', token);
+  }
+
   render() {
     const { email, name } = this.state;
 
     return (
       <main className="container">
         <form className="form-container">
-          <h1>test</h1>
           <div>
             <input
               data-testid="input-player-name"
@@ -55,19 +70,29 @@ class Login extends React.Component {
             />
             <div className="underline" />
           </div>
-          <button
-            data-testid="btn-play"
-            type="button"
-            className="buttonLogin"
-            disabled={ !this.validateForms() }
-            onClick={ () => this.submitemail(email) }
-          >
-            Jogar
-          </button>
+          <Link to="/game">
+            <button
+              data-testid="btn-play"
+              type="button"
+              className="buttonLogin"
+              disabled={ !this.validateForms() }
+              onClick={ this.handleClick }
+            >
+              Jogar
+            </button>
+          </Link>
         </form>
       </main>
     );
   }
 }
 
-export default Login;
+Login.propTypes = {
+  triviaAction: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  triviaAction: (token) => dispatch(saveTokenAction(token)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
