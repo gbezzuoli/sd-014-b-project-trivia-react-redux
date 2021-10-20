@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { saveUser, fetchTrivia } from '../redux/actions';
+import { savePlayer, fetchTrivia } from '../redux/actions';
 
 function validateEmail(email) {
   const userEmail = /\S+@\S+\.\S+/;
@@ -38,8 +38,8 @@ class Login extends Component {
   handleSubmit(event) {
     event.preventDefault();
     const { email, name } = this.state;
-    const { setUser, fetchToken } = this.props;
-    setUser(email, name);
+    const { setPlayer, fetchToken } = this.props;
+    setPlayer(email, name);
     fetchToken();
   }
 
@@ -90,16 +90,16 @@ class Login extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  setUser: (email, name) => dispatch(saveUser(email, name)),
+  setPlayer: (email, name) => dispatch(savePlayer(email, name)),
   fetchToken: () => dispatch(fetchTrivia()),
 });
 
 const mapStateToProps = (state) => ({
-  token: state.user.token,
+  token: state.player.token,
 });
 
 Login.propTypes = {
-  setUser: PropTypes.func.isRequired,
+  setPlayer: PropTypes.func.isRequired,
   fetchToken: PropTypes.func.isRequired,
   token: PropTypes.string.isRequired,
   history: PropTypes.func.isRequired,
