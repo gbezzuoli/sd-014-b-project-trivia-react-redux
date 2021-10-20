@@ -30,7 +30,7 @@ class Login extends React.Component {
             className="input-name"
             type="text"
             data-testid="input-player-name"
-            name="input-player-name"
+            name="playerName"
             onChange={ this.handleInput }
           />
         </label>
@@ -41,7 +41,7 @@ class Login extends React.Component {
             className="input-email"
             type="email"
             data-testid="input-gravatar-email"
-            name="input-gravatar-email"
+            name="playerEmail"
             onChange={ this.handleInput }
           />
         </label>
