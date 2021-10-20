@@ -1,7 +1,8 @@
-import React from 'react';
-import logo from './trivia.png';
+import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Login from './components/pages/Login';
+
 
 export default function App() {
   return (
@@ -12,4 +13,5 @@ export default function App() {
       </header>
     </div>
   );
-}
+
+export default App;
