@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import getToken from '../services/fetchTokenAPI';
 
 class Login extends React.Component {
   constructor(props) {
@@ -9,7 +10,8 @@ class Login extends React.Component {
       email: '',
       name: '',
     };
-    this.handleClick = this.handleClick.bind(this);
+    this.handlePlayClick = this.handlePlayClick.bind(this);
+    this.handleConfigClick = this.handleConfigClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -17,9 +19,16 @@ class Login extends React.Component {
     this.setState({ [name]: value });
   }
 
-  handleClick() {
+  async handlePlayClick() {
     const { history } = this.props;
+    const token = await getToken();
+    localStorage.setItem('token', token);
     history.push('/game');
+  }
+
+  handleConfigClick() {
+    const { history } = this.props;
+    history.push('/config');
   }
 
   isEmailValid(email) {
@@ -57,11 +66,18 @@ class Login extends React.Component {
         </label>
         <button
           type="button"
-          onClick={ this.handleClick }
+          onClick={ this.handlePlayClick }
           data-testid="btn-play"
           disabled={ !validate }
         >
           Jogar
+        </button>
+        <button
+          type="button"
+          onClick={ this.handleConfigClick }
+          data-testid="btn-settings"
+        >
+          Configurar
         </button>
       </form>
     );
