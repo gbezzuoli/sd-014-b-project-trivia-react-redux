@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 
 class Login extends Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
     this.state = {
-    nameInput:'',
-    emailInput:'',
-    }
+      nameInput: '',
+      emailInput: '',
+    };
     this.handleChange = this.handleChange.bind(this);
   }
-
 
   handleChange({ target }) {
     const { name } = target;
@@ -24,18 +23,36 @@ class Login extends Component {
   //   return regexEmail.test(email) === true;
   // };
 
-
-
   render() {
     const { nameInput, emailInput } = this.state;
     const validInput = nameInput.length > 0 && emailInput.length > 0;
     return (
       <div>
-        <label htmlFor="input-player-name" />Nome
-        <input name="nameInput" onChange={this.handleChange} data-testid="input-player-name" type="text" />
-        <label htmlFor="input-player-name" />Email
-        <input name="emailInput" onChange={this.handleChange} data-testid="input-gravatar-email" type="text" />
-        <button disabled={!validInput} data-testid="btn-play">Jogar</button>
+
+        <input
+          placeholder="Nome"
+          id="input-player-name"
+          name="nameInput"
+          onChange={ this.handleChange }
+          data-testid="input-player-name"
+          type="text"
+        />
+
+        <input
+          placeholder="Email"
+          name="emailInput"
+          id="input-gravatar-email"
+          onChange={ this.handleChange }
+          data-testid="input-gravatar-email"
+          type="text"
+        />
+        <button
+          type="button"
+          disabled={ !validInput }
+          data-testid="btn-play"
+        >
+          Jogar
+        </button>
       </div>
     );
   }
