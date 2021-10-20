@@ -1,6 +1,18 @@
 export const ADD_LOGIN_AND_EMAIL = 'ADD_LOGIN_AND_EMAIL';
+export const ADD_PLAYER_TOKEN = 'ADD_PLAYER_TOKEN';
+export const ADD_PLAYER_EMAIL_AND_NAME = 'ADD_PLAYER_EMAIL_AND_NAME';
 
 export const addLoginAndEmail = (payload) => ({
   type: ADD_LOGIN_AND_EMAIL,
   payload,
+});
+
+export const addPlayerToken = (payload) => ({
+  type: ADD_PLAYER_TOKEN,
+  payload,
+});
+
+export const addPlayerEmailAndName = (payload) => ({
+  type: ADD_PLAYER_EMAIL_AND_NAME,
+  ...payload,
 });
