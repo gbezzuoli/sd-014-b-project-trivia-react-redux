@@ -43,7 +43,13 @@ class Login extends React.Component {
           type="email"
           placeholder="Email"
         />
-        <button data-testid="btn-play" disabled={ !this.validate(name, email) }>Jogar</button>
+        <button
+          type="button"
+          data-testid="btn-play"
+          disabled={ !this.validate(name, email) }
+        >
+          Jogar
+        </button>
       </div>
     );
   }

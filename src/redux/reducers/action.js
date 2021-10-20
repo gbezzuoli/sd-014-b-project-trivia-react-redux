@@ -1,4 +1,4 @@
-import { ACTION } from '../actions/index.js';
+import { ACTION } from '../actions/index';
 
 const INITIAL_STATE = {
   list: [],
@@ -6,13 +6,13 @@ const INITIAL_STATE = {
 
 function actionReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case ACTION:
-      return ({
-        ...state,
-        list: action.payload,
-      });
-    default:
-      return state;
+  case ACTION:
+    return ({
+      ...state,
+      list: action.payload,
+    });
+  default:
+    return state;
   }
 }
 
