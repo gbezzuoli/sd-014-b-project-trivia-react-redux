@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import fetchToken from '../services/token';
 
@@ -61,6 +62,14 @@ class Login extends React.Component {
         >
           Jogar
         </button>
+        <Link to="/settings">
+          <button
+            type="button"
+            data-testid="btn-settings"
+          >
+            Configurações
+          </button>
+        </Link>
       </div>
     );
   }
