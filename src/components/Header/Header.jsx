@@ -12,7 +12,7 @@ class Header extends Component {
     const gravatarImage = `https://www.gravatar.com/avatar/${hash}`;
     return (
       <header className="content-info">
-        <div>
+        <div className="image-title">
           <img
             src={ gravatarImage }
             alt="avatar-player"
@@ -20,8 +20,8 @@ class Header extends Component {
           />
           <h4 data-testid="header-player-name">{name}</h4>
         </div>
-        <div>
-          <span data-testid="header-score">0</span>
+        <div className="content-score">
+          <span data-testid="header-score">Score: 0</span>
         </div>
       </header>
     );

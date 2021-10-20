@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { userLogin } from '../redux/actions';
+import './Login.css';
+import logo from '../trivia.png';
 
 class Login extends Component {
   constructor() {
@@ -37,40 +39,43 @@ class Login extends Component {
     const isValid = this.handleValidation(email, name);
 
     return (
-      <div>
-        <label htmlFor="name">
-          Nome
-          <input
-            type="text"
-            name="name"
-            id="name"
-            onChange={ this.handleChange }
-            value={ name }
-            placeholder="Insira seu Nome"
-            data-testid="input-player-name"
-          />
-        </label>
-        <label htmlFor="email">
-          Email
-          <input
-            type="text"
-            name="email"
-            id="email"
-            onChange={ this.handleChange }
-            value={ email }
-            placeholder="Insira seu Email"
-            data-testid="input-gravatar-email"
-          />
-        </label>
-        <button
-          type="button"
-          data-testid="btn-play"
-          onClick={ this.handleClick }
-          disabled={ !isValid }
-        >
-          Jogar
-        </button>
-      </div>
+      <section className="center">
+        <div>
+          <img src={ logo } alt="logo" />
+          <label htmlFor="name">
+            Nome:
+            <input
+              type="text"
+              name="name"
+              id="name"
+              onChange={ this.handleChange }
+              value={ name }
+              placeholder="Insira seu Nome"
+              data-testid="input-player-name"
+            />
+          </label>
+          <label htmlFor="email">
+            Email:
+            <input
+              type="text"
+              name="email"
+              id="email"
+              onChange={ this.handleChange }
+              value={ email }
+              placeholder="Insira seu Email"
+              data-testid="input-gravatar-email"
+            />
+          </label>
+          <button
+            type="button"
+            data-testid="btn-play"
+            onClick={ this.handleClick }
+            disabled={ !isValid }
+          >
+            Jogar
+          </button>
+        </div>
+      </section>
     );
   }
 }
