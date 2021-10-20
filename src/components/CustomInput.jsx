@@ -14,6 +14,8 @@ export default class CustomInput extends Component {
 }
 
 CustomInput.propTypes = {
-  description: PropTypes.string,
-  id: PropTypes.string,
+  dataTestId: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
