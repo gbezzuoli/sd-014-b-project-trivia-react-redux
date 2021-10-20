@@ -5,7 +5,7 @@ class Config extends React.Component {
   render() {
     return (
       <div>
-        Nasci
+        <h1 data-testid="settings-title">Configuração</h1>
       </div>
     );
   }
