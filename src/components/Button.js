@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export class Button extends Component {
-
-
   render() {
     const { onClick, disabled, dataTestid } = this.props;
     const { text } = this.props;
