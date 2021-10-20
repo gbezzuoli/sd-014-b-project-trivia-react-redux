@@ -15,12 +15,12 @@ class Login extends React.Component {
     this.requestAPI = this.requestAPI.bind(this);
   }
 
-  async requestAPI(){
-    const { history } = this.props; 
+  async requestAPI() {
+    const { history } = this.props;
     const URL_TOKEN = 'https://opentdb.com/api_token.php?command=request';
     const requestAPI = await fetch(URL_TOKEN);
     const data = await requestAPI.json();
-    localStorage.setItem('token',data.token);
+    localStorage.setItem('token', data.token);
     history.push('/game');
   }
 
@@ -38,7 +38,7 @@ class Login extends React.Component {
 
   render() {
     const { name, email } = this.state;
-    const { handleChange, validateEmailAndName, state, requestAPI} = this;
+    const { handleChange, validateEmailAndName, state, requestAPI } = this;
     const { savePlayerInfoToGlobal } = this.props;
     return (
       <form>
@@ -63,10 +63,10 @@ class Login extends React.Component {
           />
         </label>
         <button
-          onClick={ () =>  {
-          savePlayerInfoToGlobal(state)
-          requestAPI()
-          }}
+          onClick={ () => {
+            savePlayerInfoToGlobal(state);
+            requestAPI();
+          } }
           disabled={ validateEmailAndName() }
           data-testid="btn-play"
           type="button"
@@ -80,6 +80,7 @@ class Login extends React.Component {
 
 Login.propTypes = {
   savePlayerInfoToGlobal: PropTypes.func.isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
