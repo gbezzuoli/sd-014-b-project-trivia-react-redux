@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { setuserdata } from '../../Redux/Actions';
 
 class Login extends Component {
@@ -73,5 +74,10 @@ const mapDipatchToProps = (dispatch) => ({
     dispatch(setuserdata(state));
   },
 });
+
+
+Login.propTypes = {
+  dispatchSetValue: PropTypes.func,
+}.isRequired;
 
 export default connect(null, mapDipatchToProps)(Login);
