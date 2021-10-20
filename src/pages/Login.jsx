@@ -32,6 +32,7 @@ class Login extends React.Component {
     return (
       <main className="container">
         <form className="form-container">
+          <h1>test</h1>
           <div>
             <input
               data-testid="input-player-name"
