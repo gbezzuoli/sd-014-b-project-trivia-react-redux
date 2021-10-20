@@ -1,4 +1,4 @@
-import { submitPlayerAction } from '../actions';
+import { SUBMIT_PLAYER } from '../actions';
 
 const INITIAL_STATE = {
   name: '',
@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 
 const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case submitPlayerAction:
+  case SUBMIT_PLAYER:
     return {
       ...state,
     };

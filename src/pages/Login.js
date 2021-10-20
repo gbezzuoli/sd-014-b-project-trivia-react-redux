@@ -48,28 +48,36 @@ class Login extends Component {
     const { disabled } = this.state;
     return (
       <form>
-        <input
-          labelText="Jogador"
-          name="name"
-          data-testid="input-player-name"
-          type="text"
-          onChange={ this.handleChange }
-        />
-        <input
-          labelText="E-mail"
-          name="email"
-          data-testid="input-gravatar-email"
-          type="text"
-          onChange={ this.handleChange }
-        />
-        <button
-          type="button"
-          data-testid="btn-play"
-          disabled={ disabled }
-          onClick={ this.submitPlayer }
-        >
-          Jogar
-        </button>
+        <label htmlFor>
+          Jogador:
+          <input
+            name="name"
+            data-testid="input-player-name"
+            type="text"
+            onChange={ this.handleChange }
+          />
+        </label>
+        <br />
+        <label htmlFor>
+          E-mail
+          <input
+            name="email"
+            data-testid="input-gravatar-email"
+            type="text"
+            onChange={ this.handleChange }
+          />
+        </label>
+        <br />
+        <Link to="/game">
+          <button
+            type="button"
+            data-testid="btn-play"
+            disabled={ disabled }
+            onClick={ this.submitPlayer }
+          >
+            Jogar
+          </button>
+        </Link>
         <Link to="/settings">
           <button
             type="button"
