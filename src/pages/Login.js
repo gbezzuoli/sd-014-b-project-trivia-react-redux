@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Link from 'react-router-dom';
 
 class Login extends Component {
   constructor() {
@@ -55,14 +56,16 @@ class Login extends Component {
             value={ emailInput }
           />
         </label>
-        <button
-          type="button"
-          data-testid="btn-play"
-          disabled={ this.verifyLogin() }
-          onClick={ this.handleClick }
-        >
-          Jogar
-        </button>
+        <Link to="/game">
+          <button
+            type="button"
+            data-testid="btn-play"
+            disabled={ this.verifyLogin() }
+            onClick={ this.handleClick }
+          >
+            Jogar
+          </button>
+        </Link>
       </form>
     );
   }
