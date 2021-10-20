@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 class Login extends Component {
@@ -11,22 +12,22 @@ class Login extends Component {
     this.getTokenOnClick = this.getTokenOnClick.bind(this);
   }
 
+  async getTokenOnClick() {
+    const { history } = this.props;
+    const URL = 'https://opentdb.com/api_token.php?command=request';
+    const requestToken = await fetch(URL);
+    const responseToken = await requestToken.json();
+    console.log(responseToken.token);
+    localStorage.setItem('token', JSON.stringify(responseToken.token));
+    history.push('/paginadojogo');
+  }
+
   handleChange({ target }) {
     const { name } = target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     this.setState({
       [name]: value,
     });
-  }
-
-  async getTokenOnClick(){ 
-    const { history } = this.props;
-    const URL = 'https://opentdb.com/api_token.php?command=request';
-    const requestToken = await fetch(URL);
-    const responseToken = await requestToken.json();
-    console.log(responseToken.token);
-    localStorage.setItem('token', JSON.stringify(responseToken.token))
-    history.push('/paginadojogo');
   }
 
   // isEmailValid = (email) => {
@@ -69,5 +70,11 @@ class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default Login;
