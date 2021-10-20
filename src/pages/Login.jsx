@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
+import { Link } from 'react-router-dom';
 import { setInfo } from '../redux/actions';
 
 // Requisito 1
@@ -11,6 +12,7 @@ class Login extends React.Component {
 
     this.handleInput = this.handleInput.bind(this);
     this.setUserInfo = this.setUserInfo.bind(this);
+    this.getTokenFromAPI = this.getTokenFromAPI.bind(this);
 
     this.state = {
       playerName: '',
@@ -33,6 +35,19 @@ class Login extends React.Component {
 
     // a função do onclick chama a action que seta o email para o estado global
     userInfo(info);
+  }
+
+  async getTokenFromAPI() {
+    const URL = 'https://opentdb.com/api_token.php?command=request';
+    const result = await fetch(URL);
+    const response = await result.json();
+    const { token } = response;
+    localStorage.setItem('token', token);
+  }
+
+  async getTokenAndSetInfo() {
+    setUserInfo();
+    await getTokenFromAPI();
   }
 
   handleInput(event) {
@@ -67,15 +82,17 @@ class Login extends React.Component {
             onChange={ this.handleInput }
           />
         </label>
-        <button
-          className="button-login"
-          type="button"
-          data-testid="btn-play"
-          disabled={ playerEmail === '' || playerName === '' }
-          onClick={ this.setUserInfo }
-        >
-          Jogar
-        </button>
+        <Link to="/game">
+          <button
+            className="button-login"
+            type="button"
+            data-testid="btn-play"
+            disabled={ playerEmail === '' || playerName === '' }
+            onClick={ this.getTokenAndSetInfo }
+          >
+            Jogar
+          </button>
+        </Link>
       </form>
     );
   }
