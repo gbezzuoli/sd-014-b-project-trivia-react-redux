@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import fetchToken from '../services/FetchAPI';
 
 class Login extends Component {
   constructor() {
@@ -30,8 +28,7 @@ class Login extends Component {
   }
 
   handleClick() {
-    const { getToken } = this.props;
-    getToken(fetchToken());
+    console.log('alalala');
   }
 
   render() {
@@ -71,12 +68,4 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
-  getToken: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  getToken: (token) => dispatch(fetchToken(token)),
-});
-
-export default (null, mapDispatchToProps)(Login);
+export default Login;
