@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getToken } from '../redux/actions/index';
 
+import logo from '../trivia.png';
 import { Button } from './Button';
 
 export class LoginForm extends Component {
@@ -16,6 +17,8 @@ export class LoginForm extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.validEmail = this.validEmail.bind(this);
+    this.validName = this.validName.bind(this);
   }
 
   handleChange(e) {
@@ -36,19 +39,32 @@ export class LoginForm extends Component {
     localStorage.setItem('token', token);
   }
 
+  validEmail() {
+    const { gravatarEmail } = this.state;
+    const regex = /\S+@\S+.\S+/;
+    return regex.test(gravatarEmail);
+  }
+
+  validName() {
+    const { name } = this.state;
+    return !!name;
+  }
+
   render() {
     const { name, gravatarEmail } = this.state;
-    const { handleChange, handleClick } = this;
-
-    const validEmail = () => {
-      const regex = /\S+@\S+.\S+/;
-      return regex.test(gravatarEmail);
-    };
-
-    const validName = () => !!name;
-
+    const { handleChange, handleClick, validEmail, validName } = this;
     return (
       <form className="login-form">
+        <div>
+          <img src={ logo } className="App-logo" alt="logo" />
+        </div>
+        <Link to="/settings">
+          <Button
+            text="Configurações"
+            dataTestid="btn-settings"
+            onClick={ () => {} }
+          />
+        </Link>
         <label htmlFor="gravatarEmail">
           Gravatar E-mail
           <input
