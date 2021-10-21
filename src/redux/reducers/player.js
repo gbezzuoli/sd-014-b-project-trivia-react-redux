@@ -7,8 +7,6 @@ const INITIAL_STATE = {
 
 function playerReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-  case LOGIN:
-    return ({ });
   default:
     return state;
   }
