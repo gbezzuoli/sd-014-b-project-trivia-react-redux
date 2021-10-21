@@ -22,6 +22,11 @@ class Login extends Component {
     history.push('/paginadojogo');
   }
 
+  loadConfigsPage() {
+    const { history } = this.props;
+    history.push('/configuracoes');
+  }
+
   handleChange({ target }) {
     const { name } = target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -65,6 +70,13 @@ class Login extends Component {
           onClick={ this.getTokenOnClick }
         >
           Jogar
+        </button>
+        <button
+          type="button"
+          data-testid="btn-settings"
+          onClick={ () => this.loadConfigsPage() }
+        >
+          Configuração
         </button>
       </div>
     );
