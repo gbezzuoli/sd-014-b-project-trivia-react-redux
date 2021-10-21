@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from '../Components/Header';
+import Trivia from '../Components/Trivia';
 
 class Game extends Component {
   render() {
     return (
       <section>
         <Header />
+        <Trivia />
       </section>
     );
   }
