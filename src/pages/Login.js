@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { getGameTokenAction } from '../redux/actions';
+import fetchToken from '../services/FetchToken';
 
 class Login extends Component {
   constructor() {
@@ -11,6 +15,7 @@ class Login extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.buttonActivation = this.buttonActivation.bind(this);
     this.renderForm = this.renderForm.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   buttonActivation() {
@@ -26,6 +31,13 @@ class Login extends Component {
     this.setState({
       [name]: value,
     });
+  }
+
+  async handleClick() {
+    const { getGameToken } = this.props;
+    const token = await fetchToken();
+    getGameToken(token);
+    localStorage.setItem('token', JSON.stringify(token));
   }
 
   renderForm() {
@@ -57,6 +69,7 @@ class Login extends Component {
             type="button"
             data-testid="btn-play"
             disabled={ this.buttonActivation() }
+            onClick={ this.handleClick }
           >
             Jogar
           </button>
@@ -74,4 +87,12 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  getGameToken: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  getGameToken: (token) => dispatch(getGameTokenAction(token)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
