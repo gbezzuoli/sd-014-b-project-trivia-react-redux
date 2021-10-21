@@ -1,14 +1,18 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAvatar } from '../redux/slices/userSlice';
+import { fetchQuestions } from '../redux/slices/gameSlice';
 
 export default function Game() {
   const dispatch = useDispatch();
-  const { name, email, avatar } = useSelector((store) => store.user);
+  const { name, email, avatar, token } = useSelector((store) => store.user);
+  const { questions } = useSelector((store) => store.game);
+  console.log(questions[0]);
 
   useEffect(() => {
     dispatch(fetchAvatar(email));
-  }, [dispatch, email]);
+    dispatch(fetchQuestions(token));
+  }, [dispatch, email, token]);
 
   return (
     <>
@@ -17,7 +21,9 @@ export default function Game() {
         <span data-testid="header-player-name">{name}</span>
         <span data-testid="header-score">{`Pontos: ${0}`}</span>
       </header>
-      <main>Game Page</main>
+      <main>
+        <h1>Game Page</h1>
+      </main>
     </>
   );
 }

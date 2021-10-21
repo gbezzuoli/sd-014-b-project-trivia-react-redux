@@ -5,7 +5,7 @@ const initialState = {
   name: '',
   email: '',
   avatar: '',
-  tokenAPI: {},
+  token: '',
 };
 
 export const fetchToken = createAsyncThunk('user/fetchToken', async () => {
@@ -25,7 +25,7 @@ export const fetchAvatar = createAsyncThunk(
 );
 
 export const userSlice = createSlice({
-  name: 'login',
+  name: 'user',
   initialState,
   reducers: {
     login: (state, action) => {
@@ -36,7 +36,7 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchToken.fulfilled, (state, action) => {
-        state.tokenAPI = action.payload;
+        state.token = action.payload.token;
         localStorage.setItem('token', JSON.stringify(action.payload.token));
       })
       .addCase(fetchAvatar.fulfilled, (state, action) => {
