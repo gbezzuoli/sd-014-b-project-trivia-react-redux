@@ -22,6 +22,7 @@ class Game extends Component {
 
   componentDidMount() {
     this.requestAPI();
+    console.log('ooio');
   }
 
   handleClick({ target }) {
