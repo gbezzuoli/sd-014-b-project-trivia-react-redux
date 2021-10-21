@@ -1,0 +1,20 @@
+.game-board {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 3% auto;
+}
+
+.game-board button {
+  margin: 5px;
+  padding: 5px 15px;
+}
+
+.correct-answer:disabled {
+  border: 3px solid rgb(6, 240, 15);
+}
+
+.wrong-answer:disabled {
+  border: 3px solid red;
+}
