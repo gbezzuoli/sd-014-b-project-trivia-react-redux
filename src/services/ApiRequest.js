@@ -4,6 +4,6 @@ const getApiToken = async () => {
   const getJson = await getFetch.json();
   const getResults = await getJson;
   return getResults;
-}
+};
 
 export default getApiToken;

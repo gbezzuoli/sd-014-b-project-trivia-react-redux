@@ -21,10 +21,10 @@ class Login extends Component {
 
   async handleClickButton() {
     const getResultsFromAPI = await getApiToken();
-    localStorage.setItem('token', JSON.stringify(getResultsFromAPI.token))
+    localStorage.setItem('token', JSON.stringify(getResultsFromAPI.token));
   }
 
-  //Ao clicar no botão "Jogar", um requisição para a API do Trivia deve ser feita para obter o token de jogador
+  // Ao clicar no botão "Jogar", um requisição para a API do Trivia deve ser feita para obter o token de jogador
 
   render() {
     const { name, email } = this.state;
@@ -55,7 +55,7 @@ class Login extends Component {
             type="button"
             onClick={ this.handleClickButton }
             disabled={ disabled }
-            >
+          >
             Jogar
           </button>
         </Link>

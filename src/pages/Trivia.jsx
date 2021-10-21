@@ -1,13 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-export class Trivia extends Component {
+export default class Trivia extends Component {
   render() {
     return (
-      <div>
-        
-      </div>
-    )
+      <div />
+    );
   }
 }
-
-export default Trivia
