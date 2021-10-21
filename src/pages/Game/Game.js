@@ -8,8 +8,11 @@ class Game extends Component {
     super();
     this.requestQuestions = this.requestQuestions.bind(this);
     this.skipQuestion = this.skipQuestion.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.generateButton = this.generateButton.bind(this);
     this.state = {
       tag: 0,
+      button: false,
     };
   }
 
@@ -26,11 +29,29 @@ class Game extends Component {
     const { tag } = this.state;
     this.setState({
       tag: tag + 1,
+      button: false,
     });
   }
 
+  handleClick() {
+    this.setState({
+      button: true,
+    });
+  }
+
+  generateButton() {
+    return (
+      <button
+        type="button"
+        onClick={ this.skipQuestion }
+        data-testid="btn-next"
+      >
+        Próxima Pergunta!
+      </button>);
+  }
+
   render() {
-    const { tag } = this.state;
+    const { tag, button } = this.state;
     const {
       loading,
       questions,
@@ -50,10 +71,13 @@ class Game extends Component {
                 data-testid={ e === questions[tag].correct_answer
                   ? 'correct-answer'
                   : `wrong-answer-${index}` }
+                onClick={ () => this.handleClick() }
               >
                 { e }
               </button>)) }
-          <button type="button" onClick={ this.skipQuestion }>Skip</button>
+          {button
+            ? this.generateButton()
+            : null}
         </div>
       );
     }
