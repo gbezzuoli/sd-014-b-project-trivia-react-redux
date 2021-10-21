@@ -65,8 +65,8 @@ class Trivia extends Component {
             <p data-testid="question-text">
               { results[actualQuestion].question }
             </p>
-            { this.createAnswerButtons()
-              .map((question, index) => (question !== results[actualQuestion].correct_answer
+            { this.createAnswerButtons().map((question, index) => (
+              question !== results[actualQuestion].correct_answer
                 ? (
                   <Button
                     key={ index }
