@@ -13,7 +13,7 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       name: action.name,
       gravatarEmail: action.email,
-    };
+    }
   default:
     return state;
   }
