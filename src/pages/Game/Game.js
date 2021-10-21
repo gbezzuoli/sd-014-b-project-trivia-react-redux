@@ -10,9 +10,10 @@ class Game extends Component {
     this.skipQuestion = this.skipQuestion.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.generateButton = this.generateButton.bind(this);
+    this.changeColor = this.changeColor.bind(this);
     this.state = {
       tag: 0,
-      button: false,
+      skip: false,
     };
   }
 
@@ -29,14 +30,24 @@ class Game extends Component {
     const { tag } = this.state;
     this.setState({
       tag: tag + 1,
-      button: false,
+      skip: false,
     });
   }
 
   handleClick() {
     this.setState({
-      button: true,
+      skip: true,
     });
+  }
+
+  changeColor(e, rightAnswer) {
+    const { skip } = this.state;
+    if (e === rightAnswer && skip === true) {
+      return 'correct-answer';
+    } if (e !== rightAnswer && skip === true) {
+      return 'wrong-answer';
+    }
+    return '';
   }
 
   generateButton() {
@@ -51,7 +62,7 @@ class Game extends Component {
   }
 
   render() {
-    const { tag, button } = this.state;
+    const { tag, skip } = this.state;
     const {
       loading,
       questions,
@@ -68,6 +79,7 @@ class Game extends Component {
               <button
                 type="button"
                 key={ index }
+                className={ this.changeColor(e, questions[tag].correct_answer) }
                 data-testid={ e === questions[tag].correct_answer
                   ? 'correct-answer'
                   : `wrong-answer-${index}` }
@@ -75,9 +87,7 @@ class Game extends Component {
               >
                 { e }
               </button>)) }
-          {button
-            ? this.generateButton()
-            : null}
+          {skip && this.generateButton()}
         </div>
       );
     }
