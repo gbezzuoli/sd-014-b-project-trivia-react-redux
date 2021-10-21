@@ -3,6 +3,12 @@ import { ACTION_LOGIN, SAVE_TOKEN, GET_NAME_EMAIL } from '../actions/actions';
 const INITIAL_STATE = {
   email: '',
   name: '',
+  token: '',
+  triviaQuest: {
+    response_code: 0,
+    results: [],
+  },
+  request: false,
 };
 
 const login = (state = INITIAL_STATE, action) => {
@@ -11,6 +17,7 @@ const login = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       triviaQuest: action.json,
+      request: true,
     };
   case SAVE_TOKEN:
     return {
