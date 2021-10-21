@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import RequestApi from './RequestApi';
+import { Link } from 'react-router-dom';
 import { getToken } from '../redux/actions/index';
 
 import { Button } from './Button';
@@ -26,12 +26,14 @@ export class LoginForm extends Component {
   }
 
   async handleClick() {
-    const { history, valueToken } = this.props;
+    const { valueToken } = this.props;
 
-    const apiToken = await RequestApi();
-    valueToken(apiToken);
-    localStorage.setItem('token', apiToken.token);
-    history.push('/game');
+    const response = await fetch('https://opentdb.com/api_token.php?command=request');
+    const apiToken = await response.json();
+    const { token } = apiToken;
+    valueToken(token);
+
+    localStorage.setItem('token', token);
   }
 
   render() {
@@ -67,12 +69,14 @@ export class LoginForm extends Component {
             value={ name }
           />
         </label>
-        <Button
-          text="Start!"
-          dataTestid="btn-play"
-          onClick={ handleClick }
-          disabled={ !(validEmail() && validName()) }
-        />
+        <Link to="/game">
+          <Button
+            text="Start!"
+            dataTestid="btn-play"
+            onClick={ handleClick }
+            disabled={ !(validEmail() && validName()) }
+          />
+        </Link>
       </form>
     );
   }
@@ -80,9 +84,6 @@ export class LoginForm extends Component {
 
 LoginForm.propTypes = {
   valueToken: PropTypes.func.isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

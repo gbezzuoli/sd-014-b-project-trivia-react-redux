@@ -4,7 +4,7 @@ const Url = 'https://opentdb.com/api_token.php?command=request';
 
 export default async function RequestApi() {
   const response = await fetch(Url);
-  const token = await response.json();
+  const apiToken = await response.json();
 
-  return token;
+  localStorage.setItem('token', apiToken.token);
 }
