@@ -7,6 +7,7 @@ class GamePage extends Component {
     super();
     this.getQuestions = this.getQuestions.bind(this);
     this.onClickAnswer = this.onClickAnswer.bind(this);
+    this.setBtnAnswerBorder = this.setBtnAnswerBorder.bind(this);
 
     this.state = {
       result: [],
@@ -39,6 +40,18 @@ class GamePage extends Component {
     } catch (error) {
       console.log(error);
     }
+    this.setBtnAnswerBorder();
+  }
+
+  setBtnAnswerBorder() {
+    const btn = document.querySelectorAll('.btn-answer');
+    console.log(btn);
+    btn.forEach((element) => {
+      element.setAttribute('style', 'border: 3px solid rgb(255, 0, 0)');
+      console.log(element);
+    });
+    const btnCorrect = document.querySelector('.correct-answer');
+    btnCorrect.setAttribute('style', 'border: 3px solid rgb(6, 240, 15)');
   }
 
   async getQuestions() {
@@ -72,6 +85,7 @@ class GamePage extends Component {
           {wrongAnswersOne.map((item, index) => (
             <div key={ index }>
               <button
+                className="btn-answer"
                 type="button"
                 data-testid={ idWrongAns + index }
                 onClick={ this.onClickAnswer }
@@ -80,11 +94,19 @@ class GamePage extends Component {
               </button>
             </div>))}
           <button
-            onClick={ this.onClickAnswer }
+            className="correct-answer"
+            onClick={ this.setBtnAnswerBorder }
             type="button"
             data-testid="correct-answer"
           >
             {rightAnswerOne}
+          </button>
+          <br />
+          <button
+            type="button"
+            onClick={ this.onClickAnswer }
+          >
+            Próximo
           </button>
         </section>
 
