@@ -2,17 +2,16 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { thunkQuestions } from '../actions';
-import AlternativeCard from '../components/AlternativeCard';
 import Header from '../components/Header';
 import QuestionCard from '../components/QuestionCard';
 import Timer from '../components/Timer';
+import AlternativeCard from '../components/AlternativeCard';
 
 class Game extends Component {
   constructor() {
     super();
 
     this.state = {
-      loading: true,
       controller: 0,
     };
 
@@ -27,10 +26,6 @@ class Game extends Component {
   async pageIsReady() {
     const { saveQuestions } = this.props;
     await saveQuestions();
-
-    this.setState({
-      loading: false,
-    });
   }
 
   handleClick() {
@@ -53,8 +48,8 @@ class Game extends Component {
         justifyContent: 'space-around',
       },
     };
-    const { loading, controller } = this.state;
-    const { timeIsOver } = this.props;
+    const { controller } = this.state;
+    const { loading, timeIsOver } = this.props;
     return (
       <>
         <Header />
@@ -71,8 +66,9 @@ class Game extends Component {
   }
 }
 
-const mapStateToProps = ({ questionsReducer: { timeIsOver } }) => ({
+const mapStateToProps = ({ questionsReducer: { timeIsOver, loading } }) => ({
   timeIsOver,
+  loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -82,6 +78,7 @@ const mapDispatchToProps = (dispatch) => ({
 Game.propTypes = {
   saveQuestions: PropTypes.func.isRequired,
   timeIsOver: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
