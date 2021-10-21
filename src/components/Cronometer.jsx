@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as userActions from '../redux/actions';
 
 class Cronometer extends Component {
   constructor() {
@@ -27,20 +26,8 @@ class Cronometer extends Component {
     }, interval);
   }
 
-  componentDidUpdate() {
-    this.dispatchDisable();
-  }
-
   componentWillUnmount() {
     clearInterval(this.valueInterval);
-  }
-
-  dispatchDisable() {
-    const { setSeconds } = this.props;
-    const { seconds } = this.state;
-    if (seconds === 0) {
-      setSeconds(seconds);
-    }
   }
 
   render() {
@@ -67,6 +54,6 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(null, mapDispatchToProps)(Cronometer);
 
-CountdownTimer.propTypes = {
+Cronometer.propTypes = {
   setSeconds: PropTypes.func,
 }.isRequired;
