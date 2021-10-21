@@ -13,6 +13,7 @@ class Game extends Component {
       // answered: false,
       count: 0,
       disabledState: false,
+      currentTime: 35,
     };
     this.requestAPI = this.requestAPI.bind(this);
     this.mapQuestions = this.mapQuestions.bind(this);
@@ -22,7 +23,22 @@ class Game extends Component {
 
   componentDidMount() {
     this.requestAPI();
-    console.log('ooio');
+    this.tick();
+  }
+
+  componentDidUpdate() {
+    const { currentTime } = this.state;
+    if (currentTime === 0) {
+      clearInterval(this.timerID);
+      this.addStyle();
+    }
+  }
+
+  tick() {
+    const ONE_SECOND = 1000;
+    this.timerID = setInterval(() => this.setState((prevState) => ({
+      currentTime: prevState.currentTime - 1,
+    })), ONE_SECOND);
   }
 
   handleClick({ target }) {
@@ -55,12 +71,12 @@ class Game extends Component {
   }
 
   mapQuestions(questions) {
-    const { disabledState } = this.state;
+    const { disabledState, currentTime } = this.state;
     const mappedQuestions = questions.map((question, index1) => {
       const incorrectAnswers = question.incorrect_answers.map((alternative, index2) => (
         <button
           type="button"
-          disabled={ disabledState }
+          disabled={ disabledState || currentTime === 0 }
           data-testid={ `wrong-answer-${index2}` }
           className="wrongButton"
           key={ index2 }
@@ -72,7 +88,7 @@ class Game extends Component {
       const correctAnswer = (
         <button
           type="button"
-          disabled={ disabledState }
+          disabled={ disabledState || currentTime === 0 }
           data-testid="correct-answer"
           className="correctButton"
           key="4"
@@ -102,13 +118,14 @@ class Game extends Component {
   }
 
   render() {
-    const { questions } = this.state;
+    const { questions, currentTime } = this.state;
     return (
       <div>
         <Header />
         <h1>TRIVIA</h1>
         {questions ? this.mapQuestions(questions)
           : <span>CARREGANDO</span>}
+        { `TIMER: ${currentTime}` }
       </div>
     );
   }
