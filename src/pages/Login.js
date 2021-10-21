@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class Login extends Component {
   constructor() {
@@ -8,13 +9,13 @@ class Login extends Component {
       emailInput: '',
     };
     this.handleChange = this.handleChange.bind(this);
-    this.verifyLogin = this.verifyLogin.bind(this);
+    this.buttonActivation = this.buttonActivation.bind(this);
     this.renderForm = this.renderForm.bind(this);
   }
 
-  verifyLogin() {
+  buttonActivation() {
     const { emailInput, nameInput } = this.state;
-    const emailtest = /\S+@+\S+.+\S/;
+    const emailtest = /\S+@+\S+.+\S/; // string + @ + string + . + string
     if (emailtest.test(emailInput) && nameInput) {
       return false;
     }
@@ -51,13 +52,15 @@ class Login extends Component {
             value={ emailInput }
           />
         </label>
-        <button
-          type="button"
-          data-testid="btn-play"
-          disabled={ this.verifyLogin() }
-        >
-          Jogar
-        </button>
+        <Link to="/game">
+          <button
+            type="button"
+            data-testid="btn-play"
+            disabled={ this.buttonActivation() }
+          >
+            Jogar
+          </button>
+        </Link>
       </form>
     );
   }
