@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { userLogin } from '../redux/actions';
+import { Link } from 'react-router-dom';
+import { userLogin, fetchToken } from '../redux/actions';
 import './Login.css';
 import logo from '../trivia.png';
+import Loading from '../components/Loading';
 
 class Login extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       email: '',
@@ -16,7 +17,10 @@ class Login extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleValidation = this.handleValidation.bind(this);
+    this.renderButtons = this.renderButtons.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.formElement = this.formElement.bind(this);
   }
 
   handleChange({ target: { name, value } }) {
@@ -26,7 +30,7 @@ class Login extends Component {
   handleClick() {
     const { dispatchLogin, history } = this.props;
     dispatchLogin({ ...this.state });
-    history.push('/play');
+    history.push('/game');
   }
 
   handleValidation(email, name) {
@@ -73,6 +77,7 @@ class Login extends Component {
 
   renderButtons() {
     const { email, name } = this.state;
+    const { startFetching } = this.props;
     const isValid = this.handleValidation(email, name);
 
     return (
@@ -80,7 +85,7 @@ class Login extends Component {
         <button
           type="button"
           data-testid="btn-play"
-          onClick={ this.handleClick }
+          onClick={ startFetching }
           disabled={ !isValid }
           className="settings"
         >
@@ -90,9 +95,10 @@ class Login extends Component {
           <button
             type="button"
             data-testid="btn-settings"
-            className="settings"
+            className="btn-settings"
           >
             Configurações
+
           </button>
         </Link>
       </div>
@@ -100,20 +106,44 @@ class Login extends Component {
   }
 
   render() {
-    return (
-      this.formElement()
-    );
+    const {
+      props: { redirect, code, isFetching },
+      formElement, handleClick,
+    } = this;
+
+    let output = formElement();
+
+    if (isFetching) {
+      output = <Loading />;
+    } else if (redirect) {
+      localStorage.setItem('token', code);
+      handleClick();
+    }
+
+    return output;
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  dispatchLogin: (state) => dispatch(userLogin(state)) });
+  dispatchLogin: (state) => dispatch(userLogin(state)),
+  startFetching: () => dispatch(fetchToken()),
+});
+
+const mapStateToProps = (state) => ({
+  redirect: state.token.redirect,
+  code: state.token.code,
+  isFetching: state.token.isFetching,
+});
 
 Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
   dispatchLogin: PropTypes.func,
+  redirect: PropTypes.bool,
+  code: PropTypes.string,
+  isFetching: PropTypes.bool,
+  startFetching: PropTypes.func,
 }.isRequired;
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

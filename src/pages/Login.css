@@ -40,7 +40,7 @@
   width: 98%;
 }
 
-.settings {
+.settings, .btn-settings {
   align-self: center;
   background-color: green;
   border: none;
@@ -50,12 +50,12 @@
   width: 40%;
 }
 
-.settings button {
+.btn-settings {
   margin: 0;
   width: 100%;
 }
 
-.settings:hover {
+.btn-settings:hover {
   background-color: rgba(3, 102, 3, 0.801);
   cursor: pointer;
   transition: 1.5;
