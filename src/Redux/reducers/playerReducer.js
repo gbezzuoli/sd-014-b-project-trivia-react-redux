@@ -3,6 +3,7 @@ import { ADD_PLAYER_EMAIL_AND_NAME, ADD_PLAYER_TOKEN } from '../actions';
 const INITIAL_STATE = {
   name: '',
   gravatarEmail: '',
+  score: 0,
 };
 
 const playerReducer = (state = INITIAL_STATE, action) => {
