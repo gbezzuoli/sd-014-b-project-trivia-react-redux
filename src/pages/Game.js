@@ -20,7 +20,7 @@ class Game extends Component {
   }
 
   handleClick() {
-
+    console.log('oioi');
   }
 
   async requestAPI() {
@@ -36,7 +36,7 @@ class Game extends Component {
           type="button"
           data-testid={ `wrong-answer-${index2}` }
           key={ index2 }
-          onClick={ () => this.handleClick() }
+          onClick={ this.handleClick() }
         >
           {alternative}
         </button>
@@ -46,7 +46,7 @@ class Game extends Component {
           type="button"
           data-testid="correct-answer"
           key="4"
-          onClick={ () => this.handleClick() }
+          onClick={ this.handleClick() }
         >
           { question.correct_answer }
         </button>
@@ -60,7 +60,6 @@ class Game extends Component {
             {`Categoria: ${question.category}`}
           </h5>
           <h3 data-testid="question-text">
-            <br />
             {`Pergunta: ${question.question}`}
           </h3>
           <h3 data-testid="question-text">
