@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import getApiToken from '../services/ApiRequest';
 import PropTypes from 'prop-types';
 
 class Login extends Component {
@@ -8,8 +10,9 @@ class Login extends Component {
       name: '',
       email: '',
     };
+    this.handleClickTrivia = this.handleClickTrivia.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClickSettings = this.handleClickSettings.bind(this);
   }
 
   handleChange({ target: { value, name } }) {
@@ -18,7 +21,12 @@ class Login extends Component {
     });
   }
 
-  handleClick() {
+  async handleClickTrivia() {
+    const getResultsFromAPI = await getApiToken();
+    localStorage.setItem('token', JSON.stringify(getResultsFromAPI.token));
+  }
+
+  handleClickSettings() {
     const { history } = this.props;
     history.push('/settings');
   }
@@ -46,6 +54,16 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
         </label>
+        <Link to="/Trivia">
+          <button
+            data-testid="btn-play"
+            type="button"
+            onClick={ this.handleClickTrivia }
+            disabled={ disabled }
+          >
+            Jogar
+          </button>
+        </Link>
         <button
           data-testid="btn-play"
           type="button"
@@ -56,7 +74,7 @@ class Login extends Component {
         <button
           data-testid="btn-settings"
           type="button"
-          onClick={ this.handleClick }
+          onClick={ this.handleClickSettings }
         >
           Settings
         </button>
