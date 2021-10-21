@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import getApiToken from '../services/ApiRequest';
 import PropTypes from 'prop-types';
+import getApiToken from '../services/ApiRequest';
 
 class Login extends Component {
   constructor(props) {
