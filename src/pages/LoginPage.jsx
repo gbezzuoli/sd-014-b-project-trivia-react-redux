@@ -101,7 +101,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 function mapStateToProps(state) {
-  console.log(state.userReducer);
   return { token: state.userReducer.apiToken.token };
 }
 
