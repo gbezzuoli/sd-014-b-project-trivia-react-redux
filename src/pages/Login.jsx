@@ -21,7 +21,7 @@ class Login extends Component {
   handleClick() {
     // const { email } = this.state;
     const { history } = this.props;
-    history.push('/');
+    history.push('/game');
   }
 
   handleValidation(email, name) {
