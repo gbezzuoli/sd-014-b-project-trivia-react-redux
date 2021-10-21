@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { saveTokenAction, getNameEmail } from '../redux/actions/actions';
+import { fetchLogin, saveTokenAction, getNameEmail } from '../redux/actions/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -32,10 +32,11 @@ class Login extends React.Component {
   }
 
   async handleClick() {
-    const { triviaAction } = this.props;
+    const { triviaAction, saveToken } = this.props;
     const urlToken = await fetch('https://opentdb.com/api_token.php?command=request');
     const response = await urlToken.json();
     const { token } = response;
+    saveToken(token);
     triviaAction(token);
     const { getNameEmailAction } = this.props;
     const { name, email } = this.state;
@@ -96,6 +97,7 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
+  saveToken: PropTypes.func.isRequired,
   triviaAction: PropTypes.func.isRequired,
   getNameEmailAction: PropTypes.func.isRequired,
   history: PropTypes.shape({
@@ -105,7 +107,8 @@ Login.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  triviaAction: (token) => dispatch(saveTokenAction(token)),
+  saveToken: (token) => dispatch(saveTokenAction(token)),
+  triviaAction: (token) => dispatch(fetchLogin(token)),
   getNameEmailAction: (name, email) => dispatch(getNameEmail(name, email)),
 });
 
