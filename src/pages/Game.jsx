@@ -10,8 +10,6 @@ class Game extends React.Component {
 
     this.state = {
       arrayQuestions: [],
-      // respostas: [...arrayQuestions.incorrect_answers, ...arrayQuestions.correct_answers ]
-      // correct:
     };
 
     this.retriveQuestions = this.retriveQuestions.bind(this);
@@ -34,8 +32,7 @@ class Game extends React.Component {
       <div>
         <Header />
         TRIVIA
-         {arrayQuestions.map((question) => <CardGame question={ question }/>) }
-          
+          {arrayQuestions.map((question) => <CardGame question={ question }/>) }
       </div>
     );
   }
