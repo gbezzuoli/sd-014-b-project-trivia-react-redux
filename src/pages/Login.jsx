@@ -44,7 +44,7 @@ class Login extends React.Component {
 
   render() {
     const { email, name } = this.state;
-
+    const { history } = this.props;
     return (
       <main className="container">
         <form className="form-container">
@@ -81,6 +81,13 @@ class Login extends React.Component {
               Jogar
             </button>
           </Link>
+          <button
+            data-testid="btn-settings"
+            type="button"
+            onClick={ () => history.push('/settings') }
+          >
+            Configurações
+          </button>
         </form>
       </main>
     );
@@ -89,6 +96,10 @@ class Login extends React.Component {
 
 Login.propTypes = {
   triviaAction: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    history: PropTypes.string,
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
