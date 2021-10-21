@@ -5,7 +5,7 @@
   justify-content: center;
 }
 
-.center div {
+.form-login {
   border: 1px solid rgb(192, 186, 186);
   border-radius: 10px;
   display: flex;
@@ -14,6 +14,11 @@
   justify-content: center;
   padding: 5px;
   width: 420px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-around;
 }
 
 .center img {
@@ -35,16 +40,22 @@
   width: 98%;
 }
 
-.center div button {
+.settings {
   align-self: center;
   background-color: green;
   border: none;
   border-radius: 5px;
   height: 40px;
-  width: 88%;
+  margin: 5px;
+  width: 40%;
 }
 
-.center div button:hover {
+.settings button {
+  margin: 0;
+  width: 100%;
+}
+
+.settings:hover {
   background-color: rgba(3, 102, 3, 0.801);
   cursor: pointer;
   transition: 1.5;
