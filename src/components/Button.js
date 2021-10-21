@@ -17,8 +17,6 @@ class Button extends React.Component {
   }
 }
 
-export default connect()(Button);
-
 Button.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
