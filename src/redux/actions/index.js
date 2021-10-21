@@ -1,6 +1,6 @@
-export const ACTION = 'ACTION';
+export const SEND_USER_INFO = 'SEND_USER_INFO';
 
-export const saveAction = (payload) => ({
-  type: ACTION,
+export const sendUserInfo = (payload) => ({
+  type: SEND_USER_INFO,
   payload,
 });
