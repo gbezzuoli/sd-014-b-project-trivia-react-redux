@@ -22,7 +22,7 @@ class AlternativeCard extends Component {
 
   render() {
     const NUMBER = 0.5;
-    const { questions, controller } = this.props;
+    const { questions, controller, disabled } = this.props;
     const array = questions[controller];
     let accum = 0;
     let answers = [array.correct_answer, ...array.incorrect_answers];
@@ -35,12 +35,14 @@ class AlternativeCard extends Component {
             if (array.incorrect_answers.includes(answer)) {
               accum += 1;
               return (<Alternative
+                disabled={ disabled }
                 key={ index }
                 testid={ `wrong-answer-${accum}` }
                 alternative={ answer }
               />);
             }
             return (<Alternative
+              disabled={ disabled }
               key={ index }
               testid="correct-answer"
               alternative={ answer }
@@ -54,6 +56,7 @@ class AlternativeCard extends Component {
 
 const mapStateToProps = (state) => ({
   questions: state.questionsReducer.questions,
+  disabled: state.questionsReducer.timeIsOver,
 });
 
 AlternativeCard.propTypes = {
@@ -64,6 +67,7 @@ AlternativeCard.propTypes = {
     ),
   }),
   controller: PropTypes.number,
+  disabled: PropTypes.bool,
 }.isRequired;
 
 export default connect(mapStateToProps)(AlternativeCard);

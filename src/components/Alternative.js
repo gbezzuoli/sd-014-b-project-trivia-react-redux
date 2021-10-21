@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 
 class Alternative extends Component {
   render() {
-    const { alternative, testid } = this.props;
+    const { alternative, testid, disabled } = this.props;
     return (
-      <button type="button" data-testid={ testid }>
+      <button type="button" data-testid={ testid } disabled={ disabled }>
         { alternative }
       </button>
     );
@@ -15,6 +15,7 @@ class Alternative extends Component {
 Alternative.propTypes = {
   alternative: PropTypes.string.isRequired,
   testid: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default Alternative;
