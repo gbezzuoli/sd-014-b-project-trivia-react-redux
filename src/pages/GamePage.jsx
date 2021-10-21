@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import Question from '../components/Question';
 import requestQuestions from '../services/requestQuestions';
+import Header from '../components/Header';
 
 class GamePage extends Component {
   constructor() {
@@ -16,12 +17,20 @@ class GamePage extends Component {
       rightAnswerOne: '',
       correct: '',
       incorrect: '',
+      counter: 5,
       i: 0,
     };
   }
 
   componentDidMount() {
     this.getQuestions();
+  }
+
+  componentDidUpdate() {
+    const { counter } = this.state;
+    if (counter === 0) {
+      clearInterval(this.countInterval);
+    }
   }
 
   onClickAnswer() {
@@ -61,12 +70,20 @@ class GamePage extends Component {
       questionOne: result[i].question,
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
-    });
+    }, () => this.startCounter());
+  }
+
+  startCounter() {
+    const ONE_SECOND = 1000;
+    this.countInterval = setInterval(() => {
+      this.setState((state) => ({
+        counter: state.counter - 1,
+      }));
+    }, ONE_SECOND);
   }
 
   render() {
-    const {
-      questionOne, wrongAnswersOne, rightAnswerOne, correct, incorrect } = this.state;
+    const { questionOne, wrongAnswersOne, rightAnswerOne, correct, incorrect, counter } = this.state;
     const idWrongAns = 'wrong-answer-';
 
     if (questionOne === []) {
@@ -74,12 +91,14 @@ class GamePage extends Component {
     }
     return (
       <div>
+        <Header />
         <section>
           <h1 data-testid="question-category">Categoria</h1>
           <h2 data-testid="question-text">
             {' '}
             {questionOne}
           </h2>
+          <h2>{ counter }</h2>
           {wrongAnswersOne.map((item, index) => (
             <div key={ index }>
               <button
@@ -87,6 +106,7 @@ class GamePage extends Component {
                 type="button"
                 data-testid={ idWrongAns + index }
                 onClick={ this.onClickAnswer }
+                disabled={ counter === 0 }
               >
                 {item}
               </button>
@@ -96,6 +116,7 @@ class GamePage extends Component {
             onClick={ this.setBtnAnswerBorder }
             type="button"
             data-testid="correct-answer"
+            disabled={ counter === 0 }
           >
             {rightAnswerOne}
           </button>
