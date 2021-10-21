@@ -9,6 +9,8 @@ class Game extends Component {
     super();
     this.state = {
       questions: '',
+      correctAnswer: '',
+      answered: null,
     };
     this.requestAPI = this.requestAPI.bind(this);
     this.mapQuestions = this.mapQuestions.bind(this);
@@ -19,14 +21,24 @@ class Game extends Component {
     this.requestAPI();
   }
 
-  handleClick() {
-    console.log('oioi');
+  handleClick({ target }) {
+    const { correctAnswer } = this.state;
+    const givenAnswer = target.innerHTML;
+    if (givenAnswer === correctAnswer) {
+      this.setState({ answered: true });
+    } else {
+      this.setState({ answered: false });
+    }
   }
 
   async requestAPI() {
     const { token } = this.props;
     const allQuestions = await fetchQuestions(token);
-    this.setState({ questions: allQuestions.results });
+    this.setState({
+      questions: allQuestions.results,
+      correctAnswer: allQuestions.results[0].correct_answer,
+    });
+    console.log(allQuestions);
   }
 
   mapQuestions(questions) {
@@ -36,7 +48,7 @@ class Game extends Component {
           type="button"
           data-testid={ `wrong-answer-${index2}` }
           key={ index2 }
-          onClick={ this.handleClick() }
+          onClick={ this.handleClick }
         >
           {alternative}
         </button>
@@ -46,7 +58,7 @@ class Game extends Component {
           type="button"
           data-testid="correct-answer"
           key="4"
-          onClick={ this.handleClick() }
+          onClick={ this.handleClick }
         >
           { question.correct_answer }
         </button>
@@ -72,12 +84,13 @@ class Game extends Component {
   }
 
   render() {
-    const { questions } = this.state;
+    const { questions, answered } = this.state;
     return (
       <div>
         <Header />
         <h1>TRIVIA</h1>
         {questions ? this.mapQuestions(questions) : <span>CARREGANDO</span>}
+        { answered ? <p>ACERTOU</p> : ''}
       </div>
     );
   }
