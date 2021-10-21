@@ -77,6 +77,7 @@ class Game extends Component {
     const { request } = this.props;
     return (
       <div>
+        <Header />
         game
         {/* <p>{ segundo }</p> */}
         { console.log(request)}
