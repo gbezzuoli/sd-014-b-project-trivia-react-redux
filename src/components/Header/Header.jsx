@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { MD5 } from 'crypto-js';
 import './Header.css';
+import getProfile from '../../services/gravatar';
 
 class Header extends Component {
   render() {
-    const { gravatarEmail, name } = this.props;
-    const hash = MD5(gravatarEmail).toString();
-
-    const gravatarImage = `https://www.gravatar.com/avatar/${hash}`;
+    const { name, gravatarEmail } = this.props;
+    const gravatarImage = getProfile(gravatarEmail);
     return (
       <header className="content-info">
         <div className="image-title">
