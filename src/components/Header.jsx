@@ -13,7 +13,7 @@ class Header extends Component {
         <img
           data-testid="header-profile-picture"
           src={ `https://www.gravatar.com/avatar/${md5(email).toString()}` }
-          alt="avatar"
+          alt={ name }
         />
         <span data-testid="header-player-name">{ name }</span>
         <div data-testid="header-score">0</div>
