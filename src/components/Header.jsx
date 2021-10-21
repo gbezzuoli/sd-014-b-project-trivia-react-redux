@@ -9,13 +9,13 @@ class Header extends React.Component {
     return (
       <header>
         {/* Avatar do Jogador */}
-        <img src={ avatar } alt="avatar-jogador" />
+        <img src={ avatar } alt="avatar-jogador" data-testid="header-profile-picture" />
 
         {/* Nome do jogador */}
-        <h1>{ userName }</h1>
+        <h1 data-testid="header-player-name">{ userName }</h1>
 
         {/* Placar do Jogador */}
-        <span>{ `Placar: ${score}` }</span>
+        <span data-testid="header-score">{ `Placar: ${score}` }</span>
       </header>
     );
   }
