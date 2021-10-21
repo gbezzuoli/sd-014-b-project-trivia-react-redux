@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { setuserdata } from '../../Redux/Actions';
 import { requestToken } from '../../services/Api';
 import getGravatar from '../../services/getGravatar';
+import Buttons from '../Buttons';
 
 class Login extends Component {
   constructor(props) {
@@ -60,26 +61,20 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
         </label>
-        <button
-          type="button"
+        <Buttons
+          path="/game"
           disabled={ !email || !name }
-          data-testid="btn-play"
+          dataTestid="btn-play"
           id="button-form"
           onClick={ this.handleClick }
-        >
-          Jogar
-        </button>
-        <Link
-          to="/settings"
-        >
-          <button
-            type="button"
-            data-testid="btn-settings"
-            id="button-config"
-          >
-            Configurar
-          </button>
-        </Link>
+          text="Jogar"
+        />
+        <Buttons
+          path="/settings"
+          dataTestid="btn-settings"
+          id="button-config"
+          text="Configurar"
+        />
       </section>
     );
   }
