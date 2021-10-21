@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
+import { fetchApiQuestions } from '../action';
+import Questions from '../components/Questions';
 
 class Game extends Component {
 /*   constructor(props) {
@@ -9,6 +11,10 @@ class Game extends Component {
     this.state = {
     };
   } */
+  async componentDidMount() {
+    const { questionsAction } = this.props;
+    await questionsAction();
+  }
 
   render() {
     const { history, name, email } = this.props;
@@ -31,6 +37,7 @@ class Game extends Component {
           />
           <span data-testid="header-score">0</span>
         </header>
+        <Questions />
       </>
     );
   }
@@ -47,6 +54,12 @@ Game.propTypes = {
     push: PropTypes.func,
   }).isRequired,
   email: PropTypes.string.isRequired,
+  questionsAction: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps)(Game);
+const mapDispatchToProps = (dispatch) => ({
+  questionsAction: (e) => dispatch(fetchApiQuestions(e)),
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
