@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { fetchLogin, saveTokenAction, getNameEmail } from '../redux/actions/actions';
 
-
 class Login extends React.Component {
   constructor() {
     super();
