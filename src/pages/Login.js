@@ -79,8 +79,7 @@ class Login extends React.Component {
             type="button"
             onClick=""
           >
-            Confiurções
-
+            Configurações
           </button>
         </Link>
 

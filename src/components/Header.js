@@ -29,7 +29,6 @@ class Header extends Component {
           src={ this.requestGravatar() }
           alt="imagem-avatar"
         />
-        ;
         <h4 data-testid="header-player-name">{ player.name }</h4>
         <h4 data-testid="header-score">0</h4>
       </div>
