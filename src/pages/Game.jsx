@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
+import Timer from '../components/Timer';
 
 class Game extends Component {
   constructor() {
@@ -9,25 +10,11 @@ class Game extends Component {
     this.state = {
       idx: 0,
       toggle: false,
-      segundo: 30,
+      timerOver: false,
     };
 
     this.renderCardQuestion = this.renderCardQuestion.bind(this);
     this.handleClick = this.handleClick.bind(this);
-  }
-
-  componentDidMount() {
-    const ONE_SECOND = 1000;
-    setInterval(() => {
-      this.time = this.setState((prevState) => ({ segundo: prevState.segundo - 1 }));
-    }, ONE_SECOND);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const zeraTime = 0;
-    if (prevState.segundo === zeraTime) {
-      clearInterval(this.time);
-    }
   }
 
   handleClick() {
@@ -73,13 +60,13 @@ class Game extends Component {
   }
 
   render() {
-    // const { segundo } = this.state; vou fazer depois
+    const { timerOver } = this.state;
     const { request } = this.props;
     return (
       <div>
-        <Header />
+        <Header timerOver={ timerOver } />
+        <Timer />
         game
-        {/* <p>{ segundo }</p> */}
         { console.log(request)}
         {request && this.renderCardQuestion()}
       </div>
