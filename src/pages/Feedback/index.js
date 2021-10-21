@@ -9,7 +9,7 @@ class Feedback extends React.Component {
 
     this.state = {
       // estados,
-      assertions: 3, // Para teste
+      assertions: 4, // Para teste
       totalScore: 50, // Para teste
       redirectRanking: false,
       redirectLogin: false,
@@ -36,7 +36,7 @@ class Feedback extends React.Component {
     return (
       <main>
         <GameHeader />
-        <h2 data-testid="feedback-text">{ this.feedbackMessage }</h2>
+        <h2 data-testid="feedback-text">{ this.feedbackMessage() }</h2>
         <h3 data-testid="feedback-total-question">
           { `Você acertou ${assertions} questões!` }
         </h3>
@@ -47,14 +47,14 @@ class Feedback extends React.Component {
         <button
           type="button"
           data-testid="ranking-btn"
-          onClick={ this.setState({ redirectRanking: true }) }
+          onClick={ () => this.setState({ redirectRanking: true }) }
         >
           Ver Ranking
         </button>
         <button
           type="button"
           data-testid="btn-play-again"
-          onClick={ this.setState({ redirectLogin: true }) }
+          onClick={ () => this.setState({ redirectLogin: true }) }
         >
           Jogar novamente
         </button>
