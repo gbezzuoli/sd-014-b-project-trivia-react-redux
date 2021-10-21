@@ -1,4 +1,4 @@
-import { LOADING_ACTION, FAIL_ACTION, SUCCESS_ACTION } from '../actions';
+import { LOADING_ACTION, FAIL_ACTION, SUCCESS_ACTION, GET_TOKEN } from '../actions';
 
 const initialState = {
   player: {
@@ -6,6 +6,7 @@ const initialState = {
     assertions: 0,
     score: 0,
     gravatarEmail: '',
+    token: '',
   },
 };
 
@@ -19,6 +20,9 @@ export default (state = initialState, { type, payload }) => {
 
   case FAIL_ACTION:
     return { ...state, ...payload };
+
+  case GET_TOKEN:
+    return { ...state, token: payload };
 
   default:
     return state;

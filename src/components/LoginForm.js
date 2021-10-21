@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { getToken } from '../redux/actions/index';
+
 import { Button } from './Button';
 
 export class LoginForm extends Component {
@@ -8,7 +13,9 @@ export class LoginForm extends Component {
       name: '',
       gravatarEmail: '',
     };
+
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(e) {
@@ -16,6 +23,17 @@ export class LoginForm extends Component {
     this.setState(() => ({
       [name]: value,
     }));
+  }
+
+  async handleClick() {
+    const { valueToken } = this.props;
+
+    const response = await fetch('https://opentdb.com/api_token.php?command=request');
+    const apiToken = await response.json();
+    const { token } = apiToken;
+    valueToken(token);
+
+    localStorage.setItem('token', token);
   }
 
   render() {
@@ -51,15 +69,25 @@ export class LoginForm extends Component {
             value={ name }
           />
         </label>
-        <Button
-          text="Start!"
-          dataTestid="btn-play"
-          onClick={ handleClick }
-          disabled={ !(validEmail() && validName()) }
-        />
+        <Link to="/game">
+          <Button
+            text="Start!"
+            dataTestid="btn-play"
+            onClick={ handleClick }
+            disabled={ !(validEmail() && validName()) }
+          />
+        </Link>
       </form>
     );
   }
 }
 
-export default LoginForm;
+LoginForm.propTypes = {
+  valueToken: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  valueToken: (token) => dispatch(getToken(token)),
+});
+
+export default connect(null, mapDispatchToProps)(LoginForm);
