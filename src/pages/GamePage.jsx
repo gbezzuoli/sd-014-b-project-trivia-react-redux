@@ -15,9 +15,9 @@ class GamePage extends Component {
       questionOne: [],
       wrongAnswersOne: [],
       rightAnswerOne: '',
-      correct: '',
-      incorrect: '',
-      counter: 5,
+      corr: '',
+      incor: '',
+      count: 5,
       i: 0,
     };
   }
@@ -27,8 +27,8 @@ class GamePage extends Component {
   }
 
   componentDidUpdate() {
-    const { counter } = this.state;
-    if (counter === 0) {
+    const { count } = this.state;
+    if (count === 0) {
       clearInterval(this.countInterval);
     }
   }
@@ -55,8 +55,8 @@ class GamePage extends Component {
 
   setBtnAnswerBorder() {
     this.setState({
-      incorrect: 'btn-answer',
-      correct: 'correct-answer',
+      incor: 'btn-answer',
+      corr: 'correct-answer',
     });
   }
 
@@ -77,13 +77,13 @@ class GamePage extends Component {
     const ONE_SECOND = 1000;
     this.countInterval = setInterval(() => {
       this.setState((state) => ({
-        counter: state.counter - 1,
+        count: state.counter - 1,
       }));
     }, ONE_SECOND);
   }
 
   render() {
-    const { questionOne, wrongAnswersOne, rightAnswerOne, correct, incorrect, counter } = this.state;
+    const { questionOne, wrongAnswersOne, rightAnswerOne, corr, incor, count } = this.state;
     const idWrongAns = 'wrong-answer-';
 
     if (questionOne === []) {
@@ -102,21 +102,21 @@ class GamePage extends Component {
           {wrongAnswersOne.map((item, index) => (
             <div key={ index }>
               <button
-                className={ incorrect }
+                className={ incor }
                 type="button"
                 data-testid={ idWrongAns + index }
                 onClick={ this.onClickAnswer }
-                disabled={ counter === 0 }
+                disabled={ count === 0 }
               >
                 {item}
               </button>
             </div>))}
           <button
-            className={ correct }
+            className={ corr }
             onClick={ this.setBtnAnswerBorder }
             type="button"
             data-testid="correct-answer"
-            disabled={ counter === 0 }
+            disabled={ count === 0 }
           >
             {rightAnswerOne}
           </button>
