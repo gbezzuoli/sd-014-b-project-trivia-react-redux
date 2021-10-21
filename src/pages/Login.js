@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchTrivia } from '../services/triviaAPI';
 import { submitPlayerAction } from '../redux/actions';
@@ -27,6 +28,7 @@ class Login extends Component {
 
   validatePlayer() {
     const { name, email } = this.state;
+    localStorage.setItem('name', name);
     const validEmail = REGEX_EMAIL.test(email);
 
     if (name && validEmail) {
@@ -61,14 +63,16 @@ class Login extends Component {
           type="text"
           onChange={ this.handleChange }
         />
-        <button
-          type="button"
-          data-testid="btn-play"
-          disabled={ disabled }
-          onClick={ this.submitPlayer }
-        >
-          Jogar
-        </button>
+        <Link to="/game">
+          <button
+            type="button"
+            data-testid="btn-play"
+            disabled={ disabled }
+            onClick={ this.submitPlayer }
+          >
+            Jogar
+          </button>
+        </Link>
       </form>
     );
   }
@@ -79,7 +83,9 @@ Login.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  dispatchSetValue: (player, token) => (dispatch(submitPlayerAction(player, token))),
+  dispatchSetValue: (player, token) => (
+    dispatch(submitPlayerAction(player, token))
+  ),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import Header from '../components/Header';
 
 class Game extends Component {
   render() {
     return (
       <div>
-        <p>Tela de Game</p>
+        Oi
+        <Header />
       </div>
     );
   }
