@@ -1,9 +1,12 @@
+// Referencia validação email
+// https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 import PropTypes from 'prop-types';
-import { fetchTrivia, sendData } from '../redux/actions';
-import Button from './Button';
+import { sendPlayerInfo, fetchAPI } from '../redux/actions';
 
 export class LoginForm extends Component {
   constructor(props) {
@@ -11,6 +14,7 @@ export class LoginForm extends Component {
     this.state = {
       name: '',
       email: '',
+      signedIn: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -18,29 +22,31 @@ export class LoginForm extends Component {
 
   handleChange(event) {
     const { name, value } = event.target;
+    console.log(name, value);
     this.setState(() => ({
       [name]: value,
     }));
   }
 
-  handleClick() {
-    const { getToken, storeData } = this.props;
-    getToken();
-    storeData(this.state);
+  async handleClick() {
+    const { email, name } = this.state;
+    const { submitPlayer } = this.props;
+    await fetchAPI();
+    this.setState({ signedIn: true });
+    submitPlayer(email, name);
   }
 
   render() {
-    const { name, email } = this.state;
-    const { handleChange, handleClick } = this;
-
-    // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+    const { name, email, signedIn } = this.state;
     const validateEmail = () => {
       const userEmail = /\S+@\S+\.\S+/;
       return userEmail.test(email);
     };
 
     const validateName = () => !!name;
-
+    if (signedIn) {
+      return <Redirect to="/game" />;
+    }
     return (
       <form className="login-form">
         <label htmlFor="email">
@@ -49,7 +55,7 @@ export class LoginForm extends Component {
             type="email"
             data-testid="input-gravatar-email"
             name="email"
-            onChange={ handleChange }
+            onChange={ this.handleChange }
           />
         </label>
         <label htmlFor="name">
@@ -58,21 +64,20 @@ export class LoginForm extends Component {
             type="text"
             data-testid="input-player-name"
             name="name"
-            onChange={ handleChange }
+            onChange={ this.handleChange }
             value={ name }
           />
         </label>
-        <Button
-          text="Jogar!"
-          dataTestid="btn-play"
-          onClick={ handleClick }
+        <button
           disabled={ !(validateEmail() && validateName()) }
-        />
+          type="button"
+          data-testid="btn-play"
+          onClick={ this.handleClick }
+        >
+          Jogar
+        </button>
         <Link to="/settings">
-          <button
-            type="submit"
-            data-testid="btn-settings"
-          >
+          <button type="submit" data-testid="btn-settings">
             Configurações
           </button>
         </Link>
@@ -81,14 +86,12 @@ export class LoginForm extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  getToken: () => dispatch(fetchTrivia()),
-  storeData: (state) => dispatch(sendData(state)),
-});
-
 LoginForm.propTypes = {
-  getToken: PropTypes.func.isRequired,
-  storeData: PropTypes.func.isRequired,
-};
+  submitPlayer: PropTypes.func,
+}.isRequired;
+
+const mapDispatchToProps = (dispatch) => ({
+  submitPlayer: (...payload) => dispatch(sendPlayerInfo(...payload)),
+});
 
 export default connect(null, mapDispatchToProps)(LoginForm);

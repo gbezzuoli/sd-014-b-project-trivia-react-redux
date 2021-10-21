@@ -1,19 +1,19 @@
-import { SUCCESS_ACTION, FAIL_ACTION } from '../actions/actionTypes';
+import { PLAYER_INFO } from '../actions';
 
-const initialState = {
+const INITIAL_STATE = {
   name: '',
-  token: '',
+  email: '',
 };
 
-export default (state = initialState, { type, payload }) => {
-  switch (type) {
-  case SUCCESS_ACTION:
-    return { ...state, token: payload };
-
-  case FAIL_ACTION:
-    return { ...state, error: payload };
-
-  default:
-    return state;
+function player(state = INITIAL_STATE, action) {
+  switch (action.type) {
+  case PLAYER_INFO:
+    return {
+      ...state,
+      name: action.payload.name,
+      email: action.payload.email };
+  default: return state;
   }
-};
+}
+
+export default player;

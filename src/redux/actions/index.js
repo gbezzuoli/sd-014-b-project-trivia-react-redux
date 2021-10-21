@@ -1,28 +1,34 @@
-import { SUCCESS_ACTION, FAIL_ACTION, GET_DATA } from './actionTypes';
+export const PLAYER_INFO = 'PLAYER_INFO';
 
-const URL = 'https://opentdb.com/api_token.php?command=request';
-
-function successAction(json) {
-  window.localStorage.setItem('token', json.token);
-  return { type: SUCCESS_ACTION, payload: json.token };
-}
-
-export const failedRequest = (error) => ({
-  type: FAIL_ACTION,
-  payload: error,
-});
-
-export const fetchTrivia = () => async (dispatch) => {
-  try {
-    const response = await fetch(URL);
-    const data = await response.json();
-    return dispatch(successAction(data));
-  } catch (error) {
-    return dispatch(failedRequest(error.message));
-  }
-};
-
-export const sendData = (payload) => ({
-  type: GET_DATA,
+export const sendPlayerInfo = (payload) => ({
+  type: PLAYER_INFO,
   payload,
 });
+
+// const EMPTY_KEY = [];
+
+export const saveToLocalStorage = (object) => {
+  localStorage.setItem('token', object.token);
+};
+
+export const fetchAPI = () => fetch('https://opentdb.com/api_token.php?command=request')
+  .then((data) => data.json())
+  .then((response) => saveToLocalStorage(response));
+
+/* async function fetchToken() {
+  const response = await fetch('https://opentdb.com/api_token.php?command=request');
+  const json = await response.json();
+  const result = json.token;
+  console.log(result);
+  return result;
+} */
+
+/* ∫ */
+
+/*
+};
+ */
+/*
+export const loadFromLocalStorage = (key) => (
+  key === 'token' ? localStorage.getItem(key)
+    : JSON.parse(localStorage.getItem(key)) || EMPTY_KEY); */
