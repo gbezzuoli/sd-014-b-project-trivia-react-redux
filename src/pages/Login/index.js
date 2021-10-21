@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import CustomInput from '../../components/CustomInput';
 import returnTokenApi from '../../services/token_api';
 
@@ -53,14 +54,16 @@ class Login extends Component {
           description="Email:"
           onChange={ (event) => this.handleChange(event) }
         />
-        <button
-          disabled={ this.disabledButton() }
-          data-testid="btn-play"
-          type="button"
-          onClick={ () => this.handleClick() }
-        >
-          Jogar
-        </button>
+        <Link to="/game">
+          <button
+            disabled={ this.disabledButton() }
+            data-testid="btn-play"
+            type="button"
+            onClick={ () => this.handleClick() }
+          >
+            Jogar
+          </button>
+        </Link>
       </section>
     );
   }
