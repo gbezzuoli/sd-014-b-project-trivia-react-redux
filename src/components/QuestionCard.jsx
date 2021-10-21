@@ -2,9 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class QuestionCard extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      apiResultObj: {},
+    };
+  }
+
+  componentDidMount() {
+    this.iterateApiResult();
+  }
+
+  iterateApiResult() {
+    const { apiResult, index } = this.props;
+    console.log(apiResult);
+    this.setState({ apiResultObj: apiResult[index] }, () => {
+    });
+  }
+
   listAnswersMultiple() {
-    const { apiResult } = this.props;
-    const incorrectAnswers = apiResult.results.incorrect_answers;
+    const { apiResultObj } = this.state;
+    const incorrectAnswers = apiResultObj.incorrect_answers || [];
     const incorrectAnswersList = incorrectAnswers.map((answer) => (
       {
         answer,
@@ -13,7 +31,7 @@ class QuestionCard extends React.Component {
     ));
 
     const correctAnswer = {
-      answer: apiResult.results.correct_answer,
+      answer: apiResultObj.correct_answer,
       value: 'True',
     };
     const answerList = [...incorrectAnswersList, correctAnswer];
@@ -21,25 +39,24 @@ class QuestionCard extends React.Component {
     // https://flaviocopes.com/how-to-shuffle-array-javascript/
     const number = 0.5;
     answerList.sort(() => Math.random() - number);
-    console.log(answerList);
     return answerList;
   }
 
   render() {
-    const { questionText } = this.props;
+    const { apiResultObj } = this.state;
     return (
       <section className="QuestionCard">
         <h3
           data-testid="question-category"
           className="question-category"
         >
-          { questionCategory }
+          { apiResultObj.category }
         </h3>
         <p
-          data-testid="questionCategory"
+          data-testid="question-text"
           className="question-text"
         >
-          { questionText }
+          { apiResultObj.question }
         </p>
         {this.listAnswersMultiple().map((question, index) => (
           question.answer === question.correct_answer
@@ -69,12 +86,12 @@ class QuestionCard extends React.Component {
 
 QuestionCard.propTypes = {
   apiResult: PropTypes.shape({
-    results: PropTypes.shape({
-      correct_answer: PropTypes.shape(PropTypes.string),
-      incorrect_answers: PropTypes.arrayOf(PropTypes.string),
-    }),
+    correct_answer: PropTypes.shape(PropTypes.string),
+    incorrect_answers: PropTypes.arrayOf(PropTypes.string),
+    category: PropTypes.string,
+    question: PropTypes.string,
   }).isRequired,
-  questionText: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default QuestionCard;

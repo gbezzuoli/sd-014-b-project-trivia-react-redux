@@ -1,2 +1,8 @@
-// Aqui ficarão as actions
-// export const GET_TOKEN = 'GET_TOKEN';
+export const SET_INFO = 'SET_INFO';
+
+export const setInfo = (info) => ({
+  type: SET_INFO,
+  userName: info.name,
+  avatar: info.avatar,
+  score: info.score,
+});
