@@ -1,5 +1,6 @@
 export const ACTION_LOGIN = 'ACTION_LOGIN';
 export const SAVE_TOKEN = 'SAVE_TOKEN';
+export const GET_NAME_EMAIL = 'GET_NAME_EMAIL';
 
 export const triviaGameAction = (json) => ({
   type: ACTION_LOGIN,
@@ -13,4 +14,10 @@ export const fetchLogin = (token) => (dispatch) => fetch(`https://opentdb.com/ap
 export const saveTokenAction = (token) => ({
   type: SAVE_TOKEN,
   token,
+});
+
+export const getNameEmail = (name, email) => ({
+  type: GET_NAME_EMAIL,
+  name,
+  email,
 });
