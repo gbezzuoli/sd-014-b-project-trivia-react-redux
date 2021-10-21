@@ -52,10 +52,12 @@ class Ranking extends React.Component {
     const sortedRanking = this.sortRankingsTopDown();
     return (
       <ul>
-        { sortedRanking.map(({ name, score, picture }, k) => (
-          <li key={ k }>
+        { sortedRanking.map(({ name, score, picture }, index) => (
+          <li key={ score }>
             <img src={ picture } alt="Av" width="20" height="20" />
-            {` ${name} - ${score}`}
+            {/* {` ${name} - ${score}`} */}
+            <span data-testid={ `player-name-${index}` }>{` ${name} - `}</span>
+            <span data-testid={ `player-score-${index}` }>{ score }</span>
           </li>
         ))}
       </ul>

@@ -9,7 +9,7 @@ class Feedback extends React.Component {
 
     this.state = {
       // estados,
-      assertions: 4, // Para teste
+      assertions: 3, // Para teste
       totalScore: 50, // Para teste
       redirectRanking: false,
       redirectLogin: false,
@@ -31,7 +31,7 @@ class Feedback extends React.Component {
   render() {
     const { totalScore, assertions, redirectRanking, redirectLogin } = this.state;
     let NOME_DA_ROTA_DO_JOGO; // Alterar assim que definir a nome.
-    if (redirectRanking) return <Redirect to="/" />;
+    if (redirectRanking) return <Redirect to="/" />; // Alterar rota para '/ranking' depois
     if (redirectLogin) return <Redirect to={ NOME_DA_ROTA_DO_JOGO } />;
     return (
       <main>
@@ -41,7 +41,7 @@ class Feedback extends React.Component {
           { `Você acertou ${assertions} questões!` }
         </h3>
         {/* assertions e totalScore serão substituídos pelas props do estado global */}
-        <h3 data-testid="feedback-total-points">
+        <h3 data-testid="feedback-total-score">
           { `Um total de ${totalScore} pontos` }
         </h3>
         <button
@@ -67,5 +67,7 @@ const mapStateToProps = () => ({ // Incluir state no parâmetro
   // estado global da pontuação total: state.REDUCER_DOS_PONTOS.PONTOS_TOTAIS,
   // estado global do número de acertos: state.REDUCER_DOS_ACERTOS.ACERTOS_TOTAIS,
 });
+
+// const mapDispatchToProps
 
 export default connect(mapStateToProps, null)(Feedback);
