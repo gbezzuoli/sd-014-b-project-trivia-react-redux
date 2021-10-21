@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 class Alternative extends Component {
   render() {
-    const { alternative, testid, name, handleClick } = this.props;
+    const { alternative, testid, name, handleClick, disabled } = this.props;
     return (
       <button
         className={ name }
@@ -11,6 +11,7 @@ class Alternative extends Component {
         data-testid={ testid }
         name={ name }
         onClick={ handleClick }
+        disabled={ disabled }
       >
         {alternative}
       </button>
@@ -21,6 +22,7 @@ class Alternative extends Component {
 Alternative.propTypes = {
   alternative: PropTypes.string.isRequired,
   testid: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired,
 };

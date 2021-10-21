@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { thunkQuestions } from '../actions';
 import Header from '../components/Header';
 import QuestionCard from '../components/QuestionCard';
+import Timer from '../components/Timer';
 import AlternativeCard from '../components/AlternativeCard';
 
 class Game extends Component {
@@ -48,7 +49,7 @@ class Game extends Component {
       },
     };
     const { controller } = this.state;
-    const { loading } = this.props;
+    const { loading, timeIsOver } = this.props;
     return (
       <>
         <Header />
@@ -58,14 +59,16 @@ class Game extends Component {
               <QuestionCard controller={ controller } />
               <AlternativeCard controller={ controller } />
               <button onClick={ this.handleClick } type="button">Proxima</button>
+              {timeIsOver ? <div>Timer: 0</div> : <Timer />}
             </main>)}
       </>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  loading: state.questionsReducer.loading,
+const mapStateToProps = ({ questionsReducer: { timeIsOver, loading } }) => ({
+  timeIsOver,
+  loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -74,6 +77,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 Game.propTypes = {
   saveQuestions: PropTypes.func.isRequired,
+  timeIsOver: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
