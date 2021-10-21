@@ -25,7 +25,7 @@ GameHeader.propTypes = {
   score: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = ({ user: { score, name, profilePicture } }) => ({
+const mapStateToProps = ({ player: { score, name, profilePicture } }) => ({
   score,
   name,
   profilePicture,
