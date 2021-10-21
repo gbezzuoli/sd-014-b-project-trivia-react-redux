@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getGameTokenAction } from '../redux/actions';
+import { getGameTokenAction , getNameAndEmailAction } from '../redux/actions';
+
 import fetchToken from '../services/FetchToken';
 
 class Login extends Component {
@@ -34,10 +35,15 @@ class Login extends Component {
   }
 
   async handleClickGame() {
+    // Salvando Token
     const { getGameToken } = this.props;
     const token = await fetchToken();
     getGameToken(token);
     localStorage.setItem('token', JSON.stringify(token));
+    // Salvando nome e email
+    const { getNameAndEmail } = this.props;
+    const { nameInput, emailInput } = this.state;
+    getNameAndEmail(nameInput, emailInput);
   }
 
   renderForm() {
@@ -97,10 +103,12 @@ class Login extends Component {
 
 Login.propTypes = {
   getGameToken: PropTypes.func.isRequired,
+  getNameAndEmail: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   getGameToken: (token) => dispatch(getGameTokenAction(token)),
+  getNameAndEmail: (name, email) => dispatch(getNameAndEmailAction(name, email)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
