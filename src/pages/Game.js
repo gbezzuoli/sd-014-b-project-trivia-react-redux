@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 import { getId } from '../services/triviaAPI';
 // import { saveQuestions } from '../redux/actions';
-import QuestionCard from '../components/QuestionCard';
+import GameCard from '../components/GameCard';
+import Loading from '../components/Loading';
 
 class Game extends Component {
   constructor() {
@@ -34,12 +35,12 @@ class Game extends Component {
     const { questions, loading } = this.state;
     if (loading) {
       return (
-        <p>Loading...</p> // criar um component de loading
+        <Loading />
       );
     }
     return (
       <div>
-        <QuestionCard questions={ questions } />
+        <GameCard questions={ questions } />
       </div>
     );
   }
