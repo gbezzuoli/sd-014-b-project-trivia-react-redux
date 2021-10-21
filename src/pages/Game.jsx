@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import CardGame from '../components/CardGame';
 import Header from '../components/Header';
 import getQuestions from '../services/fetchQuestionsAPI';
 
@@ -9,6 +10,8 @@ class Game extends React.Component {
 
     this.state = {
       arrayQuestions: [],
+      // respostas: [...arrayQuestions.incorrect_answers, ...arrayQuestions.correct_answers ]
+      // correct:
     };
 
     this.retriveQuestions = this.retriveQuestions.bind(this);
@@ -31,8 +34,8 @@ class Game extends React.Component {
       <div>
         <Header />
         TRIVIA
-         {arrayQuestions.map((question) => (<div key={question.category}>{question.category}</div>)) }
-          {/* {FALTA TERMINAR DE RENDERIZAR AS QUESTOES} */}
+         {arrayQuestions.map((question) => <CardGame question={ question }/>) }
+          
       </div>
     );
   }
