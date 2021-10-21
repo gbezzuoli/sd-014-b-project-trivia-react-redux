@@ -32,7 +32,9 @@ class Game extends React.Component {
       <div>
         <Header />
         TRIVIA
-          {arrayQuestions.map((question) => <CardGame question={ question }/>) }
+        { arrayQuestions.map(
+          (question, index) => <CardGame key={ index } question={ question } />,
+        )}
       </div>
     );
   }

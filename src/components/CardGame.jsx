@@ -64,8 +64,8 @@ class CardGame extends React.Component {
 
     return (
       <div>
-        <h2>{ category }</h2>
-        <h3>{ question }</h3>
+        <h2 data-testid="question-category">{ category }</h2>
+        <h3 data-testid="question-text">{ question }</h3>
         { randomAnswers.map((answerButton, index) => {
           if (answerButton.correct) {
             return (
@@ -92,5 +92,14 @@ class CardGame extends React.Component {
     );
   }
 }
+
+CardGame.propTypes = {
+  question: PropTypes.shape({
+    category: PropTypes.string,
+    question: PropTypes.string,
+    correct_answer: PropTypes.string,
+    incorrect_answers: PropTypes.arrayOf(PropTypes.any),
+  }).isRequired,
+};
 
 export default CardGame;
