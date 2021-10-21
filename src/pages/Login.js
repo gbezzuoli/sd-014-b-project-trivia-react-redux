@@ -15,7 +15,7 @@ class Login extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.buttonActivation = this.buttonActivation.bind(this);
     this.renderForm = this.renderForm.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClickGame = this.handleClickGame.bind(this);
   }
 
   buttonActivation() {
@@ -33,7 +33,7 @@ class Login extends Component {
     });
   }
 
-  async handleClick() {
+  async handleClickGame() {
     const { getGameToken } = this.props;
     const token = await fetchToken();
     getGameToken(token);
@@ -64,16 +64,6 @@ class Login extends Component {
             value={ emailInput }
           />
         </label>
-        <Link to="/game">
-          <button
-            type="button"
-            data-testid="btn-play"
-            disabled={ this.buttonActivation() }
-            onClick={ this.handleClick }
-          >
-            Jogar
-          </button>
-        </Link>
       </form>
     );
   }
@@ -82,6 +72,24 @@ class Login extends Component {
     return (
       <div>
         { this.renderForm() }
+        <Link to="/game">
+          <button
+            type="button"
+            data-testid="btn-play"
+            disabled={ this.buttonActivation() }
+            onClick={ this.handleClickGame }
+          >
+            Jogar
+          </button>
+        </Link>
+        <Link to="/settings">
+          <button
+            type="button"
+            data-testid="btn-settings"
+          >
+            Configurações
+          </button>
+        </Link>
       </div>
     );
   }
