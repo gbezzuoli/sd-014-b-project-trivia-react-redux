@@ -11,7 +11,7 @@ class Game extends Component {
       questions: '',
       correctAnswer: '',
       // answered: false,
-      count: 0,
+      count: -1,
       disabledState: false,
       currentTime: 35,
     };
