@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { thunkQuestions } from '../actions';
-import AlternativeCard from '../components/AlternativeCard';
 import Header from '../components/Header';
 import QuestionCard from '../components/QuestionCard';
+import AlternativeCard from '../components/AlternativeCard';
 
 class Game extends Component {
   constructor() {
