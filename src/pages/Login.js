@@ -71,14 +71,8 @@ class Login extends Component {
             onClick={ this.submitPlayer }
           >
             Jogar
-        <button
-          type="button"
-          data-testid="btn-play"
-          disabled={ disabled }
-          onClick={ this.submitPlayer }
-        >
-          Jogar
-        </button>
+          </button>
+        </Link>
         <Link to="/settings">
           <button
             type="button"
