@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { setuserdata } from '../../Redux/Actions';
 import { requestToken } from '../../services/Api';
-import { Link } from 'react-router-dom';
 
 class Login extends Component {
   constructor(props) {
