@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class Timer extends Component {
   constructor() {
@@ -23,10 +24,10 @@ export default class Timer extends Component {
 
   clearTimer(interval) {
     const { timer } = this.state;
-    const { funcao } = this.props;
+    const { answerClick } = this.props;
     if (timer === 0) {
       clearInterval(interval);
-      return funcao();
+      return answerClick();
     }
   }
 
@@ -42,3 +43,7 @@ export default class Timer extends Component {
     );
   }
 }
+
+Timer.propTypes = {
+  answerClick: PropTypes.func.isRequired,
+};

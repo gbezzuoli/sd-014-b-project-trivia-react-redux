@@ -62,7 +62,7 @@ class Trivia extends Component {
         : (
           <section className="game-board">
 
-            <Timer funcao={ this.handleAnswerClick } />
+            <Timer answerClick={ this.handleAnswerClick } />
 
             <span data-testid="question-category">
               { results[actualQuestion].category }
