@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setuserdata } from '../../Redux/Actions';
 import { requestToken } from '../../services/Api';
+import { Link } from 'react-router-dom';
 
 class Login extends Component {
   constructor(props) {
@@ -66,6 +67,17 @@ class Login extends Component {
         >
           Jogar
         </button>
+        <Link
+          to="/settings"
+        >
+          <button
+            type="button"
+            data-testid="btn-settings"
+            id="button-config"
+          >
+            Configurar
+          </button>
+        </Link>
       </section>
     );
   }
