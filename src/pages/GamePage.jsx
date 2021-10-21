@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { resultAsk } from '../actions/actionTypes';
+import CardGame from '../components/CardGame';
 
 class GamePage extends React.Component {
   constructor() {
@@ -29,10 +30,11 @@ class GamePage extends React.Component {
     }
     return (
       <div>
-        <h2 data-testid="question-category">{ question[index].category}</h2>
-        <h3 data-testid="question-text">{ question[index].question}</h3>
-        <button type="button" data-testid="correct-answer" onClick={ this.handleClick }>{question[index].correct_answer }</button>
-        {question[index].incorrect_answers.map((question) => <button type="button" data-testid={ `wrong-answer-${index}` } onClick={ this.handleClick }>{ question }</button>)}
+        <CardGame
+          index={ index }
+          onClick={ this.handleClick }
+          questions={ question }
+        />
       </div>
     );
   }
