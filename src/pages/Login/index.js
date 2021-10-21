@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import CustomInput from '../../components/CustomInput';
 import returnTokenApi from '../../services/token_api';
+import Settings from '../Settings/Settings';
 
 class Login extends Component {
   constructor(props) {
@@ -64,6 +65,7 @@ class Login extends Component {
             Jogar
           </button>
         </Link>
+        <Settings />
       </section>
     );
   }
