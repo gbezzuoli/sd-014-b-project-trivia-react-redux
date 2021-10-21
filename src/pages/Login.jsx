@@ -1,9 +1,9 @@
 import React from 'react';
-/* import md5 from 'crypto-js/md5'; */
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchLogin, saveTokenAction } from '../redux/actions/actions';
+import { fetchLogin, saveTokenAction, getNameEmail } from '../redux/actions/actions';
+
 
 class Login extends React.Component {
   constructor() {
@@ -37,15 +37,17 @@ class Login extends React.Component {
     const urlToken = await fetch('https://opentdb.com/api_token.php?command=request');
     const response = await urlToken.json();
     const { token } = response;
-
-    triviaAction(token);
     saveToken(token);
+    triviaAction(token);
+    const { getNameEmailAction } = this.props;
+    const { name, email } = this.state;
+    getNameEmailAction(name, email);
     localStorage.setItem('token', token);
   }
 
   render() {
     const { email, name } = this.state;
-
+    const { history } = this.props;
     return (
       <main className="container">
         <form className="form-container">
@@ -82,6 +84,13 @@ class Login extends React.Component {
               Jogar
             </button>
           </Link>
+          <button
+            data-testid="btn-settings"
+            type="button"
+            onClick={ () => history.push('/settings') }
+          >
+            Configurações
+          </button>
         </form>
       </main>
     );
@@ -91,12 +100,17 @@ class Login extends React.Component {
 Login.propTypes = {
   saveToken: PropTypes.func.isRequired,
   triviaAction: PropTypes.func.isRequired,
+  getNameEmailAction: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    history: PropTypes.string,
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   saveToken: (token) => dispatch(saveTokenAction(token)),
   triviaAction: (token) => dispatch(fetchLogin(token)),
-
+  getNameEmailAction: (name, email) => dispatch(getNameEmail(name, email)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

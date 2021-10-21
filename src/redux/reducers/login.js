@@ -1,4 +1,4 @@
-import { ACTION_LOGIN, SAVE_TOKEN } from '../actions/actions';
+import { ACTION_LOGIN, SAVE_TOKEN, GET_NAME_EMAIL } from '../actions/actions';
 
 const INITIAL_STATE = {
   email: '',
@@ -23,6 +23,13 @@ const login = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       token: action.token,
+    };
+
+  case GET_NAME_EMAIL:
+    return {
+      ...state,
+      name: action.name,
+      email: action.email,
     };
 
   default:
