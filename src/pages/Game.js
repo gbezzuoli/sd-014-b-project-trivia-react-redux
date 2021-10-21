@@ -11,6 +11,7 @@ class Game extends Component {
     this.state = {
       questions: [],
       game: 0,
+      count: 30,
     };
 
     this.requestTriviaAPI = this.requestTriviaAPI.bind(this);
@@ -20,6 +21,19 @@ class Game extends Component {
   componentDidMount() {
     const { requestTriviaAPI } = this;
     requestTriviaAPI();
+    const second = 1000;
+    this.interval = setInterval(() => {
+      this.setState((prevState) => ({
+        count: prevState.count - 1,
+      }));
+    }, second);
+  }
+
+  componentDidUpdate() {
+    const { count } = this.state;
+    if (count === 0) {
+      clearInterval(this.interval);
+    }
   }
 
   changeColor() {
@@ -44,7 +58,7 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, game } = this.state;
+    const { questions, game, count } = this.state;
     const { changeColor } = this;
     if (questions.length > 0) {
       const question = questions[game];
@@ -57,6 +71,7 @@ class Game extends Component {
             <p data-testid="question-text">{question.question}</p>
             {allAnswers.sort().map((answer, answerIndex) => (
               <button
+                disabled={ count === 0 }
                 type="button"
                 key={ answerIndex }
                 style={ {} }
@@ -70,6 +85,7 @@ class Game extends Component {
               >
                 {answer}
               </button>))}
+            <p>{ count }</p>
           </div>
         </div>
       );
