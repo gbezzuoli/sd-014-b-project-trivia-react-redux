@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import getApiToken from '../services/ApiRequest';
+import PropTypes from 'prop-types';
 
 class Login extends Component {
   constructor(props) {
@@ -9,8 +10,9 @@ class Login extends Component {
       name: '',
       email: '',
     };
-    this.handleClickButton = this.handleClickButton.bind(this);
+    this.handleClickTrivia = this.handleClickTrivia.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleClickSettings = this.handleClickSettings.bind(this);
   }
 
   handleChange({ target: { value, name } }) {
@@ -19,12 +21,15 @@ class Login extends Component {
     });
   }
 
-  async handleClickButton() {
+  async handleClickTrivia() {
     const getResultsFromAPI = await getApiToken();
     localStorage.setItem('token', JSON.stringify(getResultsFromAPI.token));
   }
 
-  // Ao clicar no botão "Jogar", um requisição para a API do Trivia deve ser feita para obter o token de jogador
+  handleClickSettings() {
+    const { history } = this.props;
+    history.push('/settings');
+  }
 
   render() {
     const { name, email } = this.state;
@@ -53,15 +58,33 @@ class Login extends Component {
           <button
             data-testid="btn-play"
             type="button"
-            onClick={ this.handleClickButton }
+            onClick={ this.handleClickTrivia }
             disabled={ disabled }
           >
             Jogar
           </button>
         </Link>
+        <button
+          data-testid="btn-play"
+          type="button"
+          disabled={ disabled }
+        >
+          Jogar
+        </button>
+        <button
+          data-testid="btn-settings"
+          type="button"
+          onClick={ this.handleClickSettings }
+        >
+          Settings
+        </button>
       </div>
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 
 export default Login;
