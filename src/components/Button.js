@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 class Button extends React.Component {
@@ -23,4 +22,4 @@ Button.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-export default  Button;
+export default Button;
