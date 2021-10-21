@@ -9,34 +9,61 @@ class Game extends Component {
     super();
     this.state = {
       questions: '',
+      correctAnswer: '',
+      // answered: false,
+      count: 0,
+      disabledState: false,
     };
     this.requestAPI = this.requestAPI.bind(this);
     this.mapQuestions = this.mapQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.addStyle = this.addStyle.bind(this);
   }
 
   componentDidMount() {
     this.requestAPI();
   }
 
-  handleClick() {
-
+  handleClick({ target }) {
+    const { correctAnswer, count } = this.state;
+    const givenAnswer = target.innerHTML;
+    if (givenAnswer === correctAnswer) {
+      this.setState({ count: count + 1 });
+    }
+    this.addStyle();
+    this.setState({ disabledState: true });
   }
 
   async requestAPI() {
     const { token } = this.props;
     const allQuestions = await fetchQuestions(token);
-    this.setState({ questions: allQuestions.results });
+    this.setState({
+      questions: allQuestions.results,
+      correctAnswer: allQuestions.results[0].correct_answer,
+    });
+    console.log(allQuestions);
+  }
+
+  addStyle() {
+    const btn = document.querySelectorAll('.wrongButton');
+    btn.forEach((button) => {
+      button.setAttribute('style', 'border: 3px solid rgb(255, 0, 0)');
+    });
+    const btnCorrect = document.querySelector('.correctButton');
+    btnCorrect.setAttribute('style', 'border: 3px solid rgb(6, 240, 15)');
   }
 
   mapQuestions(questions) {
+    const { disabledState } = this.state;
     const mappedQuestions = questions.map((question, index1) => {
       const incorrectAnswers = question.incorrect_answers.map((alternative, index2) => (
         <button
           type="button"
+          disabled={ disabledState }
           data-testid={ `wrong-answer-${index2}` }
+          className="wrongButton"
           key={ index2 }
-          onClick={ () => this.handleClick() }
+          onClick={ this.handleClick }
         >
           {alternative}
         </button>
@@ -44,9 +71,11 @@ class Game extends Component {
       const correctAnswer = (
         <button
           type="button"
+          disabled={ disabledState }
           data-testid="correct-answer"
+          className="correctButton"
           key="4"
-          onClick={ () => this.handleClick() }
+          onClick={ this.handleClick }
         >
           { question.correct_answer }
         </button>
@@ -60,7 +89,6 @@ class Game extends Component {
             {`Categoria: ${question.category}`}
           </h5>
           <h3 data-testid="question-text">
-            <br />
             {`Pergunta: ${question.question}`}
           </h3>
           <h3 data-testid="question-text">
@@ -78,7 +106,8 @@ class Game extends Component {
       <div>
         <Header />
         <h1>TRIVIA</h1>
-        {questions ? this.mapQuestions(questions) : <span>CARREGANDO</span>}
+        {questions ? this.mapQuestions(questions)
+          : <span>CARREGANDO</span>}
       </div>
     );
   }
