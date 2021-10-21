@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import CardGame from '../components/CardGame';
 import Header from '../components/Header';
 import getQuestions from '../services/fetchQuestionsAPI';
@@ -10,9 +10,11 @@ class Game extends React.Component {
 
     this.state = {
       arrayQuestions: [],
+      count: 0,
     };
 
     this.retriveQuestions = this.retriveQuestions.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -25,21 +27,35 @@ class Game extends React.Component {
     this.setState({ arrayQuestions: [...questions] });
   }
 
+  handleClick() {
+    const { history } = this.props;
+    const { count } = this.state;
+    const FOUR = 4;
+    if (count < FOUR) {
+      this.setState(() => ({ count: count + 1 }));
+    } else {
+      history.push('/result');
+    }
+  }
+
   render() {
-    const { arrayQuestions } = this.state;
+    const { arrayQuestions, count } = this.state;
     console.log(arrayQuestions);
     return (
       <div>
         <Header />
         TRIVIA
-        { arrayQuestions.map(
-          (question, index) => <CardGame key={ index } question={ question } />,
-        )}
+        { arrayQuestions.length === 0
+          ? <span>Loading ...</span> : <CardGame question={ arrayQuestions[count] } /> }
+        <button type="button" onClick={ () => this.handleClick() }>Proxima</button>
+
       </div>
     );
   }
 }
 
-const mapDispatchToProps = () => ({});
+Game.propTypes = {
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 
-export default connect(null, mapDispatchToProps)(Game);
+export default Game;
