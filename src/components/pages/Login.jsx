@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setuserdata } from '../../Redux/Actions';
+import { requestToken } from '../../services/Api';
 
 class Login extends Component {
   constructor(props) {
@@ -27,6 +28,7 @@ class Login extends Component {
     const { name, email } = this.state;
     const { dispatchSetValue } = this.props;
     dispatchSetValue(name, email);
+    requestToken();
   }
 
   render() {
