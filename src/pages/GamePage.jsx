@@ -14,6 +14,8 @@ class GamePage extends Component {
       questionOne: [],
       wrongAnswersOne: [],
       rightAnswerOne: '',
+      correct: '',
+      incorrect: '',
       i: 0,
     };
   }
@@ -35,7 +37,6 @@ class GamePage extends Component {
         questionOne: result[i].question,
         wrongAnswersOne: result[i].incorrect_answers,
         rightAnswerOne: result[i].correct_answer,
-
       });
     } catch (error) {
       console.log(error);
@@ -44,14 +45,10 @@ class GamePage extends Component {
   }
 
   setBtnAnswerBorder() {
-    const btn = document.querySelectorAll('.btn-answer');
-    console.log(btn);
-    btn.forEach((element) => {
-      element.setAttribute('style', 'border: 3px solid rgb(255, 0, 0)');
-      console.log(element);
+    this.setState({
+      incorrect: 'btn-answer',
+      correct: 'correct-answer',
     });
-    const btnCorrect = document.querySelector('.correct-answer');
-    btnCorrect.setAttribute('style', 'border: 3px solid rgb(6, 240, 15)');
   }
 
   async getQuestions() {
@@ -68,7 +65,8 @@ class GamePage extends Component {
   }
 
   render() {
-    const { questionOne, wrongAnswersOne, rightAnswerOne } = this.state;
+    const {
+      questionOne, wrongAnswersOne, rightAnswerOne, correct, incorrect } = this.state;
     const idWrongAns = 'wrong-answer-';
 
     if (questionOne === []) {
@@ -85,7 +83,7 @@ class GamePage extends Component {
           {wrongAnswersOne.map((item, index) => (
             <div key={ index }>
               <button
-                className="btn-answer"
+                className={ incorrect }
                 type="button"
                 data-testid={ idWrongAns + index }
                 onClick={ this.onClickAnswer }
@@ -94,7 +92,7 @@ class GamePage extends Component {
               </button>
             </div>))}
           <button
-            className="correct-answer"
+            className={ correct }
             onClick={ this.setBtnAnswerBorder }
             type="button"
             data-testid="correct-answer"
