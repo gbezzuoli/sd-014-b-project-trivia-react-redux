@@ -14,6 +14,7 @@ export default class Game extends React.Component {
     await this.requestTrivia();
   }
 
+  // Função de requisição do Trivia
   async requestTrivia() {
     const token = localStorage.getItem('token');
     const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
