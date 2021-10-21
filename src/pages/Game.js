@@ -19,7 +19,7 @@ class Game extends Component {
     this.requestAPI();
   }
 
-  handleClick(key) {
+  handleClick() {
 
   }
 
@@ -60,6 +60,7 @@ class Game extends Component {
             {`Categoria: ${question.category}`}
           </h5>
           <h3 data-testid="question-text">
+            <br />
             {`Pergunta: ${question.question}`}
           </h3>
           <h3 data-testid="question-text">
