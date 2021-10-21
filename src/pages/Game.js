@@ -5,16 +5,74 @@ import Header from '../components/Header';
 import fetchQuestions from '../services/FetchQuestions';
 
 class Game extends Component {
-  render() {
+  constructor() {
+    super();
+    this.state = {
+      questions: '',
+    };
+    this.requestAPI = this.requestAPI.bind(this);
+    this.mapQuestions = this.mapQuestions.bind(this);
+  }
+
+  componentDidMount() {
+    this.requestAPI();
+  }
+
+  async requestAPI() {
     const { token } = this.props;
-    const questions = fetchQuestions(token);
+    const allQuestions = await fetchQuestions(token);
+    this.setState({ questions: allQuestions.results });
+  }
+
+  mapQuestions(questions) {
+    const mappedQuestions = questions.map((question, index1) => {
+      const incorrectAnswers = question.incorrect_answers.map((alternative, index2) => (
+        <button
+          type="button"
+          data-testid={ `wrong-answer-${index2}` }
+          key={ index2 }
+          onClick={ () => {} }
+        >
+          {alternative}
+        </button>
+      ));
+      const correctAnswer = (
+        <button
+          type="button"
+          data-testid="correct-answer"
+          key="4"
+          onClick={ () => {} }
+        >
+          { question.correct_answer }
+        </button>
+      );
+      const alternatives = [...incorrectAnswers, correctAnswer];
+      const metade = 0.5;
+      const shuffledQuestions = alternatives.sort(() => metade - Math.random());
+      return (
+        <div key={ index1 }>
+          <h5 data-testid="question-category">
+            {`Categoria: ${question.category}`}
+          </h5>
+          <h3 data-testid="question-text">
+            {`Pergunta: ${question.question}`}
+          </h3>
+          <h3 data-testid="question-text">
+            { shuffledQuestions.map((e) => (e))}
+          </h3>
+        </div>
+      );
+    });
+    return mappedQuestions;
+  }
+
+  render() {
+    const { questions } = this.state;
     return (
       <div>
         <Header />
-        <br />
-        <span data-testid="question-category">Categorias</span>
-        <span data-testid="question-text">Pergunta</span>
-        {questions}
+        <h1>TRIVIA</h1>
+        {questions ? this.mapQuestions(questions) : <span>CARREGANDO</span>}
       </div>
     );
   }
