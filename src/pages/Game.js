@@ -4,6 +4,7 @@ import { getId } from '../services/triviaAPI';
 // import { saveQuestions } from '../redux/actions';
 import GameCard from '../components/GameCard';
 import Loading from '../components/Loading';
+import Header from '../components/Header';
 
 class Game extends Component {
   constructor() {
@@ -40,6 +41,7 @@ class Game extends Component {
     }
     return (
       <div>
+        <Header />
         <GameCard questions={ questions } />
       </div>
     );

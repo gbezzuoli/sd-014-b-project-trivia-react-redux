@@ -28,6 +28,7 @@ class Login extends Component {
 
   validatePlayer() {
     const { name, email } = this.state;
+    localStorage.setItem('name', name);
     const validEmail = REGEX_EMAIL.test(email);
 
     if (name && validEmail) {
@@ -96,7 +97,9 @@ Login.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  dispatchSetValue: (player, token) => (dispatch(submitPlayerAction(player, token))),
+  dispatchSetValue: (player, token) => (
+    dispatch(submitPlayerAction(player, token))
+  ),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

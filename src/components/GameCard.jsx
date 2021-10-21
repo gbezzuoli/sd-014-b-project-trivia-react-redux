@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Question from './Question';
+import Answers from './Answers';
 
 class QuestionCard extends Component {
   render() {
     const { questions } = this.props;
     return (
       <div>
-        <p>inserir questoes do game</p>
-        <p>{questions[0].category}</p>
+        <Question questions={ questions } />
+        <Answers />
       </div>
     );
   }

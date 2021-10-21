@@ -11,7 +11,8 @@ const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case SUBMIT_PLAYER:
     return {
-      ...state,
+      name: action.name,
+      gravatarEmail: action.email,
     };
   default:
     return state;
