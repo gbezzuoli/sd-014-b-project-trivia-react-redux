@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 export default function Login() {
   const [state, setState] = useState({ name: '', email: '' });
   const { name, email } = state;
-  const disabled = !(name.length && email.length);
+  const disabled = !(name && email);
 
   const handleChange = (event) => {
     const { id, value } = event.target;
