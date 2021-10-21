@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Switch } from 'react-router';
 import Header from '../components/Header';
+
+const correctAnswer = 'correct-answer';
+const wrongAnswer = 'wrong-answer';
 
 class Game extends Component {
   constructor(props) {
@@ -12,11 +14,25 @@ class Game extends Component {
     };
 
     this.requestTriviaAPI = this.requestTriviaAPI.bind(this);
+    this.changeColor = this.changeColor.bind(this);
   }
 
   componentDidMount() {
     const { requestTriviaAPI } = this;
     requestTriviaAPI();
+  }
+
+  changeColor() {
+    const btn = document.querySelectorAll('button');
+    console.log(btn);
+    btn.forEach((button) => {
+      if (button.value === correctAnswer) {
+        button.style.border = '3px solid rgb(6, 240, 15)';
+      }
+      if (button.value === wrongAnswer) {
+        button.style.border = '3px solid rgb(255, 0, 0)';
+      }
+    });
   }
 
   async requestTriviaAPI() {
@@ -29,6 +45,7 @@ class Game extends Component {
 
   render() {
     const { questions, game } = this.state;
+    const { changeColor } = this;
     if (questions.length > 0) {
       const question = questions[game];
       const allAnswers = [question.correct_answer, ...question.incorrect_answers];
@@ -37,25 +54,29 @@ class Game extends Component {
           <Header />
           <div key={ game }>
             <p data-testid="question-category">{question.category}</p>
-              <p data-testid="question-text">{question.question}</p>
-                {allAnswers.sort().map((answer, answerIndex) => (
-                  <button
-                    type="button"
-                    key={ answerIndex }
-                    data-testid={
-                      question.correct_answer === answer
-                      ? 'correct-answer' : `wrong-answer-${answerIndex}`
-                    }
-                  >
-                    {answer}
-                  </button>))}
+            <p data-testid="question-text">{question.question}</p>
+            {allAnswers.sort().map((answer, answerIndex) => (
+              <button
+                type="button"
+                key={ answerIndex }
+                style={ {} }
+                onClick={ () => changeColor() }
+                value={ question.correct_answer === answer
+                  ? correctAnswer : 'wrong-answer' }
+                data-testid={
+                  question.correct_answer === answer
+                    ? correctAnswer : `wrong-answer-${answerIndex}`
+                }
+              >
+                {answer}
+              </button>))}
           </div>
         </div>
       );
     }
-    return(
+    return (
       <p>Loading...</p>
-    )
+    );
   }
 }
 
