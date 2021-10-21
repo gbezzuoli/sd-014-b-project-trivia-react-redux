@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CustomInput from '../../components/CustomInput';
+import returnTokenApi from '../../services/token_api';
 
 class Login extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class Login extends Component {
 
     this.disabledButton = this.disabledButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   disabledButton() {
@@ -29,6 +31,11 @@ class Login extends Component {
     this.setState({
       [name]: value,
     });
+  }
+
+  async handleClick() {
+    const token = await returnTokenApi();
+    localStorage.setItem('token', token);
   }
 
   render() {
@@ -50,6 +57,7 @@ class Login extends Component {
           disabled={ this.disabledButton() }
           data-testid="btn-play"
           type="button"
+          onClick={ () => this.handleClick() }
         >
           Jogar
         </button>
