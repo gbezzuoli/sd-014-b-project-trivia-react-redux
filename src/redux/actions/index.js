@@ -1,10 +1,15 @@
+export const LOGIN = 'LOGIN';
+
+export const userLogin = (payload) => ({
+  type: LOGIN,
+  payload,
+});
+
 export const REQUEST_QUESTIONS = 'REQUEST_QUESTIONS';
-export const RECEIVE_QUESTIONS = 'RECEIVE_QUESTIONS';
-export const REQUEST_TOKEN = 'REQUEST_TOKEN';
-export const GET_TOKEN = 'GET_TOKEN';
-export const FAILED_REQUEST = 'FAILED_REQUEST';
 
 const requestQuestions = () => ({ type: REQUEST_QUESTIONS });
+
+export const RECEIVE_QUESTIONS = 'RECEIVE_QUESTIONS';
 
 const receiveQuestions = (questions) => ({
   type: RECEIVE_QUESTIONS,
@@ -21,14 +26,17 @@ export function fetchQuestions(token) {
   };
 }
 
+export const REQUEST_TOKEN = 'REQUEST_TOKEN';
 export function requestToken() {
   return { type: REQUEST_TOKEN };
 }
 
+export const GET_TOKEN = 'GET_TOKEN';
 export function getToken(payload) {
   return { type: GET_TOKEN, payload };
 }
 
+export const FAILED_REQUEST = 'FAILED_REQUEST';
 export function failedRequest(error) {
   return { type: FAILED_REQUEST, payload: error };
 }

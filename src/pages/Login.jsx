@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchToken } from '../redux/actions';
+import { userLogin, fetchToken } from '../redux/actions';
+import './Login.css';
+import logo from '../trivia.png';
 import Loading from '../components/Loading';
 
 class Login extends Component {
@@ -16,11 +18,19 @@ class Login extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleValidation = this.handleValidation.bind(this);
+    this.renderButtons = this.renderButtons.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.formElement = this.formElement.bind(this);
   }
 
   handleChange({ target: { name, value } }) {
     this.setState({ [name]: value });
+  }
+
+  handleClick() {
+    const { dispatchLogin, history } = this.props;
+    dispatchLogin({ ...this.state });
+    history.push('/game');
   }
 
   handleValidation(email, name) {
@@ -30,59 +40,75 @@ class Login extends Component {
   }
 
   formElement() {
-    const {
-      state: { email, name },
-      props: { startFetching },
-      handleValidation, handleChange,
-    } = this;
+    const { email, name } = this.state;
+    return (
+      <section className="center">
+        <div className="form-login">
+          <img src={ logo } alt="logo" />
+          <label htmlFor="name">
+            Nome:
+            <input
+              type="text"
+              name="name"
+              id="name"
+              onChange={ this.handleChange }
+              value={ name }
+              placeholder="Insira seu Nome"
+              data-testid="input-player-name"
+            />
+          </label>
+          <label htmlFor="email">
+            Email:
+            <input
+              type="text"
+              name="email"
+              id="email"
+              onChange={ this.handleChange }
+              value={ email }
+              placeholder="Insira seu Email"
+              data-testid="input-gravatar-email"
+            />
+          </label>
+          { this.renderButtons() }
+        </div>
+      </section>
+    );
+  }
 
-    const isValid = handleValidation(email, name);
+  renderButtons() {
+    const { email, name } = this.state;
+    const { startFetching } = this.props;
+    const isValid = this.handleValidation(email, name);
 
     return (
-      <form>
-        <label htmlFor="name">
-          Nome
-          <input
-            type="text"
-            name="name"
-            id="name"
-            onChange={ handleChange }
-            value={ name }
-            placeholder="Insira seu Nome"
-            data-testid="input-player-name"
-          />
-        </label>
-        <label htmlFor="email">
-          Email
-          <input
-            type="text"
-            name="email"
-            id="email"
-            onChange={ handleChange }
-            value={ email }
-            placeholder="Insira seu Email"
-            data-testid="input-gravatar-email"
-          />
-        </label>
+      <div className="form-buttons">
         <button
           type="button"
           data-testid="btn-play"
           onClick={ startFetching }
           disabled={ !isValid }
+          className="settings"
         >
           Jogar
         </button>
-        <Link to="/settings">
-          <button type="button" data-testid="btn-settings">Configurações</button>
+        <Link to="/settings" className="settings">
+          <button
+            type="button"
+            data-testid="btn-settings"
+            className="btn-settings"
+          >
+            Configurações
+
+          </button>
         </Link>
-      </form>
+      </div>
     );
   }
 
   render() {
     const {
-      props: { redirect, code, isFetching, history },
-      formElement,
+      props: { redirect, code, isFetching },
+      formElement, handleClick,
     } = this;
 
     let output = formElement();
@@ -91,29 +117,33 @@ class Login extends Component {
       output = <Loading />;
     } else if (redirect) {
       localStorage.setItem('token', code);
-      history.push('/game');
+      handleClick();
     }
 
     return output;
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  dispatchLogin: (state) => dispatch(userLogin(state)),
+  startFetching: () => dispatch(fetchToken()),
+});
+
+const mapStateToProps = (state) => ({
+  redirect: state.token.redirect,
+  code: state.token.code,
+  isFetching: state.token.isFetching,
+});
+
 Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
+  dispatchLogin: PropTypes.func,
   redirect: PropTypes.bool,
   code: PropTypes.string,
   isFetching: PropTypes.bool,
   startFetching: PropTypes.func,
 }.isRequired;
-
-const mapStateToProps = (state) => ({
-  redirect: state.token.redirect,
-  code: state.token.code,
-  isFetching: state.token.isFetching });
-
-const mapDispatchToProps = (dispatch) => ({
-  startFetching: () => dispatch(fetchToken()) });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
