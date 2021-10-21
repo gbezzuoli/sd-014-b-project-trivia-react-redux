@@ -43,14 +43,14 @@ class Login extends React.Component {
           />
         </label>
         <Link to="/game">
-        <button
-          data-testid="btn-play"
-          type="submit"
-          name="button"
-          disabled={ userName.length <= 0 || userEmail.length <= 0 }
-        >
-          Jogar
-        </button>
+          <button
+            data-testid="btn-play"
+            type="submit"
+            name="button"
+            disabled={ userName.length <= 0 || userEmail.length <= 0 }
+          >
+            Jogar
+          </button>
         </Link>
       </form>
     );
