@@ -40,10 +40,7 @@ class Game extends Component {
       return (
         <div>
           <h3 data-testid="question-category">{ questions[tag].category }</h3>
-          <h3
-            data-testid="question-text"
-            dangerouslySetInnerHTML={ { __html: questions[tag].question } }
-          />
+          <h3 data-testid="question-text">{ questions[tag].question }</h3>
           { [questions[tag].correct_answer, ...questions[tag].incorrect_answers]
             .sort(() => Math.random() - randomInt)
             .map((e, index) => (
