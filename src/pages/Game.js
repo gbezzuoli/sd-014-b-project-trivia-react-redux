@@ -31,7 +31,7 @@ class Game extends Component {
           type="button"
           data-testid={ `wrong-answer-${index2}` }
           key={ index2 }
-          onClick={ () => {} }
+          onClick={ () => { } }
         >
           {alternative}
         </button>
@@ -41,7 +41,7 @@ class Game extends Component {
           type="button"
           data-testid="correct-answer"
           key="4"
-          onClick={ () => {} }
+          onClick={ () => { } }
         >
           { question.correct_answer }
         </button>
