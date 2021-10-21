@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { resultAsk } from '../actions/actionTypes';
 
 class GamePage extends React.Component {
-  componentDidMount() {
+  async componentDidMount() {
     const { dispatchAskGame } = this.props;
-    dispatchAskGame();
+    await dispatchAskGame();
   }
 
   render() {
-    const { question } = this.props;
-    console.log(question);
+    const { results } = this.props;
+    console.log(results[0]);
     return (
       <div>
         <h2 data-testid="question-category ">{}</h2>
@@ -25,7 +25,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 function mapStateToProps(state) {
-  return { question: state.gameReducer.questions.results };
+  return { results: state.gameReducer.results };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GamePage);
