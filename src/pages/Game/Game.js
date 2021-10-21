@@ -87,9 +87,7 @@ class Game extends Component {
               >
                 { e }
               </button>)) }
-          {skip
-            ? this.generateButton()
-            : null}
+          {skip && this.generateButton()}
         </div>
       );
     }
