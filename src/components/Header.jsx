@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import '../styles/headerstyle.css';
 import PropTypes from 'prop-types';
 
 class Header extends Component {
@@ -9,9 +8,9 @@ class Header extends Component {
 
     return (
       <header className="header-container">
-        <image
+        <img
           data-testid="header-profile-picture"
-          src={ `https://www.gravatar.com/avatar/${email}` }
+          src={ `https://www.gravatar.com/avatar/${md5(email).toString()}` }
           alt={ name }
         />
         <span data-testid="header-player-name">{ name }</span>

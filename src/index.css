@@ -11,3 +11,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.incorrect {
+  border: 3px solid rgb(255, 0, 0)
+
+}
+
+.correct {
+  border: 3px solid rgb(6, 240, 15)
+}
+
+.header-container {
+  background-color: silver;
+  display: flex;
+  height: 120px;
+  width: 100%;
+}
