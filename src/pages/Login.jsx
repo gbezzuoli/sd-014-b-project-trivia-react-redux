@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 class Login extends React.Component {
   constructor() {
@@ -41,6 +42,7 @@ class Login extends React.Component {
             onChange={ this.handleChange }
           />
         </label>
+        <Link to="/game">
         <button
           data-testid="btn-play"
           type="submit"
@@ -48,9 +50,8 @@ class Login extends React.Component {
           disabled={ userName.length <= 0 || userEmail.length <= 0 }
         >
           Jogar
-
         </button>
-
+        </Link>
       </form>
     );
   }
