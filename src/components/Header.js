@@ -26,14 +26,13 @@ class Header extends Component {
 
   render() {
     const { img } = this.state;
-    const name = localStorage.getItem('name');
-    // console.log(name);
+    const { score, name } = this.props;
 
     return (
       <header>
         <img src={ img } alt={ `avatar ${name}` } data-testid="header-profile-picture" />
         <span data-testid="header-player-name">{ name }</span>
-        <span data-testid="header-score">0</span>
+        <span data-testid="header-score">{ score }</span>
       </header>
     );
   }
@@ -41,10 +40,14 @@ class Header extends Component {
 
 Header.propTypes = {
   email: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  email: state.submitPlayerAction.token.player.email,
+  email: state.player.email,
+  name: state.player.name,
+  score: state.player.score,
 });
 
 export default connect(mapStateToProps)(Header);
