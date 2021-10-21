@@ -12,10 +12,15 @@ class Game extends Component {
     };
     this.requestAPI = this.requestAPI.bind(this);
     this.mapQuestions = this.mapQuestions.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
     this.requestAPI();
+  }
+
+  handleClick(key) {
+
   }
 
   async requestAPI() {
@@ -31,7 +36,7 @@ class Game extends Component {
           type="button"
           data-testid={ `wrong-answer-${index2}` }
           key={ index2 }
-          onClick={ () => { } }
+          onClick={ () => this.handleClick() }
         >
           {alternative}
         </button>
@@ -41,7 +46,7 @@ class Game extends Component {
           type="button"
           data-testid="correct-answer"
           key="4"
-          onClick={ () => { } }
+          onClick={ () => this.handleClick() }
         >
           { question.correct_answer }
         </button>
