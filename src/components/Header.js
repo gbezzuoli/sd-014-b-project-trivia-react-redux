@@ -7,7 +7,7 @@ import { getAvatarAction } from '../redux/actions';
 class Header extends Component {
   render() {
     const { name, score, email } = this.props;
-    const profileImage = getAvatarImg(email);
+    const avatarURL = getAvatarImg(email);
     return (
       <div>
         <h1 data-testid="header-player-name">
@@ -15,7 +15,7 @@ class Header extends Component {
         </h1>
         <br />
         <img
-          src={ profileImage }
+          src={ avatarURL }
           alt="Foto do perfil"
           data-testid="header-profile-picture"
         />
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  profileImage: (profileImageURL) => dispatch(getAvatarAction(profileImageURL)),
+  avatarURL: (profileImage) => dispatch(getAvatarAction(profileImage)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

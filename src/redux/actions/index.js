@@ -19,7 +19,7 @@ export const getAvatarAction = (profileImage) => ({
   payload: profileImage,
 });
 
-export const getScore = (score) => ({
+export const getScoreAction = (score) => ({
   type: GET_SCORE,
   payload: score,
 });

@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   token: '',
   name: '',
   email: '',
-  avatar: '',
+  profileImage: '',
   score: 0,
 };
 
