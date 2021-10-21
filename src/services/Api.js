@@ -3,6 +3,7 @@ export const requestToken = async () => {
   const data = await fetch(sessionTokenUrl);
   const dataJson = await data.json();
   localStorage.setItem('token', dataJson.token);
+  return dataJson.token;
 };
 export const requestQuestion = async (token, questionUrl = 'https://opentdb.com/api.php?amount=5&token=') => {
   const data = await fetch(`${questionUrl}${token}`);
@@ -11,16 +12,21 @@ export const requestQuestion = async (token, questionUrl = 'https://opentdb.com/
 export const saveResponse = (questionObject) => (
   localStorage.setItem('Questions', questionObject)
 );
+export const requestQuestionAndSave = async (token, questionUrl) => {
+  const questionObject = await requestQuestion(token, questionUrl);
+  const { response_code: responseCode } = questionObject;
+  if (responseCode === 0) {
+    saveResponse(questionObject);
+    return true;
+  } return false;
+};
 export const requestTriviaApi = async (questionUrl) => { // questionUrl opcional
-  const token = localStorage.getItem('token');
+  let token = localStorage.getItem('token');
   if (token) {
-    const questionObject = await requestQuestion(token, questionUrl);
-    const { response_code: responseCode } = questionObject;
-    if (responseCode === 0) {
-      saveResponse(questionObject);
+    const tokeIsValid = requestQuestionAndSave(token, questionUrl);
+    if (!tokeIsValid) {
+      token = requestToken();
+      requestQuestionAndSave(token);
     }
   }
-  requestToken();
-  const questionObject = await requestQuestion(token, questionUrl);
-  saveResponse(questionObject);
 };
