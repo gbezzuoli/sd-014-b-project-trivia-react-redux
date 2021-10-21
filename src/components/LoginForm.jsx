@@ -30,14 +30,14 @@ export class LoginForm extends Component {
   }
 
   render() {
-    const { name } = this.state;
+    const { name, email } = this.state;
     const { handleChange, handleClick } = this;
 
     // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
-    function validateEmail(email) {
+    const validateEmail = () => {
       const userEmail = /\S+@\S+\.\S+/;
       return userEmail.test(email);
-    }
+    };
 
     const validateName = () => !!name;
 
