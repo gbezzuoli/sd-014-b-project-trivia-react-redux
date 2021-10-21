@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import Login from '../pages/Login';
 import GamePage from '../pages/GamePage';
+import Configs from '../pages/Configs';
 
 class Routes extends Component {
   render() {
@@ -12,7 +13,7 @@ class Routes extends Component {
       <Switch>
         <Route exact path="/" component={ Login } />
         <Route path="/paginadojogo" component={ GamePage } />
-
+        <Route path="/configuracoes" component={ Configs } />
       </Switch>
     );
   }
