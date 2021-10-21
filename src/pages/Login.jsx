@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 // Requisito 1
@@ -7,6 +8,7 @@ class Login extends React.Component {
     super();
 
     this.handleInput = this.handleInput.bind(this);
+    this.configButton = this.configButton.bind(this);
     this.getTokenFromAPI = this.getTokenFromAPI.bind(this);
 
     this.state = {
@@ -27,6 +29,11 @@ class Login extends React.Component {
     this.setState({
       [event.target.name]: event.target.value,
     });
+  }
+
+  configButton() {
+    const { history } = this.props;
+    history.push('/settings');
   }
 
   render() {
@@ -66,9 +73,23 @@ class Login extends React.Component {
             Jogar
           </button>
         </Link>
+        <button
+          className="button-settings"
+          type="button"
+          data-testid="btn-settings"
+          onClick={ this.configButton }
+        >
+          Configurações
+        </button>
       </form>
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+}.isRequired;
 
 export default Login;
