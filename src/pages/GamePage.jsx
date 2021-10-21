@@ -12,11 +12,11 @@ class GamePage extends React.Component {
     const { question } = this.props;
     console.log(question);
     if (!question) {
-      return <p>Loading...</p>;
+      return <h1>Loading ...</h1>;
     }
     return (
       <div>
-        <h2 data-testid="question-category ">{ question[0].category }</h2>
+        <h2 data-testid="question-category ">{ question[0].category}</h2>
         <h3 data-testid="question-text ">{}</h3>
       </div>
     );

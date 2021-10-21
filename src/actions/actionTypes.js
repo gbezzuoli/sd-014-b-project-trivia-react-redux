@@ -22,8 +22,7 @@ export const resultApi = () => async (dispatch) => {
 };
 
 export const requestAskApi = async () => {
-  const myToken = JSON.parse(localStorage.getItem('token'));
-  console.log(myToken);
+  const myToken = await JSON.parse(localStorage.getItem('token'));
   const urlAsk = `https://opentdb.com/api.php?amount=5&token=${myToken}`;
   const response = await fetch(urlAsk);
   const data = await response.json();
