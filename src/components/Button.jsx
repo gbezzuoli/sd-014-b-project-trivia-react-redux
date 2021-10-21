@@ -1,19 +1,34 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-const Button = ({ answer, id }) => (
-  <button
-    type="button"
-    data-testid={ id }
-  >
-    { answer }
-  </button>
+class Button extends Component {
+  render() {
+    const {
+      props: { id, answer, changeBorderColor,
+        shouldBorderColorChange, buttonBorderColor },
+    } = this;
 
-);
+    const color = shouldBorderColorChange ? buttonBorderColor : '0, 0, 0';
+
+    return (
+      <button
+        type="button"
+        data-testid={ id }
+        style={ { border: `3px solid rgb(${color})` } }
+        onClick={ changeBorderColor }
+      >
+        { answer }
+      </button>
+    );
+  }
+}
 
 Button.propTypes = {
-  answer: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-};
+  answer: PropTypes.string,
+  id: PropTypes.string,
+  borderColor: PropTypes.string,
+  changeBorderColor: PropTypes.func,
+  shouldBorderColorChange: PropTypes.bool,
+}.isRequired;
 
 export default Button;
