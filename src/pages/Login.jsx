@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { saveTokenAction } from '../redux/actions/actions';
+import { saveTokenAction, getNameEmail } from '../redux/actions/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -37,8 +37,10 @@ class Login extends React.Component {
     const urlToken = await fetch('https://opentdb.com/api_token.php?command=request');
     const response = await urlToken.json();
     const { token } = response;
-    console.log(token);
     triviaAction(token);
+    const { getNameEmailAction } = this.props;
+    const { name, email } = this.state;
+    getNameEmailAction(name, email);
     localStorage.setItem('token', token);
   }
 
@@ -96,6 +98,7 @@ class Login extends React.Component {
 
 Login.propTypes = {
   triviaAction: PropTypes.func.isRequired,
+  getNameEmailAction: PropTypes.func.isRequired,
   history: PropTypes.shape({
     history: PropTypes.string,
     push: PropTypes.func,
@@ -104,6 +107,7 @@ Login.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   triviaAction: (token) => dispatch(saveTokenAction(token)),
+  getNameEmailAction: (name, email) => dispatch(getNameEmail(name, email)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
