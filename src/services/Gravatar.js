@@ -1,8 +1,9 @@
 import md5 from 'crypto-js/md5';
 
 const getAvatarImg = (email) => {
-  const md5Email = md5(email.trim().toLowerCase()).toString();
-  return `https://www.gravatar.com/avatar/${md5Email}`;
+  const hash = md5(email.trim().toLowerCase()).toString();
+  const profileImageURL = `https://www.gravatar.com/avatar/${hash}`;
+  return profileImageURL;
 };
 
 export default getAvatarImg;
