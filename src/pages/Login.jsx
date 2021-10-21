@@ -50,14 +50,9 @@ class Login extends React.Component {
             disabled={ userName.length <= 0 || userEmail.length <= 0 }
           >
             Jogar
-
           </button>
-
         </form>
-
-        <Link
-          to="/settings"
-        >
+        <Link to="/settings" >
           <button data-testid="btn-settings" type="button">Configurações</button>
         </Link>
       </div>
