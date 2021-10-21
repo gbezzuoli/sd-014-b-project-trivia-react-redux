@@ -1,41 +1,19 @@
-import { FAILED_REQUEST,
-  GET_TOKEN, REQUEST_API, SAVE_PLAYER } from '../actions/actionTypes';
+import { SUCCESS_ACTION, FAIL_ACTION } from '../actions/actionTypes';
 
-const INITIAL_STATE = {
+const initialState = {
   name: '',
-  email: '',
   token: '',
-  isLoading: false,
 };
 
-const player = (state = INITIAL_STATE, action) => {
-  switch (action.type) {
-  case SAVE_PLAYER:
-    return {
-      ...state,
-      name: action.name,
-      email: action.email,
-    };
-  case REQUEST_API:
-    return {
-      ...state,
-      isLoading: true,
-    };
-  case FAILED_REQUEST:
-    return {
-      ...state,
-      isLoading: false,
-      error: action.error,
-    };
-  case GET_TOKEN:
-    return {
-      ...state,
-      isLoading: false,
-      token: action.token,
-    };
+export default (state = initialState, { type, payload }) => {
+  switch (type) {
+  case SUCCESS_ACTION:
+    return { ...state, token: payload };
+
+  case FAIL_ACTION:
+    return { ...state, error: payload };
+
   default:
     return state;
   }
 };
-
-export default player;

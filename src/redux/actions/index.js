@@ -1,33 +1,28 @@
-import { FAILED_REQUEST, GET_TOKEN, REQUEST_API, SAVE_PLAYER } from './actionTypes';
+import { SUCCESS_ACTION, FAIL_ACTION, GET_DATA } from './actionTypes';
 
-export const savePlayer = (email, name) => ({
-  type: SAVE_PLAYER,
-  email,
-  name,
-});
+const URL = 'https://opentdb.com/api_token.php?command=request';
 
-const requestApi = () => ({
-  type: REQUEST_API,
-});
-
-const getToken = (token) => ({
-  type: GET_TOKEN,
-  token,
-});
-
-const failedRequest = (error) => ({
-  type: FAILED_REQUEST,
-  error,
-});
-
-export function fetchTrivia() {
-  return (dispatch) => {
-    dispatch(requestApi());
-    return fetch('https://opentdb.com/api_token.php?command=request')
-      .then((response) => response.json()
-        .then(
-          (json) => dispatch(getToken(json.token)),
-          (error) => dispatch(failedRequest(error)),
-        ));
-  };
+function successAction(json) {
+  window.localStorage.setItem('token', json.token);
+  return { type: SUCCESS_ACTION, payload: json.token };
 }
+
+export const failedRequest = (error) => ({
+  type: FAIL_ACTION,
+  payload: error,
+});
+
+export const fetchTrivia = () => async (dispatch) => {
+  try {
+    const response = await fetch(URL);
+    const data = await response.json();
+    return dispatch(successAction(data));
+  } catch (error) {
+    return dispatch(failedRequest(error.message));
+  }
+};
+
+export const sendData = (payload) => ({
+  type: GET_DATA,
+  payload,
+});

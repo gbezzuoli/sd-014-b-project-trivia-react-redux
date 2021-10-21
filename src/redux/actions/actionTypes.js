@@ -1,4 +1,3 @@
-export const SAVE_PLAYER = 'SAVE_PLAYER';
-export const REQUEST_API = 'REQUEST_API';
-export const FAILED_REQUEST = 'FAILED_REQUEST';
-export const GET_TOKEN = 'GET_TOKEN';
+export const SUCCESS_ACTION = 'SUCCESS_ACTION';
+export const FAIL_ACTION = 'FAIL_ACTION';
+export const GET_DATA = 'GET_DATA';
