@@ -13,10 +13,12 @@ class Trivia extends Component {
     this.getTriviaGame = this.getTriviaGame.bind(this);
     this.dispatchQuestionsToState = this.dispatchQuestionsToState.bind(this);
     this.createAnswerButtons = this.createAnswerButtons.bind(this);
+    this.handleAnswerClick = this.handleAnswerClick.bind(this);
 
     this.state = {
       results: [],
       actualQuestion: 0,
+      buttonCondition: false,
     };
   }
 
@@ -32,6 +34,10 @@ class Trivia extends Component {
     }, () => this.dispatchQuestionsToState());
   }
 
+  handleAnswerClick() {
+    this.setState({ buttonCondition: true });
+  }
+
   dispatchQuestionsToState() {
     const { dispatchResultsToState } = this.props;
     const { results } = this.state;
@@ -44,39 +50,42 @@ class Trivia extends Component {
     const questionsList = getQuestions(results[actualQuestion])
       .sort(() => Math.random() - ZERO_PONTO_CINCO);
 
-    const buttonsList = questionsList
-      .map((question, index) => (question !== results[actualQuestion].correct_answer
-        ? (
-          <Button
-            key={ index }
-            textButton={ question }
-            className="wrong-answer"
-            dataTestId={ `wrong-answer-${index}` }
-          />)
-        : (
-          <Button
-            key={ index }
-            textButton={ question }
-            className="correct-answer"
-            dataTestId="correct-answer"
-          />)));
-    return buttonsList;
+    return questionsList;
   }
 
   render() {
-    const { results, actualQuestion } = this.state;
+    const { results, actualQuestion, buttonCondition } = this.state;
     return (
       results.length < 1
         ? <div>Carregando...</div> : (
-          <div>
+          <section className="game-board">
             <span data-testid="question-category">
               { results[actualQuestion].category }
             </span>
             <p data-testid="question-text">
               { results[actualQuestion].question }
             </p>
-            { this.createAnswerButtons() }
-          </div>)
+            { this.createAnswerButtons().map((question, index) => (
+              question !== results[actualQuestion].correct_answer
+                ? (
+                  <Button
+                    key={ index }
+                    textButton={ question }
+                    className="wrong-answer"
+                    dataTestId={ `wrong-answer-${index}` }
+                    onClick={ this.handleAnswerClick }
+                    disabled={ buttonCondition }
+                  />)
+                : (
+                  <Button
+                    key={ index }
+                    textButton={ question }
+                    className="correct-answer"
+                    dataTestId="correct-answer"
+                    onCLick={ this.handleAnswerClick }
+                    disabled={ buttonCondition }
+                  />))) }
+          </section>)
 
     );
   }
