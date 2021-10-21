@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ButtonConfig from '../components/ButtonConfig';
-import fetchToken from '../services';
+import { fetchToken } from '../services';
 
 class Login extends React.Component {
   constructor() {
