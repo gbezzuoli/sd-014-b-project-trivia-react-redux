@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Switch } from 'react-router';
 import Header from '../components/Header';
 
 class Game extends Component {
@@ -7,6 +8,7 @@ class Game extends Component {
 
     this.state = {
       questions: [],
+      game: 0,
     };
 
     this.requestTriviaAPI = this.requestTriviaAPI.bind(this);
@@ -26,35 +28,34 @@ class Game extends Component {
   }
 
   render() {
-    const { questions } = this.state;
-    return (
-      <div>
-        <Header />
-        <section>
-          {questions.map((question, index) => {
-            const allAnswers = [question.correct_answer, ...question.incorrect_answers];
-            return (
-              <div key={ index }>
-                <p data-testid="question-category">{question.category}</p>
-                <p data-testid="question-text">{question.question}</p>
+    const { questions, game } = this.state;
+    if (questions.length > 0) {
+      const question = questions[game];
+      const allAnswers = [question.correct_answer, ...question.incorrect_answers];
+      return (
+        <div>
+          <Header />
+          <div key={ game }>
+            <p data-testid="question-category">{question.category}</p>
+              <p data-testid="question-text">{question.question}</p>
                 {allAnswers.sort().map((answer, answerIndex) => (
                   <button
                     type="button"
                     key={ answerIndex }
                     data-testid={
                       question.correct_answer === answer
-                        ? 'correct-answer' : `wrong-answer-${answerIndex}`
+                      ? 'correct-answer' : `wrong-answer-${answerIndex}`
                     }
                   >
                     {answer}
                   </button>))}
-                <hr />
-              </div>
-            );
-          })}
-        </section>
-      </div>
-    );
+          </div>
+        </div>
+      );
+    }
+    return(
+      <p>Loading...</p>
+    )
   }
 }
 
