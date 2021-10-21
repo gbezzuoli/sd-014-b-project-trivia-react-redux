@@ -40,9 +40,10 @@ class Login extends Component {
 
   submitPlayer() {
     const { dispatchSetValue } = this.props;
+    const { name, email } = this.state;
     fetchTrivia();
     const token = localStorage.getItem('token');
-    dispatchSetValue(this.state, token);
+    dispatchSetValue(name, token, email);
   }
 
   render() {
@@ -91,8 +92,8 @@ Login.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  dispatchSetValue: (player, token) => (
-    dispatch(submitPlayerAction(player, token))
+  dispatchSetValue: (player, token, email) => (
+    dispatch(submitPlayerAction(player, token, email))
   ),
 });
 

@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import { submitPlayerAction } from '../actions';
+import player from './player';
 
 const rootReducer = combineReducers({
-  submitPlayerAction,
+  player,
 });
 
 export default rootReducer;
