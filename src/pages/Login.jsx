@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import fetchToken from '../services/token';
-import { sendUserEmail } from '../redux/actions';
+import { sendUserInfo } from '../redux/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -80,7 +80,7 @@ class Login extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  dispatchSetValue: (payload) => dispatch(sendUserEmail(payload)),
+  dispatchSetValue: (payload) => dispatch(sendUserInfo(payload)),
 });
 
 Login.propTypes = {

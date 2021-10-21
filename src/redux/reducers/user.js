@@ -1,4 +1,4 @@
-import { SEND_USER_EMAIL } from '../actions/index';
+import { SEND_USER_INFO } from '../actions/index';
 
 const INITIAL_STATE = {
   player: {
@@ -10,7 +10,7 @@ const INITIAL_STATE = {
 
 function user(state = INITIAL_STATE, action) {
   switch (action.type) {
-  case SEND_USER_EMAIL:
+  case SEND_USER_INFO:
     return ({
       ...state,
       player: action.payload,
