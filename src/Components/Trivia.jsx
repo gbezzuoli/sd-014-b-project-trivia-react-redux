@@ -40,10 +40,12 @@ class Trivia extends Component {
 
   createAnswerButtons() {
     const { results, actualQuestion } = this.state;
-    const questionsList = getQuestions(results[actualQuestion]).sort(() => Math.random() - 0.5);
+    const ZERO_PONTO_CINCO = 0.5;
+    const questionsList = getQuestions(results[actualQuestion])
+      .sort(() => Math.random() - ZERO_PONTO_CINCO);
 
     const buttonsList = questionsList
-      .map((question, index) => (question !== results[actualQuestion]
+      .map((question, index) => (question !== results[actualQuestion].correct_answer
         ? (
           <Button
             key={ index }
@@ -62,13 +64,26 @@ class Trivia extends Component {
   }
 
   render() {
-    const { results } = this.state;
+    const { results, actualQuestion } = this.state;
     return (
-      <div>
-        <span data-testid="question-category">Categoria</span>
-        <p data-testid="question-text">Texto da pergunta</p>
-        { results.length > 0 && this.createAnswerButtons() }
-      </div>
+      results.length < 1
+        ? <div>Carregando...</div> : (
+          <div>
+            <span
+              data-testid="question-category"
+            >
+              { results[actualQuestion].category }
+
+            </span>
+            <p
+              data-testid="question-text"
+            >
+              { results[actualQuestion].question }
+
+            </p>
+            { this.createAnswerButtons() }
+          </div>)
+
     );
   }
 }
