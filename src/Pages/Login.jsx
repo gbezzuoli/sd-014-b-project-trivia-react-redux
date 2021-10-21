@@ -12,6 +12,7 @@ class Login extends Component {
     super();
 
     this.handlePlay = this.handlePlay.bind(this);
+    this.handleSettings = this.handleSettings.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.state = {
       name: '',
@@ -42,6 +43,11 @@ class Login extends Component {
     this.addTokenLocalStorage(playerToken);
 
     this.setState({ redirect: true });
+  }
+
+  handleSettings() {
+    const { history } = this.props;
+    history.push('/settings');
   }
 
   render() {
@@ -76,14 +82,23 @@ class Login extends Component {
           />
         </form>
         { redirect && <Redirect to="/game" /> }
+
+        <Button
+          dataTestId="btn-settings"
+          onClick={ this.handleSettings }
+          textButton="Configurações"
+        />
       </main>
     );
   }
 }
 
 Login.propTypes = {
-  dispatchPlayerToken: PropTypes.func.isRequired,
   dispatchPlayerNameAndEmail: PropTypes.func.isRequired,
+  dispatchPlayerToken: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => (
