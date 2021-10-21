@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import RequestApi from './RequestApi';
+import { getToken } from '../redux/actions/index';
+
 import { Button } from './Button';
 
 export class LoginForm extends Component {
@@ -8,7 +13,9 @@ export class LoginForm extends Component {
       name: '',
       gravatarEmail: '',
     };
+
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(e) {
@@ -16,6 +23,15 @@ export class LoginForm extends Component {
     this.setState(() => ({
       [name]: value,
     }));
+  }
+
+  async handleClick() {
+    const { history, valueToken } = this.props;
+
+    const apiToken = await RequestApi();
+    valueToken(apiToken);
+    localStorage.setItem('token', apiToken.token);
+    history.push('/game');
   }
 
   render() {
@@ -62,4 +78,15 @@ export class LoginForm extends Component {
   }
 }
 
-export default LoginForm;
+LoginForm.propTypes = {
+  valueToken: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  valueToken: (token) => dispatch(getToken(token)),
+});
+
+export default connect(null, mapDispatchToProps)(LoginForm);
