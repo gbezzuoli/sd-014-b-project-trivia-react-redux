@@ -7,10 +7,7 @@ export default function Game() {
   const { name, email, avatar } = useSelector((store) => store.user);
 
   useEffect(() => {
-    const fetchAPI = async () => {
-      dispatch(fetchAvatar(email));
-    };
-    fetchAPI();
+    dispatch(fetchAvatar(email));
   }, [dispatch, email]);
 
   return (
