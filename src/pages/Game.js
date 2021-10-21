@@ -6,6 +6,9 @@ class Game extends Component {
     return (
       <div>
         <Header />
+        <br />
+        <span data-testid="question-category">Categoria</span>
+        <span data-testid="question-text">Pergunta</span>
       </div>
     );
   }
