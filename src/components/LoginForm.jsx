@@ -33,7 +33,7 @@ class LoginForm extends Component {
     const { submitPlayer } = this.props;
     await fetchAPI();
     this.setState({ signedIn: true });
-    submitPlayer(email, name);
+    submitPlayer({ email, name });
   }
 
   render() {
