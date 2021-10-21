@@ -1,25 +1,33 @@
-export const GET_TOKEN = 'GET_TOKEN';
-export const GET_NAME_AND_EMAIL = 'GET_NAME_AND_EMAIL';
-export const GET_AVATAR = 'GET_AVATAR';
-export const GET_SCORE = 'GET_SCORE';
+export const ACTIONS = {
+  GET_TOKEN: 'GET_TOKEN',
+  GET_NAME_AND_EMAIL: 'GET_NAME_AND_EMAIL',
+  GET_AVATAR: 'GET_AVATAR',
+  GET_SCORE: 'GET_SCORE',
+  GET_QUESTIONS: 'GET_QUESTIONS',
+};
 
 export const getGameTokenAction = (payload) => ({
-  type: GET_TOKEN,
+  type: ACTIONS.GET_TOKEN,
   payload,
 });
 
 export const getNameAndEmailAction = (name, email) => ({
-  type: 'GET_NAME_AND_EMAIL',
+  type: ACTIONS.GET_NAME_AND_EMAIL,
   name,
   email,
 });
 
 export const getAvatarAction = (profileImage) => ({
-  type: GET_AVATAR,
+  type: ACTIONS.GET_AVATAR,
   payload: profileImage,
 });
 
 export const getScoreAction = (score) => ({
-  type: GET_SCORE,
+  type: ACTIONS.GET_SCORE,
   payload: score,
+});
+
+export const getQuestions = (payload) => ({
+  type: ACTIONS.GET_QUESTIONS,
+  payload,
 });
