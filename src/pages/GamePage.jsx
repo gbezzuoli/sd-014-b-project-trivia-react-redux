@@ -77,7 +77,7 @@ class GamePage extends Component {
     const ONE_SECOND = 1000;
     this.countInterval = setInterval(() => {
       this.setState((state) => ({
-        count: state.counter - 1,
+        count: state.count - 1,
       }));
     }, ONE_SECOND);
   }
