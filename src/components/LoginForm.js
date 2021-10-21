@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getToken } from '../redux/actions/index';
+import { getToken, getInfoPlayer } from '../redux/actions/index';
 
 import logo from '../trivia.png';
 import { Button } from './Button';
@@ -29,12 +29,15 @@ export class LoginForm extends Component {
   }
 
   async handleClick() {
-    const { valueToken } = this.props;
+    const { valueToken, gravatar } = this.props;
 
     const response = await fetch('https://opentdb.com/api_token.php?command=request');
     const apiToken = await response.json();
     const { token } = apiToken;
     valueToken(token);
+
+    const { name, gravatarEmail } = this.state;
+    gravatar(name, gravatarEmail);
 
     localStorage.setItem('token', token);
   }
@@ -100,10 +103,12 @@ export class LoginForm extends Component {
 
 LoginForm.propTypes = {
   valueToken: PropTypes.func.isRequired,
+  gravatar: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   valueToken: (token) => dispatch(getToken(token)),
+  gravatar: (name, email) => dispatch(getInfoPlayer(name, email)),
 });
 
 export default connect(null, mapDispatchToProps)(LoginForm);
