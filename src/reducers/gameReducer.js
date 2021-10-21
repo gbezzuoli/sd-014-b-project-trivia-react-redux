@@ -1,7 +1,7 @@
 import { GET_ASK } from '../actions/actionTypes';
 
 const INICIAL_STATE = {
-  questions: '',
+  questions: [],
 };
 
 function gameReducer(state = INICIAL_STATE, action) {
