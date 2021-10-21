@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { fetchTokenAction } from '../redux/actions/TokenAction';
 
 class Login extends React.Component {
   constructor() {
@@ -22,6 +25,7 @@ class Login extends React.Component {
 
   render() {
     const { userName, userEmail } = this.state;
+    const { fetchAPI } = this.props;
     return (
       <form>
         <label htmlFor="user">
@@ -48,6 +52,7 @@ class Login extends React.Component {
             type="submit"
             name="button"
             disabled={ userName.length <= 0 || userEmail.length <= 0 }
+            onClick={ () => fetchAPI() }
           >
             Jogar
           </button>
@@ -56,5 +61,12 @@ class Login extends React.Component {
     );
   }
 }
+const mapDispatchToProps = (dispatch) => ({
+  fetchAPI: () => dispatch(fetchTokenAction()),
+});
 
-export default Login;
+export default connect(null, mapDispatchToProps)(Login);
+
+Login.propTypes = {
+  fetchAPI: PropTypes.func.isRequired,
+};
