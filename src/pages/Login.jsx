@@ -12,6 +12,7 @@ class Login extends React.Component {
 
     this.handleInput = this.handleInput.bind(this);
     this.setUserInfo = this.setUserInfo.bind(this);
+    this.configButton = this.configButton.bind(this);
     this.getTokenFromAPI = this.getTokenFromAPI.bind(this);
 
     this.state = {
@@ -54,6 +55,11 @@ class Login extends React.Component {
     });
   }
 
+  configButton() {
+    const { history } = this.props;
+    history.push('/settings');
+  }
+
   render() {
     const { playerEmail, playerName } = this.state;
 
@@ -91,6 +97,14 @@ class Login extends React.Component {
             Jogar
           </button>
         </Link>
+        <button
+          className="button-settings"
+          type="button"
+          data-testid="btn-settings"
+          onClick={ this.configButton }
+        >
+          Configurações
+        </button>
       </form>
     );
   }
@@ -98,6 +112,9 @@ class Login extends React.Component {
 
 Login.propTypes = {
   userInfo: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
