@@ -20,8 +20,8 @@ class GamePage extends React.Component {
             src={ avatar }
             alt="Imagem de Avatar"
           />
-          <span data-tetsid="header-player-name">{name}</span>
-          <span datat-testid="header-score">{`Pontos: ${0}`}</span>
+          <span data-testid="header-player-name">{name}</span>
+          <span data-testid="header-score">{`Pontos: ${0}`}</span>
         </header>
 
         <main>
