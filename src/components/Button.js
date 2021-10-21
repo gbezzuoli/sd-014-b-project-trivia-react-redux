@@ -25,6 +25,4 @@ Button.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-Button.defaultProps = {
-
-};
+export default  Button;
