@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import Question from '../components/Question';
 import requestQuestions from '../services/requestQuestions';
+import Header from '../components/Header';
 
 class GamePage extends Component {
   constructor() {
@@ -63,6 +64,7 @@ class GamePage extends Component {
     }
     return (
       <div>
+        <Header />
         <section>
           <h1 data-testid="question-category">Categoria</h1>
           <h2 data-testid="question-text">

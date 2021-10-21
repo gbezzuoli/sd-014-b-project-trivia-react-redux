@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import md5 from 'crypto-js/md5';
+import { connect } from 'react-redux';
+import { submitUser } from '../redux/actions';
 
 class Login extends Component {
   constructor() {
@@ -13,12 +16,13 @@ class Login extends Component {
   }
 
   async getTokenOnClick() {
-    const { history } = this.props;
+    const { history, submitHash } = this.props;
+    const { nameInput, emailInput } = this.state;
     const URL = 'https://opentdb.com/api_token.php?command=request';
     const requestToken = await fetch(URL);
     const responseToken = await requestToken.json();
-    console.log(responseToken.token);
     localStorage.setItem('token', JSON.stringify(responseToken.token));
+    submitHash(nameInput, md5(emailInput).toString());
     history.push('/paginadojogo');
   }
 
@@ -87,6 +91,11 @@ Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  submitHash: PropTypes.func.isRequired,
 };
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  submitHash: (name, hashGravatar) => dispatch(submitUser(name, hashGravatar)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
