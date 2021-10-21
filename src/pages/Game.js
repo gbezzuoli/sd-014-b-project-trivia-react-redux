@@ -10,11 +10,14 @@ class Game extends Component {
     this.state = {
       questions: '',
       correctAnswer: '',
-      answered: null,
+      // answered: false,
+      count: 0,
+      disabledState: false,
     };
     this.requestAPI = this.requestAPI.bind(this);
     this.mapQuestions = this.mapQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.addStyle = this.addStyle.bind(this);
   }
 
   componentDidMount() {
@@ -22,13 +25,13 @@ class Game extends Component {
   }
 
   handleClick({ target }) {
-    const { correctAnswer } = this.state;
+    const { correctAnswer, count } = this.state;
     const givenAnswer = target.innerHTML;
     if (givenAnswer === correctAnswer) {
-      this.setState({ answered: true });
-    } else {
-      this.setState({ answered: false });
+      this.setState({ count: count + 1 });
     }
+    this.addStyle();
+    this.setState({ disabledState: true });
   }
 
   async requestAPI() {
@@ -41,12 +44,24 @@ class Game extends Component {
     console.log(allQuestions);
   }
 
+  addStyle() {
+    const btn = document.querySelectorAll('.wrongButton');
+    btn.forEach((button) => {
+      button.setAttribute('style', 'border: 3px solid rgb(255, 0, 0)');
+    });
+    const btnCorrect = document.querySelector('.correctButton');
+    btnCorrect.setAttribute('style', 'border: 3px solid rgb(6, 240, 15)');
+  }
+
   mapQuestions(questions) {
+    const { disabledState } = this.state;
     const mappedQuestions = questions.map((question, index1) => {
       const incorrectAnswers = question.incorrect_answers.map((alternative, index2) => (
         <button
           type="button"
+          disabled={ disabledState }
           data-testid={ `wrong-answer-${index2}` }
+          className="wrongButton"
           key={ index2 }
           onClick={ this.handleClick }
         >
@@ -56,7 +71,9 @@ class Game extends Component {
       const correctAnswer = (
         <button
           type="button"
+          disabled={ disabledState }
           data-testid="correct-answer"
+          className="correctButton"
           key="4"
           onClick={ this.handleClick }
         >
@@ -84,13 +101,13 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, answered } = this.state;
+    const { questions } = this.state;
     return (
       <div>
         <Header />
         <h1>TRIVIA</h1>
-        {questions ? this.mapQuestions(questions) : <span>CARREGANDO</span>}
-        { answered ? <p>ACERTOU</p> : ''}
+        {questions ? this.mapQuestions(questions)
+          : <span>CARREGANDO</span>}
       </div>
     );
   }
