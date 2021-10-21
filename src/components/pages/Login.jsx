@@ -96,4 +96,3 @@ Login.propTypes = {
 }.isRequired;
 
 export default connect(null, mapDipatchToProps)(Login);
-// a
