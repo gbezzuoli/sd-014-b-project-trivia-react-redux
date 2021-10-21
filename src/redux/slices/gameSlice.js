@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const initialState = {
   questions: [],
+  loading: true,
 };
 
 export const fetchQuestions = createAsyncThunk(
@@ -21,6 +22,7 @@ export const gameSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchQuestions.fulfilled, (state, action) => {
       state.questions = action.payload.results;
+      state.loading = false;
     });
   },
 });

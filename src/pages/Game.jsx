@@ -6,8 +6,7 @@ import { fetchQuestions } from '../redux/slices/gameSlice';
 export default function Game() {
   const dispatch = useDispatch();
   const { name, email, avatar, token } = useSelector((store) => store.user);
-  const { questions } = useSelector((store) => store.game);
-  console.log(questions[0]);
+  const { questions, loading } = useSelector((store) => store.game);
 
   useEffect(() => {
     dispatch(fetchAvatar(email));
@@ -23,6 +22,7 @@ export default function Game() {
       </header>
       <main>
         <h1>Game Page</h1>
+        {!loading && JSON.stringify(questions[1].category)}
       </main>
     </>
   );
