@@ -1,14 +1,9 @@
-const initialState = {
-  questions: [{ question: '', incorrect_answer: [] }],
-};
+const initialState = [];
 
 function questions(state = initialState, action) {
   switch (action.type) {
   case 'GET_QUESTIONS':
-    return {
-      ...state,
-      questions: action.payload.results,
-    };
+    return action.payload.results;
   default:
     return state;
   }
