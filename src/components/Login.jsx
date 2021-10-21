@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function LoginForm(props) {
+export default function Login(props) {
   const {
     state: { name, email },
     disabled,
     handleChange,
     handleSubmit,
   } = props;
+
   return (
     <form>
       <label htmlFor="name">
@@ -44,7 +45,7 @@ export default function LoginForm(props) {
   );
 }
 
-LoginForm.propTypes = {
+Login.propTypes = {
   state: PropTypes.shape({ name: PropTypes.string, email: PropTypes.string }),
   disabled: PropTypes.bool,
   handleChange: PropTypes.func,

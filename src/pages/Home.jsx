@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login, fetchToken } from '../redux/slices/userSlice';
-import LoginForm from '../components/LoginForm';
+import Login from '../components/Login';
 
-export default function Login(props) {
+export default function Home({ history }) {
   const dispatch = useDispatch();
   const [state, setState] = useState({ name: '', email: '' });
   const { name, email } = state;
@@ -16,24 +16,34 @@ export default function Login(props) {
   };
 
   const handleSubmit = () => {
-    const { history } = props;
     dispatch(login(state));
     dispatch(fetchToken());
     history.push('/game');
   };
 
+  const switchToSettings = () => {
+    history.push('/settings');
+  };
+
   return (
     <main>
-      <LoginForm
+      <Login
         state={ state }
         disabled={ disabled }
         handleChange={ handleChange }
         handleSubmit={ handleSubmit }
       />
+      <button
+        data-testid="btn-settings"
+        type="button"
+        onClick={ switchToSettings }
+      >
+        Configurações
+      </button>
     </main>
   );
 }
 
-Login.propTypes = {
+Home.propTypes = {
   history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
