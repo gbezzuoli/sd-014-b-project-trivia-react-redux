@@ -20,6 +20,7 @@ class Login extends React.Component {
     };
   }
 
+  // Função que seta as informações do usuário (nome, avatar, e score)
   setUserInfo() {
     const { playerName, playerEmail } = this.state;
     const { userInfo } = this.props;
@@ -37,6 +38,7 @@ class Login extends React.Component {
     userInfo(info);
   }
 
+  // Função que seta o token no LocalStorage
   async getTokenFromAPI() {
     const URL = 'https://opentdb.com/api_token.php?command=request';
     const result = await fetch(URL);
@@ -45,11 +47,7 @@ class Login extends React.Component {
     localStorage.setItem('token', token);
   }
 
-  async getTokenAndSetInfo() {
-    setUserInfo();
-    await getTokenFromAPI();
-  }
-
+  // Função que pega os values dos inputs
   handleInput(event) {
     this.setState({
       [event.target.name]: event.target.value,
@@ -88,7 +86,7 @@ class Login extends React.Component {
             type="button"
             data-testid="btn-play"
             disabled={ playerEmail === '' || playerName === '' }
-            onClick={ this.getTokenAndSetInfo }
+            onClick={ async () => { this.setUserInfo(); this.getTokenFromAPI(); } }
           >
             Jogar
           </button>
