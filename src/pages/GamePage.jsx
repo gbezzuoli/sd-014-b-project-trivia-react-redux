@@ -14,12 +14,20 @@ class GamePage extends Component {
       questionOne: [],
       wrongAnswersOne: [],
       rightAnswerOne: '',
+      counter: 5,
       i: 0,
     };
   }
 
   componentDidMount() {
     this.getQuestions();
+  }
+
+  componentDidUpdate() {
+    const { counter } = this.state;
+    if (counter === 0) {
+      clearInterval(this.countInterval);
+    }
   }
 
   onClickAnswer() {
@@ -35,7 +43,6 @@ class GamePage extends Component {
         questionOne: result[i].question,
         wrongAnswersOne: result[i].incorrect_answers,
         rightAnswerOne: result[i].correct_answer,
-
       });
     } catch (error) {
       console.log(error);
@@ -52,11 +59,25 @@ class GamePage extends Component {
       questionOne: result[i].question,
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
-    });
+    }, () => this.startCounter());
+  }
+
+  startCounter() {
+    const ONE_SECOND = 1000;
+    this.countInterval = setInterval(() => {
+      this.setState((state) => ({
+        counter: state.counter - 1,
+      }));
+    }, ONE_SECOND);
   }
 
   render() {
-    const { questionOne, wrongAnswersOne, rightAnswerOne } = this.state;
+    const {
+      questionOne,
+      wrongAnswersOne,
+      rightAnswerOne,
+      counter,
+    } = this.state;
     const idWrongAns = 'wrong-answer-';
 
     if (questionOne === []) {
@@ -71,12 +92,14 @@ class GamePage extends Component {
             {' '}
             {questionOne}
           </h2>
+          <h2>{ counter }</h2>
           {wrongAnswersOne.map((item, index) => (
             <div key={ index }>
               <button
                 type="button"
                 data-testid={ idWrongAns + index }
                 onClick={ this.onClickAnswer }
+                disabled={ counter === 0 }
               >
                 {item}
               </button>
@@ -85,6 +108,7 @@ class GamePage extends Component {
             onClick={ this.onClickAnswer }
             type="button"
             data-testid="correct-answer"
+            disabled={ counter === 0 }
           >
             {rightAnswerOne}
           </button>
