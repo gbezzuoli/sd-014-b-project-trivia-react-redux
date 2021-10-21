@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { saveTokenAction } from '../redux/actions/actions';
+import { fetchLogin, saveTokenAction } from '../redux/actions/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -33,12 +33,13 @@ class Login extends React.Component {
   }
 
   async handleClick() {
-    const { triviaAction } = this.props;
+    const { triviaAction, saveToken } = this.props;
     const urlToken = await fetch('https://opentdb.com/api_token.php?command=request');
     const response = await urlToken.json();
     const { token } = response;
-    console.log(token);
+
     triviaAction(token);
+    saveToken(token);
     localStorage.setItem('token', token);
   }
 
@@ -88,11 +89,14 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
+  saveToken: PropTypes.func.isRequired,
   triviaAction: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  triviaAction: (token) => dispatch(saveTokenAction(token)),
+  saveToken: (token) => dispatch(saveTokenAction(token)),
+  triviaAction: (token) => dispatch(fetchLogin(token)),
+
 });
 
 export default connect(null, mapDispatchToProps)(Login);
