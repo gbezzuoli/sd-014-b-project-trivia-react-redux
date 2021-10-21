@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import './style.css';
-
 class GameHeader extends Component {
   render() {
     const { score, name, profilePicture } = this.props;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-import GameHeader from '../../components/GameHeader';
+import GameHeader from '../components/GameHeader';
 
 class Feedback extends React.Component {
   constructor() {
