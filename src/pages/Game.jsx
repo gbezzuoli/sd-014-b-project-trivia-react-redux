@@ -24,3 +24,5 @@ export default function Game() {
     </main>
   );
 }
+
+export default Game;
