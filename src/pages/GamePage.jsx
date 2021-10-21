@@ -12,7 +12,7 @@ class GamePage extends Component {
 
     this.state = {
       result: [],
-      questionOne: [],
+      questOne: [],
       wrongAnswersOne: [],
       rightAnswerOne: '',
       corr: '',
@@ -43,7 +43,7 @@ class GamePage extends Component {
     try {
       this.setState({
         i: i + 1,
-        questionOne: result[i].question,
+        questOne: result[i].question,
         wrongAnswersOne: result[i].incorrect_answers,
         rightAnswerOne: result[i].correct_answer,
       });
@@ -67,7 +67,7 @@ class GamePage extends Component {
 
     this.setState({
       result,
-      questionOne: result[i].question,
+      questOne: result[i].question,
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
     }, () => this.startCounter());
@@ -83,10 +83,10 @@ class GamePage extends Component {
   }
 
   render() {
-    const { questionOne, wrongAnswersOne, rightAnswerOne, corr, incor, count } = this.state;
+    const { questOne, wrongAnswersOne, rightAnswerOne, corr, incor, count } = this.state;
     const idWrongAns = 'wrong-answer-';
 
-    if (questionOne === []) {
+    if (questOne === []) {
       return null;
     }
     return (
@@ -96,7 +96,7 @@ class GamePage extends Component {
           <h1 data-testid="question-category">Categoria</h1>
           <h2 data-testid="question-text">
             {' '}
-            {questionOne}
+            {questOne}
           </h2>
           <h2>{ counter }</h2>
           {wrongAnswersOne.map((item, index) => (
