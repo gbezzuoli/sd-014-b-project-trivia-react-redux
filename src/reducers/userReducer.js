@@ -1,8 +1,9 @@
-import { GET_TOKEN } from '../actions/actionTypes';
+import { GET_TOKEN, GET_AVATAR } from '../actions/actionTypes';
 
 const INICIAL_STATE = {
   name: '',
   email: '',
+  avatar: '',
   apiToken: '',
 };
 
@@ -17,7 +18,10 @@ function userReducer(state = INICIAL_STATE, action) {
   case GET_TOKEN:
     return {
       ...state,
-      apiToken: action.payload };
+      apiToken: action.payload,
+    };
+  case GET_AVATAR:
+    return { ...state, avatar: action.payload };
   default:
     return state;
   }
