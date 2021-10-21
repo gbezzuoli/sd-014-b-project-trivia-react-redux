@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
+import { login, fetchToken } from '../redux/slices/userSlice';
+import LoginForm from '../components/LoginForm';
 
-export default function Login() {
+export default function Login(props) {
+  const dispatch = useDispatch();
   const [state, setState] = useState({ name: '', email: '' });
   const { name, email } = state;
   const disabled = !(name && email);
@@ -10,35 +15,25 @@ export default function Login() {
     setState({ ...state, [id]: value });
   };
 
+  const handleSubmit = () => {
+    const { history } = props;
+    dispatch(login(state));
+    dispatch(fetchToken());
+    history.push('/game');
+  };
+
   return (
     <main>
-      <form>
-        <label htmlFor="name">
-          Nome:
-          <input
-            data-testid="input-player-name"
-            type="text"
-            id="name"
-            placeholder="Digite o seu nome"
-            value={ name }
-            onChange={ handleChange }
-          />
-        </label>
-        <label htmlFor="email">
-          Email:
-          <input
-            data-testid="input-gravatar-email"
-            type="email"
-            id="email"
-            placeholder="email@email.com"
-            value={ email }
-            onChange={ handleChange }
-          />
-        </label>
-        <button data-testid="btn-play" disabled={ disabled } type="button">
-          Jogar
-        </button>
-      </form>
+      <LoginForm
+        state={ state }
+        disabled={ disabled }
+        handleChange={ handleChange }
+        handleSubmit={ handleSubmit }
+      />
     </main>
   );
 }
+
+Login.propTypes = {
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+};
