@@ -31,6 +31,8 @@ class Game extends React.Component {
     const { history } = this.props;
     const { count } = this.state;
     const FOUR = 4;
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach((button) => { button.className = ''; });
     if (count < FOUR) {
       this.setState(() => ({ count: count + 1 }));
     } else {
@@ -46,9 +48,8 @@ class Game extends React.Component {
         <Header />
         TRIVIA
         { arrayQuestions.length === 0
-          ? <span>Loading ...</span> : <CardGame question={ arrayQuestions[count] } /> }
-        <button type="button" onClick={ () => this.handleClick() }>Proxima</button>
-
+          ? <span>Loading ...</span>
+          : <CardGame question={ arrayQuestions[count] } next={ this.handleClick } /> }
       </div>
     );
   }

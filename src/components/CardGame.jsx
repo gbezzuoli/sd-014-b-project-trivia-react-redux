@@ -1,18 +1,21 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import '../css/buttonCss.css';
 
 class CardGame extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      incorrect: props.question.incorrect_answers,
-      correct: props.question.correct_answer,
+      incorrect: [],
+      correct: '',
       answers: [],
       answerObjects: [],
     };
 
     this.setAnswer = this.setAnswer.bind(this);
+    this.handleAnswerClick = this.handleAnswerClick.bind(this);
+    // this.handleWrongClick = this.handleWrongClick.bind(this);
     this.shuffleArray = this.shuffleArray.bind(this);
   }
 
@@ -21,6 +24,12 @@ class CardGame extends React.Component {
   }
 
   async setAnswer() {
+    const { question } = this.props;
+    await this.setState({
+      incorrect: question.incorrect_answers,
+      correct: question.correct_answer,
+    });
+
     const { incorrect, correct } = this.state;
     await this.setState({
       answers: [correct, ...incorrect],
@@ -40,7 +49,7 @@ class CardGame extends React.Component {
         correct: false,
       };
     });
-    this.setState({
+    await this.setState({
       answerObjects: [...answersObjects],
     });
   }
@@ -56,8 +65,20 @@ class CardGame extends React.Component {
     return arr;
   }
 
+  handleAnswerClick() {
+    const brothers = document.querySelectorAll('button');
+    // getAttribute feito com base no stackoverflow
+    brothers.forEach((brother) => {
+      if (brother.getAttribute('data-testid') === 'correct-answer') {
+        brother.classList.add('right-answer');
+      } else if (brother.getAttribute('data-testid').includes('wrong-answer')) {
+        brother.classList.add('wrong-answer');
+      }
+    });
+  }
+
   render() {
-    const { question: { category, question } } = this.props;
+    const { question: { category, question }, next } = this.props;
     const { answerObjects } = this.state;
     const randomAnswers = this.shuffleArray(answerObjects);
     let count = 0;
@@ -72,6 +93,7 @@ class CardGame extends React.Component {
               <button
                 type="button"
                 data-testid="correct-answer"
+                onClick={ this.handleAnswerClick }
               >
                 { answerButton.answer }
               </button>);
@@ -82,11 +104,17 @@ class CardGame extends React.Component {
               key={ index }
               type="button"
               data-testid={ `wrong-answer-${count - 1}` }
+              onClick={ this.handleAnswerClick }
             >
               {answerButton.answer}
             </button>
           );
         }) }
+        <input
+          type="button"
+          value="Proxima"
+          onClick={ () => { this.setAnswer(); next(); } }
+        />
         <div />
       </div>
     );
@@ -100,6 +128,7 @@ CardGame.propTypes = {
     correct_answer: PropTypes.string,
     incorrect_answers: PropTypes.arrayOf(PropTypes.any),
   }).isRequired,
+  next: PropTypes.func.isRequired,
 };
 
 export default CardGame;
