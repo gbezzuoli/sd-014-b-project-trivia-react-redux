@@ -8,7 +8,7 @@ import { Redirect } from 'react-router';
 import PropTypes from 'prop-types';
 import { sendPlayerInfo, fetchAPI } from '../redux/actions';
 
-export class LoginForm extends Component {
+class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
