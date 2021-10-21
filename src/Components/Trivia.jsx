@@ -69,17 +69,11 @@ class Trivia extends Component {
       results.length < 1
         ? <div>Carregando...</div> : (
           <div>
-            <span
-              data-testid="question-category"
-            >
+            <span data-testid="question-category">
               { results[actualQuestion].category }
-
             </span>
-            <p
-              data-testid="question-text"
-            >
+            <p data-testid="question-text">
               { results[actualQuestion].question }
-
             </p>
             { this.createAnswerButtons() }
           </div>)
