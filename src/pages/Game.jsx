@@ -73,7 +73,7 @@ class Game extends Component {
   }
 
   render() {
-    // const { segundo } = this.state;
+    // const { segundo } = this.state; vou fazer depois
     const { request } = this.props;
     return (
       <div>
