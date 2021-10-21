@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Input from '../Components/Input';
 import Button from '../Components/Button';
-import requestToken from '../services';
+import requestToken from '../services/token';
 import { addPlayerEmailAndName, addPlayerToken } from '../Redux/actions';
 
 class Login extends Component {
