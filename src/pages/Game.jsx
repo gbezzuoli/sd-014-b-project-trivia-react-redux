@@ -2,12 +2,26 @@ import React from 'react';
 import QuestionCard from '../components/QuestionCard';
 
 export default class Game extends React.Component {
-  // questionCategory
-  // questionType
-  // questionDifficulty
-  // questionText
-  // questionCorrectAnswer
-  // qustionIncorrectAnswers
+  constructor() {
+    super();
+    this.state = {
+      asks: [],
+    };
+
+    this.requestTrivia = this.requestTrivia.bind(this);
+  }
+
+  async componentDidMount() {
+    await this.requestTrivia();
+  }
+
+  // Função de requisição do Trivia
+  async requestTrivia() {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
+    const data = await response.json();
+    this.setState({ asks: data.results });
+  }
 
   render() {
     const answerList = ['A pistol', 'The H.E.V suit', 'Your fists'];
