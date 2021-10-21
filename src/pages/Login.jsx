@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import getApiToken from '../services/ApiRequest';
 
 class Login extends Component {
   constructor(props) {
@@ -7,6 +9,7 @@ class Login extends Component {
       name: '',
       email: '',
     };
+    this.handleClickButton = this.handleClickButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -15,6 +18,13 @@ class Login extends Component {
       [name]: value,
     });
   }
+
+  async handleClickButton() {
+    const getResultsFromAPI = await getApiToken();
+    localStorage.setItem('token', JSON.stringify(getResultsFromAPI.token))
+  }
+
+  //Ao clicar no botão "Jogar", um requisição para a API do Trivia deve ser feita para obter o token de jogador
 
   render() {
     const { name, email } = this.state;
@@ -39,13 +49,16 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
         </label>
-        <button
-          data-testid="btn-play"
-          type="button"
-          disabled={ disabled }
-        >
-          Jogar
-        </button>
+        <Link to="/Trivia">
+          <button
+            data-testid="btn-play"
+            type="button"
+            onClick={ this.handleClickButton }
+            disabled={ disabled }
+            >
+            Jogar
+          </button>
+        </Link>
       </div>
     );
   }
