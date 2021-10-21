@@ -2,6 +2,7 @@ import { GET_QUESTIONS } from '../actions';
 
 const INITIAL_STATE = {
   questions: [],
+  loading: true,
 };
 
 function questionsReducer(state = INITIAL_STATE, action) {
@@ -10,6 +11,7 @@ function questionsReducer(state = INITIAL_STATE, action) {
     return {
       ...state,
       questions: action.payload,
+      loading: false,
     };
   default:
     return state;

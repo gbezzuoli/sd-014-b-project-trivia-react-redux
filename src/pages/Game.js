@@ -11,7 +11,6 @@ class Game extends Component {
     super();
 
     this.state = {
-      loading: true,
       controller: 0,
     };
 
@@ -26,10 +25,6 @@ class Game extends Component {
   async pageIsReady() {
     const { saveQuestions } = this.props;
     await saveQuestions();
-
-    this.setState({
-      loading: false,
-    });
   }
 
   handleClick() {
@@ -52,7 +47,8 @@ class Game extends Component {
         justifyContent: 'space-around',
       },
     };
-    const { loading, controller } = this.state;
+    const { controller } = this.state;
+    const { loading } = this.props;
     return (
       <>
         <Header />
@@ -68,12 +64,17 @@ class Game extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  loading: state.questionsReducer.loading,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   saveQuestions: () => dispatch(thunkQuestions()),
 });
 
 Game.propTypes = {
   saveQuestions: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(Game);
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
