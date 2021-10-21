@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { fetchToken } from '../redux/actions';
+import Loading from '../components/Loading';
 
 class Login extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       email: '',
@@ -11,17 +14,12 @@ class Login extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleValidation = this.handleValidation.bind(this);
+    this.formElement = this.formElement.bind(this);
   }
 
   handleChange({ target: { name, value } }) {
     this.setState({ [name]: value });
-  }
-
-  handleClick() {
-    // const { email } = this.state;
-    const { history } = this.props;
-    history.push('/');
   }
 
   handleValidation(email, name) {
@@ -30,19 +28,24 @@ class Login extends Component {
     return regexEmail.test(email) && regexName.test(name);
   }
 
-  render() {
-    const { email, name } = this.state;
-    const isValid = this.handleValidation(email, name);
+  formElement() {
+    const {
+      state: { email, name },
+      props: { startFetching },
+      handleValidation, handleChange,
+    } = this;
+
+    const isValid = handleValidation(email, name);
 
     return (
-      <div>
+      <form>
         <label htmlFor="name">
           Nome
           <input
             type="text"
             name="name"
             id="name"
-            onChange={ this.handleChange }
+            onChange={ handleChange }
             value={ name }
             placeholder="Insira seu Nome"
             data-testid="input-player-name"
@@ -54,7 +57,7 @@ class Login extends Component {
             type="text"
             name="email"
             id="email"
-            onChange={ this.handleChange }
+            onChange={ handleChange }
             value={ email }
             placeholder="Insira seu Email"
             data-testid="input-gravatar-email"
@@ -63,13 +66,31 @@ class Login extends Component {
         <button
           type="button"
           data-testid="btn-play"
-          onClick={ this.handleClick }
+          onClick={ startFetching }
           disabled={ !isValid }
         >
           Jogar
         </button>
-      </div>
+      </form>
     );
+  }
+
+  render() {
+    const {
+      props: { redirect, code, isFetching, history },
+      formElement,
+    } = this;
+
+    let output = formElement();
+
+    if (isFetching) {
+      output = <Loading />;
+    } else if (redirect) {
+      localStorage.setItem('token', code);
+      history.push('/game');
+    }
+
+    return output;
   }
 }
 
@@ -77,6 +98,18 @@ Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
+  redirect: PropTypes.bool,
+  code: PropTypes.string,
+  isFetching: PropTypes.bool,
+  startFetching: PropTypes.func,
 }.isRequired;
 
-export default Login;
+const mapStateToProps = (state) => ({
+  redirect: state.token.redirect,
+  code: state.token.code,
+  isFetching: state.token.isFetching });
+
+const mapDispatchToProps = (dispatch) => ({
+  startFetching: () => dispatch(fetchToken()) });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
