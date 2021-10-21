@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Timer extends Component {
   constructor(props) {
     super(props);
-    // const { timerOver } = props;
+    // const { timerOver } = props; kkl
     this.state = {
       segundos: 30,
       // timerOver,
