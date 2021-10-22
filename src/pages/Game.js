@@ -57,7 +57,6 @@ class Game extends Component {
       questions: allQuestions.results,
       correctAnswer: allQuestions.results[0].correct_answer,
     });
-    this.mapQuestions(allQuestions.results);
   }
 
   mapQuestions(questions) {
