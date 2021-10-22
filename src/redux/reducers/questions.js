@@ -1,7 +1,7 @@
 import { REQUEST_QUESTION, RECEIVE_QUESTION } from '../actions/index';
 
 const INITIAL_STATE = {
-  questions: {},
+  questions: [],
   isFetching: false,
 };
 
@@ -15,7 +15,7 @@ function questions(state = INITIAL_STATE, action) {
   case RECEIVE_QUESTION:
     return ({
       ...state,
-      questions: action.questions,
+      questions: action.questions.results,
       isFetching: false,
     });
   default:

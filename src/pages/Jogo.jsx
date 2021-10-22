@@ -10,7 +10,6 @@ class Jogo extends React.Component {
     super();
     this.state = {
       loading: true,
-      results: {},
     };
     this.getQuestions = this.getQuestions.bind(this);
   }
@@ -20,9 +19,6 @@ class Jogo extends React.Component {
   }
 
   async getQuestions() {
-    // this.setState({
-    //   loading: true,
-    // });
     const { fetchQuestionsDispatch } = this.props;
     const token = JSON.parse(localStorage.getItem('token'));
     await fetchQuestionsDispatch(token.token);
@@ -36,25 +32,23 @@ class Jogo extends React.Component {
     }
     this.setState({
       loading: false,
-      results: questionsObj,
     });
   }
 
   render() {
-    // const { questionsObj } = this.props;
-    const { loading, results } = this.state;
-    // const r = questionsObj.results;
-    // const array = [...r];
-    // console.log(array);
-    const pagina = (
+    const { questionsObj } = this.props;
+    console.log(questionsObj);
+    const question = questionsObj[0];
+    console.log(question);
+    const { loading } = this.state;
+    if (loading) {
+      return (<h2>Loading</h2>);
+    }
+    return (
       <div>
         <Header />
         <h1>Jogo</h1>
-        <h3>{results.map((a) => <h1 key={ a.category }>{a.category}</h1>)}</h3>
-      </div>);
-    return (
-      <div>
-        {loading ? <h2>loading</h2> : pagina}
+        <h2>{question.category}</h2>
       </div>
     );
   }
