@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import TriviaQuestion from '../components/TriviaQuestion';
 import WrongAnswer from '../components/WrongAnswer';
 import CorrectAnswer from '../components/CorrectAnswer';
+import GameHeader from '../components/GameHeader';
 
 const OBJ_TESTE = {
   response_code: 0,
@@ -126,6 +127,7 @@ class GameTest extends Component {
     const { questions, index, next } = this.state;
     return (
       <div>
+        <GameHeader />
         <TriviaQuestion
           category={ questions[index].category }
           question={ questions[index].question }
