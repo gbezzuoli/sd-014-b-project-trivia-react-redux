@@ -9,7 +9,7 @@ class Game extends React.Component {
     if (loading) return 'Loading...';
     return (
       <div className="game-page">
-        <QuestionCard apiResult={ questions } index={ 0 } />
+        <QuestionCard apiResult={ questions } />
       </div>
     );
   }

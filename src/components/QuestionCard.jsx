@@ -7,12 +7,12 @@ class QuestionCard extends React.Component {
     this.state = {
       questionIndex: 0,
       answerListState: [],
-      correctAnswerClass: 'answer',
-      wrongAnswerClass: 'answer',
+      correctAnswerC: 'answer', // State referente a Classe das respostas
+      wrongAnswerC: 'answer', // State referente a Classe das respostas
     };
 
     this.nextQuestion = this.nextQuestion.bind(this);
-    this.onClick = this.onClick.bind(this);
+    this.setColorAndScore = this.setColorAndScore.bind(this);
   }
 
   componentDidMount() {
@@ -20,15 +20,13 @@ class QuestionCard extends React.Component {
     this.listAnswersMultiple(questionIndex);
   }
 
-  onClick() {
-    // console.log(target);
-    // console.log(parseInt(target.name, 0));
+  setColorAndScore() {
     const { answerListState } = this.state;
     answerListState.forEach((answer) => {
       if (answer.value === true) {
-        this.setState({ correctAnswerClass: 'answer correct-answer' });
+        this.setState({ correctAnswerC: 'answer correct-answer' });
       } else {
-        this.setState({ wrongAnswerClass: 'answer wrong-answer' });
+        this.setState({ wrongAnswerC: 'answer wrong-answer' });
       }
       // if (index === parseInt(target.name, 10) && answer.value === true) {
       //   target.className = 'answer correct-answer';
@@ -64,14 +62,14 @@ class QuestionCard extends React.Component {
     const { questionIndex } = this.state;
     this.setState({
       questionIndex: questionIndex + 1,
-      wrongAnswerClass: 'answer',
-      correctAnswerClass: 'answer',
+      wrongAnswerC: 'answer',
+      correctAnswerC: 'answer',
     }, () => this.listAnswersMultiple());
   }
 
   render() {
     const { apiResult } = this.props;
-    const { questionIndex, answerListState, correctAnswerClass, wrongAnswerClass } = this.state;
+    const { questionIndex, answerListState, correctAnswerC, wrongAnswerC } = this.state;
     return (
       <section className="question-card">
         <h3
@@ -92,9 +90,9 @@ class QuestionCard extends React.Component {
               <button
                 type="button"
                 key={ index }
-                onClick={ this.onClick }
+                onClick={ this.setColorAndScore }
                 data-testid="correct-answer"
-                className={ correctAnswerClass }
+                className={ correctAnswerC }
                 name={ index }
               >
                 { question.answer }
@@ -103,9 +101,9 @@ class QuestionCard extends React.Component {
               <button
                 type="button"
                 key={ index }
-                onClick={ this.onClick }
+                onClick={ this.setColorAndScore }
                 data-testid={ `wrong-answer-${index}` }
-                className={ wrongAnswerClass }
+                className={ wrongAnswerC }
                 name={ index }
               >
                 { question.answer }
