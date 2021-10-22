@@ -10,7 +10,8 @@ import GameCard from '../components/GameCard';
 class Game extends Component {
   constructor(props) {
     super(props);
-    this.state = { counter: 30 };
+    this.state = { counter: 30,
+    };
     this.setCounter = this.setCounter.bind(this);
   }
 
@@ -34,20 +35,20 @@ class Game extends Component {
   }
 
   render() {
-    const { name, avatar, questions, isGameReady } = this.props;
+    const { name, avatar, questions, isGameReady, playerScore } = this.props;
     const { counter } = this.state;
-
     return (
       <>
         <header>
           <img data-testid="header-profile-picture" src={ avatar } alt="" />
           <span data-testid="header-player-name">{name}</span>
-          <span data-testid="header-score">{`Pontos: ${0}`}</span>
+          <span data-testid="header-score">{`Pontos: ${playerScore}`}</span>
         </header>
         <hr />
         <main>
           {!isGameReady && <GameCard question={ questions[0] } />}
           <div>{`Tempo Restante: ${counter}`}</div>
+          <button type="button" onClick={ this.setPlayer }>Entrar</button>
         </main>
       </>
     );
@@ -61,6 +62,7 @@ const mapStateToProps = (state) => ({
   token: state.user.token,
   questions: state.game.questions,
   isGameReady: state.game.isGameReady,
+  playerScore: state.user.score,
 });
 
 const mapDispatchToProps = (dispatch) => ({
