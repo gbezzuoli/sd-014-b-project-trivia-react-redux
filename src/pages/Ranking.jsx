@@ -1,10 +1,10 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 export default class Ranking extends Component {
   render() {
     const magicNumber = -1;
-    /* const ranking = JSON.parse(localStorage.getItem('ranking'));
-    console.log(ranking); */
+    const { history } = this.props;
     const ranking = JSON.parse(localStorage.getItem('ranking')).sort((a, b) => {
       if (a.score > b.score) {
         return magicNumber;
@@ -27,7 +27,20 @@ export default class Ranking extends Component {
             </li>
           ))}
         </ul>
+        <button
+          type="button"
+          onClick={ () => history.push('/') }
+          data-testid="btn-go-home"
+        >
+          Voltar ao Inicio
+        </button>
       </div>
     );
   }
 }
+
+Ranking.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
