@@ -1,8 +1,14 @@
-import { SET_USER_DATA } from '../Actions/index';
+import { SET_USER_DATA, SET_FEEDBACK } from '../Actions/index';
 
 const INITIAL_STATE = {
-  name: '',
+  login: '',
   email: '',
+  player: {
+    name: '',
+    assertions: '',
+    score: 0,
+    gravatarEmail: '',
+  },
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -12,6 +18,16 @@ const userReducer = (state = INITIAL_STATE, action) => {
       ...state,
       name: action.payload,
       email: action.payload,
+    };
+  case SET_FEEDBACK:
+    return {
+      ...state,
+      player: {
+        name: action.payload,
+        assertions: action.payload,
+        score: action.payload,
+        gravatarEmail: action.payload,
+      },
     };
   default:
     return state;

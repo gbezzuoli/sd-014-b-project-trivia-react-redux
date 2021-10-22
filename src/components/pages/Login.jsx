@@ -39,8 +39,8 @@ class Login extends Component {
   render() {
     const { name, email } = this.state;
     return (
-      <section>
-        <label htmlFor="name-input">
+      <section className="input-login">
+        <label htmlFor="name-input" className="name-input">
           Nome:
           <input
             type="text"
@@ -51,7 +51,7 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
         </label>
-        <label htmlFor="email-input">
+        <label htmlFor="email-input" className="name-input">
           Email:
           <input
             type="email"
