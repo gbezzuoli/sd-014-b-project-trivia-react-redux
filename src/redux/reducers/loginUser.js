@@ -1,19 +1,18 @@
 import { GET_INFO_PLAYER } from '../actions';
 
 const INITIAL_STATE = {
-  name: 'user',
+  name: '',
   score: 0,
   gravatarEmail: '',
-  gravatarURL: '',
 };
 
-function loginUser(state = INITIAL_STATE, action) {
-  switch (action.type) {
+function loginUser(state = INITIAL_STATE, { type }) {
+  switch (type) {
   case GET_INFO_PLAYER:
     return {
       ...state,
-      name: action.payload.name,
-      email: action.payload.gravatarEmail,
+      name: action.name,
+      email: action.gravatarEmail,
     };
 
   default:
