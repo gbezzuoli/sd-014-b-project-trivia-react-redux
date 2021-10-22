@@ -7,7 +7,7 @@ class Timer extends Component {
   constructor() {
     super();
     this.state = {
-      counter: 5,
+      counter: 30,
     };
     this.resetSeconds = this.resetSeconds.bind(this);
   }
