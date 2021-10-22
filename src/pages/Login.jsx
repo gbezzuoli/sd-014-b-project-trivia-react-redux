@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import getApiToken from '../services/ApiRequest';
+import * as userActions from '../redux/actions/index';
 
 class Login extends Component {
   constructor(props) {
@@ -22,6 +24,10 @@ class Login extends Component {
   }
 
   async handleClickTrivia() {
+    const { getName, getEmail } = this.props;
+    const { name, email } = this.state;
+    getName(name);
+    getEmail(email);
     const getResultsFromAPI = await getApiToken();
     localStorage.setItem('token', JSON.stringify(getResultsFromAPI.token));
   }
@@ -41,6 +47,7 @@ class Login extends Component {
           <input
             type="text"
             name="name"
+            value={ name }
             data-testid="input-player-name"
             onChange={ this.handleChange }
           />
@@ -50,6 +57,7 @@ class Login extends Component {
           <input
             type="email"
             name="email"
+            value={ email }
             data-testid="input-gravatar-email"
             onChange={ this.handleChange }
           />
@@ -65,13 +73,6 @@ class Login extends Component {
           </button>
         </Link>
         <button
-          data-testid="btn-play"
-          type="button"
-          disabled={ disabled }
-        >
-          Jogar
-        </button>
-        <button
           data-testid="btn-settings"
           type="button"
           onClick={ this.handleClickSettings }
@@ -85,6 +86,13 @@ class Login extends Component {
 
 Login.propTypes = {
   history: PropTypes.objectOf(PropTypes.any).isRequired,
+  getName: PropTypes.func.isRequired,
+  getEmail: PropTypes.func.isRequired,
 };
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  getEmail: (email) => dispatch(userActions.addEmail(email)),
+  getName: (name) => dispatch(userActions.addName(name)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
