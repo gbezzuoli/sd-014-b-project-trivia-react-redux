@@ -1,109 +1,85 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { getToken } from '../redux/actions/index';
+import PropTypes from 'prop-types';
+import setLogin from '../redux/actions';
+import { Buttons } from '../components/Buttons';
+import '../App.css';
 
-import logo from '../trivia.png';
-import { Button } from './Button';
-
-export class LoginForm extends Component {
+class LoginForm extends React.Component {
   constructor() {
     super();
+
     this.state = {
-      name: '',
-      gravatarEmail: '',
+      login: '',
+      email: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.validEmail = this.validEmail.bind(this);
-    this.validName = this.validName.bind(this);
   }
 
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState(() => ({
-      [name]: value,
-    }));
+  handleChange({ target }) {
+    const { name, value } = target;
+    this.setState({ [name]: value });
   }
 
   async handleClick() {
-    const { valueToken } = this.props;
-
-    const response = await fetch('https://opentdb.com/api_token.php?command=request');
-    const apiToken = await response.json();
-    const { token } = apiToken;
-    valueToken(token);
-
-    localStorage.setItem('token', token);
-  }
-
-  validEmail() {
-    const { gravatarEmail } = this.state;
-    const regex = /\S+@\S+.\S+/;
-    return regex.test(gravatarEmail);
-  }
-
-  validName() {
-    const { name } = this.state;
-    return !!name;
+    const { loginSet } = this.props;
+    const { login, email } = this.state;
+    loginSet(login, email);
+    const { token } = this.props;
+    localStorage.setItem('token', JSON.stringify(token));
   }
 
   render() {
-    const { name, gravatarEmail } = this.state;
-    const { handleChange, handleClick, validEmail, validName } = this;
+    const { login, email } = this.state;
+    const validadeButton = login && email; // retorna true caso os campos estejam preenchidos
     return (
-      <form className="login-form">
-        <div>
-          <img src={ logo } className="App-logo" alt="logo" />
-        </div>
-        <Link to="/settings">
-          <Button
-            text="Configurações"
-            dataTestid="btn-settings"
-            onClick={ () => {} }
-          />
-        </Link>
-        <label htmlFor="gravatarEmail">
-          Gravatar E-mail
+      <main className="login-main">
+        <h2>Trivia</h2>
+        <label htmlFor="login">
+          <i className="material-icons">
+            Nome
+          </i>
           <input
-            type="text"
-            data-testid="input-gravatar-email"
-            name="gravatarEmail"
-            onChange={ handleChange }
-            value={ gravatarEmail }
-          />
-        </label>
-        <label htmlFor="name">
-          Player Name
-          <input
-            type="text"
             data-testid="input-player-name"
-            name="name"
-            onChange={ handleChange }
-            value={ name }
+            id="login"
+            name="login"
+            value={ login }
+            onChange={ this.handleChange }
+            placeholder=" Nome"
           />
         </label>
-        <Link to="/game">
-          <Button
-            text="Start!"
-            dataTestid="btn-play"
-            onClick={ handleClick }
-            disabled={ !(validEmail() && validName()) }
+        <label htmlFor="email">
+          <i className="material-icons">
+            Email
+          </i>
+          <input
+            data-testid="input-gravatar-email"
+            id="email"
+            name="email"
+            value={ email }
+            onChange={ this.handleChange }
+            placeholder=" Email"
+            type="email"
           />
-        </Link>
-      </form>
+        </label>
+        <br />
+        <Buttons validadeButton={ validadeButton } handleClick={ this.handleClick } />
+      </main>
     );
   }
 }
 
-LoginForm.propTypes = {
-  valueToken: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  valueToken: (token) => dispatch(getToken(token)),
+const mapStateToProps = (state) => ({
 });
 
-export default connect(null, mapDispatchToProps)(LoginForm);
+const mapDispatchToState = (dispatch) => ({
+  loginSet: (login, email) => dispatch(setLogin(login, email)),
+});
+
+LoginForm.propTypes = {
+  loginSet: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToState)(LoginForm);
