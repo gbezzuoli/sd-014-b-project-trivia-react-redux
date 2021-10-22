@@ -7,9 +7,8 @@ class Game extends React.Component {
   render() {
     const { questions, loading } = this.props;
     if (loading) return 'Loading...';
-    console.log(questions);
     return (
-      <div className="question-card">
+      <div className="game-page">
         <QuestionCard apiResult={ questions } index={ 0 } />
       </div>
     );

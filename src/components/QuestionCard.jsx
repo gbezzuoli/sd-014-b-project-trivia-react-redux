@@ -42,7 +42,7 @@ class QuestionCard extends React.Component {
     const { apiResult } = this.props;
     const { questionIndex } = this.state;
     return (
-      <section className="QuestionCard">
+      <section className="question-card">
         <h3
           data-testid="question-category"
           className="question-category"
@@ -63,6 +63,7 @@ class QuestionCard extends React.Component {
                 key={ index }
                 onClick={ this.submitAnswer }
                 data-testid="correct-answer"
+                className="correct-answer"
               >
                 { question.answer }
               </button>)
@@ -72,6 +73,7 @@ class QuestionCard extends React.Component {
                 key={ index }
                 onClick={ this.submitAnswer }
                 data-testid={ `wrong-answer-${index}` }
+                className="wrong-answer"
               >
                 { question.answer }
               </button>)
