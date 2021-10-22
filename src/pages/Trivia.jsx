@@ -2,15 +2,32 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from '../Component/Header';
+import Timer from '../Component/Timer';
 
 class Trivia extends Component {
   constructor() {
     super();
-    this.handleColorClick = this.handleColorClick.bind(this);
-
     this.state = {
       questionIndex: 0,
+      timer: 30,
     };
+    this.handleColorClick = this.handleColorClick.bind(this);
+    this.startTimer = this.startTimer.bind(this);
+  }
+
+  componentDidMount() {
+    this.startTimer();
+  }
+
+  startTimer() {
+    const ONE_SECOND = 1000;
+    const { timer } = this.state;
+    if ((timer - 1) >= 0) {
+      this.setState((prevState) => ({
+        timer: prevState.timer - 1,
+      }));
+      setTimeout(this.startTimer, ONE_SECOND);
+    }
   }
 
   // consultado o pr do grupo 9
@@ -28,10 +45,11 @@ class Trivia extends Component {
 
   render() {
     const { receviQuestions } = this.props;
-    const { questionIndex } = this.state;
+    const { questionIndex, timer } = this.state;
     return (
       <div>
         <Header />
+        <Timer count={ timer } />
         <p data-testid="question-category">{receviQuestions[questionIndex].category}</p>
         <p data-testid="question-text">{receviQuestions[questionIndex].question}</p>
         {receviQuestions[questionIndex].incorrect_answers.map((question, index) => (
@@ -40,6 +58,7 @@ class Trivia extends Component {
               data-testid={ `wrong-answer-${index}` }
               onClick={ this.handleColorClick }
               type="button"
+              disabled={ timer === 0 }
               value="wrong-ans"
             >
               {question}
@@ -50,6 +69,7 @@ class Trivia extends Component {
           data-testid="correct-answer"
           onClick={ this.handleColorClick }
           type="button"
+          disabled={ timer === 0 }
           value="correct-ans"
         >
           { receviQuestions[questionIndex].correct_answer }
@@ -60,9 +80,13 @@ class Trivia extends Component {
 }
 
 Trivia.propTypes = {
-  receviQuestions: PropTypes.shape({
+  receviQuestions: PropTypes.arrayOf(PropTypes.shape({
+    category: PropTypes.string,
+    question: PropTypes.string,
     length: PropTypes.number,
-  }).isRequired,
+    correct_answer: PropTypes.string,
+    incorrect_answers: PropTypes.arrayOf(PropTypes.string),
+  })).isRequired,
 };
 
 const mapStateToProps = (state) => ({
