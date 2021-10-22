@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ButtonConfig from '../components/ButtonConfig';
 import { fetchToken } from '../services';
+import './LoginPage.css';
+import image from '../trivia.png';
 
 class Login extends React.Component {
   constructor() {
@@ -60,11 +62,14 @@ class Login extends React.Component {
     const { email, name } = this.state;
     return (
       <div>
+        <ButtonConfig redirectConfig={ this.redirectConfig } />
         <form>
-          <fieldset>
+          <fieldset className="form-login">
+            <img src={ image } alt="Logo Trivia" className="image-login" />
             <label htmlFor="email-input">
-              email:
+              Email:
               <input
+                className="input-email"
                 type="email"
                 id="email-input"
                 data-testid="input-gravatar-email"
@@ -74,8 +79,9 @@ class Login extends React.Component {
               />
             </label>
             <label htmlFor="name-input">
-              name:
+              Nome:
               <input
+                className="input-name"
                 type="text"
                 id="name-input"
                 data-testid="input-player-name"
@@ -85,6 +91,7 @@ class Login extends React.Component {
               />
             </label>
             <button
+              className="button-play"
               type="button"
               data-testid="btn-play"
               disabled={ this.btnDisabled() }
@@ -94,7 +101,6 @@ class Login extends React.Component {
             </button>
           </fieldset>
         </form>
-        <ButtonConfig redirectConfig={ this.redirectConfig } />
       </div>
     );
   }
