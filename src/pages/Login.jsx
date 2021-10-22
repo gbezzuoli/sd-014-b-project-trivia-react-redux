@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import getApiToken from '../services/ApiRequest';
+import { connect } from 'react-redux';
+import getApiToken, { getApiTrivia } from '../services/ApiRequest';
+import statusQuestions from '../redux/actions';
 
 class Login extends Component {
   constructor(props) {
@@ -22,8 +24,11 @@ class Login extends Component {
   }
 
   async handleClickTrivia() {
+    const { sendToGlobal } = this.props;
     const getResultsFromAPI = await getApiToken();
     localStorage.setItem('token', JSON.stringify(getResultsFromAPI.token));
+    const response = await getApiTrivia(JSON.parse(localStorage.getItem('token')));
+    sendToGlobal(response.results);
   }
 
   handleClickSettings() {
@@ -65,13 +70,6 @@ class Login extends Component {
           </button>
         </Link>
         <button
-          data-testid="btn-play"
-          type="button"
-          disabled={ disabled }
-        >
-          Jogar
-        </button>
-        <button
           data-testid="btn-settings"
           type="button"
           onClick={ this.handleClickSettings }
@@ -85,6 +83,11 @@ class Login extends Component {
 
 Login.propTypes = {
   history: PropTypes.objectOf(PropTypes.any).isRequired,
+  sendToGlobal: PropTypes.func.isRequired,
 };
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  sendToGlobal: (arrayObjects) => dispatch(statusQuestions(arrayObjects)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
