@@ -1,8 +1,8 @@
 import { REQUEST_QUESTION, RECEIVE_QUESTION } from '../actions/index';
 
 const INITIAL_STATE = {
-  questions: [],
-  isFetching: false,
+  questions: {},
+  isFetching: true,
 };
 
 function questions(state = INITIAL_STATE, action) {
@@ -15,7 +15,7 @@ function questions(state = INITIAL_STATE, action) {
   case RECEIVE_QUESTION:
     return ({
       ...state,
-      questions: action.questions.results,
+      questions: action.questions,
       isFetching: false,
     });
   default:

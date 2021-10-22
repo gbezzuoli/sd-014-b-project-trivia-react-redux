@@ -6,14 +6,6 @@ import fetchToken from '../services/token';
 import { fetchQuestion } from '../redux/actions';
 
 class Jogo extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true,
-    };
-    this.getQuestions = this.getQuestions.bind(this);
-  }
-
   componentDidMount() {
     this.getQuestions();
   }
@@ -30,25 +22,35 @@ class Jogo extends React.Component {
       localStorage.setItem('token', JSON.stringify(newToken));
       await fetchQuestionsDispatch(newToken.token);
     }
-    this.setState({
-      loading: false,
-    });
   }
 
   render() {
-    const { questionsObj } = this.props;
-    console.log(questionsObj);
-    const question = questionsObj[0];
-    console.log(question);
-    const { loading } = this.state;
-    if (loading) {
+    const { questionsObj, isFetching } = this.props;
+    const { results } = questionsObj;
+    if (isFetching) {
       return (<h2>Loading</h2>);
     }
     return (
       <div>
         <Header />
         <h1>Jogo</h1>
-        <h2>{question.category}</h2>
+        <h2 data-testid="question-category">{results[0].category}</h2>
+        <h2 data-testid="question-text">{results[0].question}</h2>
+        <button
+          data-testid="correct-answer"
+          type="button"
+        >
+          {results[0].correct_answer}
+        </button>
+        { results[0].incorrect_answers.map((answer, index) => (
+          <button
+            data-testid="wrong-answer"
+            type="button"
+            key={ index }
+          >
+            { answer }
+          </button>
+        )) }
       </div>
     );
   }
@@ -60,11 +62,13 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
   questionsObj: state.trivia.questions,
+  isFetching: state.trivia.isFetching,
 });
 
 Jogo.propTypes = {
   fetchQuestionsDispatch: PropTypes.func.isRequired,
   questionsObj: PropTypes.objectOf(PropTypes.any).isRequired,
+  isFetching: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Jogo);
