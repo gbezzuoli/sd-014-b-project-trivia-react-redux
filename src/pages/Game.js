@@ -5,13 +5,13 @@ import { thunkQuestions } from '../actions';
 import AlternativeCard from '../components/AlternativeCard';
 import Header from '../components/Header';
 import QuestionCard from '../components/QuestionCard';
+import Timer from '../components/Timer';
 
 class Game extends Component {
   constructor() {
     super();
 
     this.state = {
-      loading: true,
       controller: 0,
     };
 
@@ -26,10 +26,6 @@ class Game extends Component {
   async pageIsReady() {
     const { saveQuestions } = this.props;
     await saveQuestions();
-
-    this.setState({
-      loading: false,
-    });
   }
 
   handleClick() {
@@ -53,7 +49,8 @@ class Game extends Component {
       },
     };
 
-    const { loading, controller } = this.state;
+    const { controller } = this.state;
+    const { loading, timeIsOver } = this.props;
     return (
       <>
         <Header />
@@ -63,11 +60,17 @@ class Game extends Component {
               <QuestionCard controller={ controller } />
               <AlternativeCard controller={ controller } />
               <button onClick={ this.handleClick } type="button">Proxima</button>
+              {timeIsOver ? <div>Timer: 0</div> : <Timer />}
             </main>)}
       </>
     );
   }
 }
+
+const mapStateToProps = ({ questionsReducer: { timeIsOver, loading } }) => ({
+  timeIsOver,
+  loading,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   saveQuestions: () => dispatch(thunkQuestions()),
@@ -75,6 +78,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 Game.propTypes = {
   saveQuestions: PropTypes.func.isRequired,
+  timeIsOver: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(Game);
+export default connect(mapStateToProps, mapDispatchToProps)(Game);

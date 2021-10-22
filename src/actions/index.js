@@ -1,6 +1,7 @@
 import { fetchQuestions } from '../services';
 
 export const GET_QUESTIONS = 'GET_QUESTIONS';
+export const TIME_IS_OVER = 'TIME_IS_OVER';
 
 export const fetchQuestionsAction = (payload) => ({
   type: GET_QUESTIONS,
@@ -16,3 +17,8 @@ export const thunkQuestions = () => async (dispatch) => {
     console.error(error.message);
   }
 };
+
+export const timeIsOver = (payload) => ({
+  type: TIME_IS_OVER,
+  payload,
+});
