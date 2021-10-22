@@ -48,7 +48,7 @@ class Game extends Component {
       this.setState({ count: count + 1 });
     }
     this.addStyle();
-    this.setState({ disabledState: true });
+    this.setState({ disabledState: true, currentTime: 0 });
   }
 
   async requestAPI() {
