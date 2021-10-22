@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import logo from '../trivia.png';
-import { fetchApiThunk, user as userAction } from '../action';
+import { user as userAction } from '../action';
 
 class Login extends Component {
   constructor() {
@@ -24,11 +24,13 @@ class Login extends Component {
     </div>
   )
 
-  handleClick = () => {
-    const { tokenAction, history, user } = this.props;
-    history.push('/game');
-    tokenAction();
+  handleClick = async () => {
+    const { history, user } = this.props;
+    await fetch('https://opentdb.com/api_token.php?command=request')
+      .then((item) => item.json()
+        .then((payload) => localStorage.setItem('token', payload.token)));
     user(this.state);
+    history.push('/game');
   }
 
   handleChange = ({ target: { id, value } }) => {
@@ -82,7 +84,6 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  tokenAction: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
@@ -90,7 +91,6 @@ Login.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  tokenAction: (e) => dispatch(fetchApiThunk(e)),
   user: (e) => dispatch(userAction(e)),
 });
 
