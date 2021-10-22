@@ -7,10 +7,11 @@ class CardGame extends React.Component {
     super(props);
 
     this.state = {
-      incorrect: [],
-      correct: '',
       answers: [],
       answerObjects: [],
+      correct: '',
+      hidden: true,
+      incorrect: [],
     };
 
     this.setAnswer = this.setAnswer.bind(this);
@@ -26,8 +27,8 @@ class CardGame extends React.Component {
   async setAnswer() {
     const { question } = this.props;
     await this.setState({
-      incorrect: question.incorrect_answers,
       correct: question.correct_answer,
+      incorrect: question.incorrect_answers,
     });
 
     const { incorrect, correct } = this.state;
@@ -66,6 +67,7 @@ class CardGame extends React.Component {
   }
 
   handleAnswerClick() {
+    this.setState({ hidden: false });
     const brothers = document.querySelectorAll('button');
     // getAttribute feito com base no stackoverflow
     brothers.forEach((brother) => {
@@ -79,7 +81,7 @@ class CardGame extends React.Component {
 
   render() {
     const { question: { category, question }, next } = this.props;
-    const { answerObjects } = this.state;
+    const { answerObjects, hidden } = this.state;
     const randomAnswers = this.shuffleArray(answerObjects);
     let count = 0;
 
@@ -111,9 +113,10 @@ class CardGame extends React.Component {
           );
         }) }
         <input
+          style={ { display: hidden ? 'none' : 'inline-block' } }
           type="button"
           value="Proxima"
-          onClick={ () => { this.setAnswer(); next(); } }
+          onClick={ () => { this.setState({ hidden: true }); this.setAnswer(); next(); } }
         />
         <div />
       </div>
