@@ -23,7 +23,7 @@ class Game extends Component {
           <span data-testid="header-score">{`Pontos: ${0}`}</span>
         </header>
         <hr />
-        <main>{!isGameReady && <GameCard question={ questions[0] } />}</main>
+        <main>{!isGameReady && <GameCard question={ questions } />}</main>
       </>
     );
   }
