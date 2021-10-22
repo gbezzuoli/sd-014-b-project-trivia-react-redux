@@ -5,24 +5,15 @@ class QuestionCard extends React.Component {
   constructor() {
     super();
     this.state = {
-      apiResultObj: {},
+      questionIndex: 0,
     };
+
+    this.nextQuestion = this.nextQuestion.bind(this);
   }
 
-  componentDidMount() {
-    this.iterateApiResult();
-  }
-
-  iterateApiResult() {
-    const { apiResult, index } = this.props;
-    console.log(apiResult);
-    this.setState({ apiResultObj: apiResult[index] }, () => {
-    });
-  }
-
-  listAnswersMultiple() {
-    const { apiResultObj } = this.state;
-    const incorrectAnswers = apiResultObj.incorrect_answers || [];
+  listAnswersMultiple(questionIndex) {
+    const { apiResult } = this.props;
+    const incorrectAnswers = apiResult[questionIndex].incorrect_answers;
     const incorrectAnswersList = incorrectAnswers.map((answer) => (
       {
         answer,
@@ -31,8 +22,8 @@ class QuestionCard extends React.Component {
     ));
 
     const correctAnswer = {
-      answer: apiResultObj.correct_answer,
-      value: 'True',
+      answer: apiResult[questionIndex].correct_answer,
+      value: true,
     };
     const answerList = [...incorrectAnswersList, correctAnswer];
 
@@ -42,24 +33,30 @@ class QuestionCard extends React.Component {
     return answerList;
   }
 
+  nextQuestion() {
+    const { questionIndex } = this.state;
+    this.setState({ questionIndex: questionIndex + 1 });
+  }
+
   render() {
-    const { apiResultObj } = this.state;
+    const { apiResult } = this.props;
+    const { questionIndex } = this.state;
     return (
       <section className="QuestionCard">
         <h3
           data-testid="question-category"
           className="question-category"
         >
-          { apiResultObj.category }
+          { apiResult[questionIndex].category }
         </h3>
         <p
           data-testid="question-text"
           className="question-text"
         >
-          { apiResultObj.question }
+          { apiResult[questionIndex].question }
         </p>
-        {this.listAnswersMultiple().map((question, index) => (
-          question.answer === question.correct_answer
+        {this.listAnswersMultiple(questionIndex).map((question, index) => (
+          question.value === true
             ? (
               <button
                 type="button"
@@ -79,6 +76,9 @@ class QuestionCard extends React.Component {
                 { question.answer }
               </button>)
         ))}
+        <button type="button" onClick={ this.nextQuestion }>
+          Próximo
+        </button>
       </section>
     );
   }
@@ -91,7 +91,6 @@ QuestionCard.propTypes = {
     category: PropTypes.string,
     question: PropTypes.string,
   }).isRequired,
-  index: PropTypes.number.isRequired,
 };
 
 export default QuestionCard;
