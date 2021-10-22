@@ -4,17 +4,8 @@ import React from 'react';
 import '../Answers.css';
 
 class CorrectAnswer extends React.Component {
-  // constructor() {
-  //   super();
-
-  //   this.state = {
-  //     buttonClass: '',
-  //   };
-  // }
-
   render() {
     const { correct, clickAnswer, borderColor } = this.props;
-    // const { buttonClass } = this.state;
     return (
       <div>
         <button

@@ -20,6 +20,7 @@ class Game extends Component {
     this.answerClickHandler = this.answerClickHandler.bind(this);
     this.nextButtonClick = this.nextButtonClick.bind(this);
     this.fetchQuestionsState = this.fetchQuestionsState.bind(this);
+    this.nextButtonClick = this.nextButtonClick.bind(this);
   }
 
   async componentDidMount() {
@@ -44,6 +45,19 @@ class Game extends Component {
     } else if (id === 'correct') {
       console.log('Certa resposta!');
     }
+  }
+
+  nextButtonRender() {
+    const { next } = this.state;
+    return (
+      <button
+        type="button"
+        disabled={ next === false }
+        onClick={ () => this.nextButtonClick() }
+      >
+        Próxima
+      </button>
+    );
   }
 
   nextButtonClick() {
@@ -89,13 +103,7 @@ class Game extends Component {
         />
         { this.renderQuestionsRandomAnswers() }
         <br />
-        <button
-          type="button"
-          disabled={ next === false }
-          onClick={ () => this.nextButtonClick() }
-        >
-          Próxima
-        </button>
+        { next && this.nextButtonRender() }
       </div>
     );
   }
