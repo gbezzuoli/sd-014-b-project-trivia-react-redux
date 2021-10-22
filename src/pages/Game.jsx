@@ -35,7 +35,6 @@ class Game extends Component {
             alt="avatar"
             data-testid="header-profile-picture"
           />
-          <span data-testid="header-score">0</span>
         </header>
         <Questions />
       </>

@@ -7,6 +7,7 @@ class Questions extends React.Component {
     super(props);
     this.state = {
       timer: 30,
+      ponts: 0,
     };
   }
 
@@ -34,22 +35,30 @@ class Questions extends React.Component {
     }
   } */
 
-  coresResposta =() => {
-    const correct = document.querySelector('.correct');
-    correct.className = 'correct correct-answer';
-    const incorrect = document.querySelectorAll('.incorrect');
-    incorrect.forEach((item) => {
-      item.className = 'incorrect incorrect-answer';
-      return item;
-    });
-  }
-
-  handleClick = () => {
-    console.log('fostes');
+  handleClick = ({ target }) => {
     document.querySelector('.correct-answer').className = 'correct correct-answer';
     document.querySelectorAll('.incorrect-answer').forEach((item) => {
       item.className = 'incorrect incorrect-answer';
     });
+    if (target.classList.contains('correct')) {
+      console.log('chamada');
+      this.calcPonts();
+    }
+  }
+
+  calcPonts = () => {
+    const { questions } = this.props;
+    const { ponts, timer } = this.state;
+    const pontsExt = 10;
+    const pontDifficulty = {
+      hard: 3,
+      medium: 2,
+      easy: 1,
+    };
+    console.log(pontDifficulty[questions.difficulty]);
+    const pts = pontsExt + (timer * pontDifficulty[questions[0].difficulty]);
+    console.log(pts);
+    this.setState({ ponts: ponts + pts });
   }
 
   boolean = () => {
@@ -122,7 +131,7 @@ class Questions extends React.Component {
 
   render() {
     const { questions } = this.props;
-    const { timer } = this.state;
+    const { timer, ponts } = this.state;
     if (!questions[0]) {
       return (
         <div>Carregando...</div>
@@ -130,6 +139,7 @@ class Questions extends React.Component {
     }
     return (
       <div>
+        <span data-testid="header-score">{ ponts }</span>
         <h2 data-testid="question-category">{ questions[0].category }</h2>
         <h2 data-testid="question-text">{ questions[0].question}</h2>
         <div>{ timer }</div>
