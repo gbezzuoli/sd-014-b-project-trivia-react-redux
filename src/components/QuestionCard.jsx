@@ -6,18 +6,44 @@ class QuestionCard extends React.Component {
     super();
     this.state = {
       questionIndex: 0,
+      answerListState: [],
+      correctAnswerClass: 'answer',
+      wrongAnswerClass: 'answer',
     };
 
     this.nextQuestion = this.nextQuestion.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
-  listAnswersMultiple(questionIndex) {
+  componentDidMount() {
+    const { questionIndex } = this.state;
+    this.listAnswersMultiple(questionIndex);
+  }
+
+  onClick() {
+    // console.log(target);
+    // console.log(parseInt(target.name, 0));
+    const { answerListState } = this.state;
+    answerListState.forEach((answer) => {
+      if (answer.value === true) {
+        this.setState({ correctAnswerClass: 'answer correct-answer' });
+      } else {
+        this.setState({ wrongAnswerClass: 'answer wrong-answer' });
+      }
+      // if (index === parseInt(target.name, 10) && answer.value === true) {
+      //   target.className = 'answer correct-answer';
+      // }
+    });
+  }
+
+  listAnswersMultiple() {
     const { apiResult } = this.props;
+    const { questionIndex } = this.state;
     const incorrectAnswers = apiResult[questionIndex].incorrect_answers;
     const incorrectAnswersList = incorrectAnswers.map((answer) => (
       {
         answer,
-        value: 'False',
+        value: false,
       }
     ));
 
@@ -30,17 +56,22 @@ class QuestionCard extends React.Component {
     // https://flaviocopes.com/how-to-shuffle-array-javascript/
     const number = 0.5;
     answerList.sort(() => Math.random() - number);
+    this.setState({ answerListState: answerList });
     return answerList;
   }
 
   nextQuestion() {
     const { questionIndex } = this.state;
-    this.setState({ questionIndex: questionIndex + 1 });
+    this.setState({
+      questionIndex: questionIndex + 1,
+      wrongAnswerClass: 'answer',
+      correctAnswerClass: 'answer',
+    }, () => this.listAnswersMultiple());
   }
 
   render() {
     const { apiResult } = this.props;
-    const { questionIndex } = this.state;
+    const { questionIndex, answerListState, correctAnswerClass, wrongAnswerClass } = this.state;
     return (
       <section className="question-card">
         <h3
@@ -55,15 +86,16 @@ class QuestionCard extends React.Component {
         >
           { apiResult[questionIndex].question }
         </p>
-        {this.listAnswersMultiple(questionIndex).map((question, index) => (
+        {answerListState.map((question, index) => (
           question.value === true
             ? (
               <button
                 type="button"
                 key={ index }
-                onClick={ this.submitAnswer }
+                onClick={ this.onClick }
                 data-testid="correct-answer"
-                className="correct-answer"
+                className={ correctAnswerClass }
+                name={ index }
               >
                 { question.answer }
               </button>)
@@ -71,9 +103,10 @@ class QuestionCard extends React.Component {
               <button
                 type="button"
                 key={ index }
-                onClick={ this.submitAnswer }
+                onClick={ this.onClick }
                 data-testid={ `wrong-answer-${index}` }
-                className="wrong-answer"
+                className={ wrongAnswerClass }
+                name={ index }
               >
                 { question.answer }
               </button>)
