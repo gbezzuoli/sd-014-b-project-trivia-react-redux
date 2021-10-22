@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
+import Loading from '../components/Loading';
 import fetchQuestions from '../services/FetchQuestions';
 
 class Game extends Component {
@@ -103,10 +104,10 @@ class Game extends Component {
       return (
         <div key={ index1 }>
           <h5 data-testid="question-category">
-            {`Categoria: ${question.category}`}
+            {`Category: ${question.category}`}
           </h5>
           <h3 data-testid="question-text">
-            {`Pergunta: ${question.question}`}
+            {`Question: ${question.question}`}
           </h3>
           <h3 data-testid="question-text">
             { shuffledQuestions.map((e) => (e))}
@@ -124,7 +125,7 @@ class Game extends Component {
         <Header />
         <h1>TRIVIA</h1>
         {questions ? this.mapQuestions(questions)
-          : <span>CARREGANDO</span>}
+          : <Loading />}
         { `TIMER: ${currentTime}` }
       </div>
     );
