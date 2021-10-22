@@ -2,6 +2,13 @@ export const LOADING_ACTION = 'LOADING_ACTION';
 export const SUCCESS_ACTION = 'SUCCESS_ACTION';
 export const FAIL_ACTION = 'FAIL_ACTION';
 export const GET_TOKEN = 'GET_TOKEN';
+export const LOGIN = 'LOGIN';
+
+const setLogin = (login, email) => ({
+  type: LOGIN, login, email,
+});
+
+export default setLogin;
 
 export const loadingAction = (payload) => ({
   type: LOADING_ACTION,
