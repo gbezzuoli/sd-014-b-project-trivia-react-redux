@@ -12,9 +12,10 @@ class GamePage extends Component {
     this.state = {
       result: [],
       questionOne: [],
+      answers: [],
       wrongAnswersOne: [],
       rightAnswerOne: '',
-      counter: 5,
+      counter: 30,
       i: 0,
     };
   }
@@ -31,35 +32,48 @@ class GamePage extends Component {
   }
 
   onClickAnswer() {
-    const { result } = this.state;
-    let { i } = this.state;
-    console.log(i);
-    if (i === 0) {
-      i += 1;
-    }
-    try {
-      this.setState({
-        i: i + 1,
-        questionOne: result[i].question,
-        wrongAnswersOne: result[i].incorrect_answers,
-        rightAnswerOne: result[i].correct_answer,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const { i } = this.state;
+    this.setState({
+      i: i + 1,
+    }, () => this.nextQuestion());
   }
 
   async getQuestions() {
     const { i } = this.state;
     const result = await requestQuestions();
-    console.log(result);
 
     this.setState({
       result,
       questionOne: result[i].question,
+      answers: [...result[i].incorrect_answers, result[i].correct_answer],
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
     }, () => this.startCounter());
+    this.randomAnswers();
+  }
+
+  nextQuestion() {
+    const { i, result } = this.state;
+    this.setState({
+      questionOne: result[i].question,
+      answers: [...result[i].incorrect_answers, result[i].correct_answer],
+      wrongAnswersOne: result[i].incorrect_answers,
+      rightAnswerOne: result[i].correct_answer,
+    });
+  }
+
+  randomAnswers() {
+    const { answers } = this.state;
+    const arraySplice = [...answers];
+    const novoArray = [];
+
+    answers.forEach(() => {
+      const max = arraySplice.length;
+      const randomNumber = Math.floor(Math.random() * (max - 0) + 0);
+      const item = arraySplice.splice(randomNumber, 1)[0];
+      novoArray.push(item);
+    });
+    console.log(novoArray);
   }
 
   startCounter() {
