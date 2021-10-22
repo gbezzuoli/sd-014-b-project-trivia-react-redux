@@ -57,11 +57,11 @@ class Game extends Component {
       questions: allQuestions.results,
       correctAnswer: allQuestions.results[0].correct_answer,
     });
-    console.log(allQuestions);
+    this.mapQuestions(allQuestions.results);
   }
 
-  mapQuestions() {
-    const { questions, disable, timer } = this.state;
+  mapQuestions(questions) {
+    const { disable, timer } = this.state;
     const mappedQuestions = questions.map((question, index1) => {
       const incorrectAnswers = question.incorrect_answers.map((alternative, index2) => (
         <button
@@ -93,10 +93,10 @@ class Game extends Component {
       return (
         <div key={ index1 }>
           <h5 data-testid="question-category">
-            {`Categoria: ${question.category}`}
+            {`Category: ${question.category}`}
           </h5>
           <h3 data-testid="question-text">
-            {`Pergunta: ${question.question}`}
+            {`Question: ${question.question}`}
           </h3>
           <h3 data-testid="question-text">
             { shuffledQuestions.map((e) => (e))}
