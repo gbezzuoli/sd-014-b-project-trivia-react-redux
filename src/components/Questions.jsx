@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from './Button';
 
-const magicNumber = 0.5;
+const HALF = 0.5;
 
 class Questions extends Component {
   constructor(props) {
@@ -11,41 +11,66 @@ class Questions extends Component {
 
     this.state = {
       shouldBorderColorChange: false,
+      sortedAnswers: [],
+      currentQuestion: 0,
     };
 
+    this.getAnswersAndSort = this.getAnswersAndSort.bind(this);
     this.changeBorderColor = this.changeBorderColor.bind(this);
+    this.handleNextQuestion = this.handleNextQuestion.bind(this);
+  }
+
+  componentDidMount() {
+    const { getAnswersAndSort } = this;
+    getAnswersAndSort();
+  }
+
+  getAnswersAndSort() {
+    const {
+      props: { questions },
+      state: { currentQuestion },
+    } = this;
+
+    const answers = questions && [
+      questions[currentQuestion].correct_answer,
+      ...questions[currentQuestion].incorrect_answers,
+    ];
+
+    const sortedAnswers = questions && answers.sort(() => Math.random() - HALF);
+
+    this.setState({ sortedAnswers });
   }
 
   changeBorderColor() {
     this.setState({ shouldBorderColorChange: true });
   }
 
+  handleNextQuestion() {
+    this.setState(({ currentQuestion }) => ({ currentQuestion: currentQuestion + 1,
+      shouldBorderColorChange: false }),
+    () => this.getAnswersAndSort());
+  }
+
   render() {
     const {
-      state: { shouldBorderColorChange },
+      state: { shouldBorderColorChange, sortedAnswers, currentQuestion },
       props: { questions },
       changeBorderColor,
     } = this;
 
-    const currentQuest = 0;
-    const answers = questions && [
-      questions[0].correct_answer,
-      ...questions[0].incorrect_answers,
-    ];
-    const sortedAnswers = questions && answers.sort(() => Math.random() - magicNumber);
-
     return (
       <div>
         <h1
-          key={ questions[currentQuest].category }
+          key={ questions[currentQuestion].category }
           data-testid="question-category"
         >
-          { questions[currentQuest].category }
+          { questions[currentQuestion].category }
         </h1>
-        <h2 data-testid="question-text">{ questions[currentQuest].question }</h2>
+        <h2 data-testid="question-text">{ questions[currentQuestion].question }</h2>
         {sortedAnswers.map((answer) => {
-          const currentQIndex = questions[0].incorrect_answers.indexOf(answer);
-          if (answer === questions[0].correct_answer) {
+          const currentQIndex = questions[currentQuestion]
+            .incorrect_answers.indexOf(answer);
+          if (answer === questions[currentQuestion].correct_answer) {
             return (
               <Button
                 answer={ answer }
@@ -67,6 +92,15 @@ class Questions extends Component {
               shouldBorderColorChange={ shouldBorderColorChange }
             />);
         })}
+        { shouldBorderColorChange
+          && (
+            <button
+              type="button"
+              onClick={ this.handleNextQuestion }
+              data-testid="btn-next"
+            >
+              Próxima
+            </button>) }
       </div>
     );
   }
