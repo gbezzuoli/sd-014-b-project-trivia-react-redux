@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getToken } from '../helper';
+import getToken from '../helper';
 import * as userActions from '../redux/actions/index';
 import { fetchQuestions } from '../redux/actions';
 
