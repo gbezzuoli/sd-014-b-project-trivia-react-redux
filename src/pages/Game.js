@@ -1,7 +1,8 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { getId } from '../services/triviaAPI';
-// import { saveQuestions } from '../redux/actions';
+import { saveQuestions } from '../redux/actions';
 import GameCard from '../components/GameCard';
 import Loading from '../components/Loading';
 import Header from '../components/Header';
@@ -30,6 +31,10 @@ class Game extends Component {
       questions: json.results,
       loading: false,
     });
+
+    const { questions } = this.state;
+    const { dispatchQuestions } = this.props;
+    dispatchQuestions(questions);
   }
 
   render() {
@@ -48,9 +53,12 @@ class Game extends Component {
   }
 }
 
-// const mapDispatchToProps = (dispatch) => ({
-//   dispatchQuestions: (questions) => dispatch((saveQuestions(questions))),
-// });
+Game.propTypes = {
+  dispatchQuestions: PropTypes.func.isRequired,
+};
 
-// export default connect(null, mapDispatchToProps)(Game);
-export default Game;
+const mapDispatchToProps = (dispatch) => ({
+  dispatchQuestions: (questions) => dispatch((saveQuestions(questions))),
+});
+
+export default connect(null, mapDispatchToProps)(Game);

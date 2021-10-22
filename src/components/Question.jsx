@@ -1,13 +1,83 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import renderQuestions from '../redux/reducers/renderQuestions';
+import Loading from './Loading';
 
 class Question extends Component {
-  render() {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      endGame: false,
+    };
+
+    // this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  // componentDidMount() {
+  //   this.handleSubmit();
+  // }
+
+  // handleSubmit() {
+  //   const { index, incrementQuestion } = this.props;
+  //   const lastQuestion = 4;
+  //   incrementQuestion(index);
+  //   if (index === lastQuestion) {
+  //     this.setState({ endGame: true });
+  //   }
+  // }
+
+  showQuestion() {
+    const { questions, index } = this.props;
     return (
       <div>
-        <p>Inserir Questões</p>
+        <h1>{`Question #${index}`}</h1>
+        <h2 data-testid="question-text">{questions[index].question}</h2>
+        <h3 data-testid="question-category">
+          {`Category: ${questions[index].category}`}
+        </h3>
       </div>
+    );
+  }
+
+  render() {
+    // const { finally } = this.state;
+    const { questions, index } = this.props;
+    const { endGame } = this.state;
+
+    if (endGame) {
+      return <Redirect to="/feedback" />;
+    }
+
+    if (questions.length) {
+      return (
+        <div>
+          {this.showQuestion}
+        </div>
+      );
+    }
+
+    return (
+      <Loading />
     );
   }
 }
 
-export default Question;
+Question.propTypes = {
+  index: PropTypes.number.isRequired,
+  questions: PropTypes.string.isRequired,
+  incrementQuestion: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  questions: state.questions.questions,
+  index: state.renderQuestions.num,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  incrementQuestion: (value) => dispatch(renderQuestions(value)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Question);

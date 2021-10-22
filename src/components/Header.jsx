@@ -18,7 +18,6 @@ class Header extends Component {
     const { email } = this.props;
     const avatar = await fetchAvatar(email);
     this.setImageInState(avatar);
-    console.log(avatar);
   }
 
   setImageInState(img) {

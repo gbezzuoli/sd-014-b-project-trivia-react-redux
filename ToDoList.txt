@@ -1,0 +1,15 @@
+Passos para solucionar a rendizacao das respostas
+ requisito 5
+
+[] State dentro do component Answers
+  [x] key para Answers
+  [x] key para correct_answers
+  [x] key para incorrect_answers.array
+  [] key para conferir a resposta.bool
+
+[] Função para inserir as respostas dentro de um array
+[] Lógica para embaralhar as respostas
+[] Lógica para verificar se a respostas está dentro do array incorrect_answers
+[] Lógica para setar a cor da resposta (false: red, true: green)
+[] Redirecionar a página quando chegar em 5 respostas
+

@@ -1,21 +1,24 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Question from './Question';
 import Answers from './Answers';
 
-class QuestionCard extends Component {
+class GameCard extends Component {
   render() {
+    const { index } = this.props;
     const { questions } = this.props;
     return (
       <div>
         <Question questions={ questions } />
-        <Answers />
+        <Answers index={ index } />
       </div>
     );
   }
 }
 
-QuestionCard.propTypes = {
+GameCard.propTypes = {
+  index: PropTypes.number.isRequired,
   questions: PropTypes.arrayOf(PropTypes.shape({
     category: PropTypes.string,
     question: PropTypes.string,
@@ -24,4 +27,8 @@ QuestionCard.propTypes = {
   })).isRequired,
 };
 
-export default QuestionCard;
+const mapStateToProps = (state) => ({
+  index: state.renderQuestions.num,
+});
+
+export default connect(mapStateToProps)(GameCard);
