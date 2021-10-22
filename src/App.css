@@ -7,6 +7,20 @@
   pointer-events: none;
 }
 
+.input-login {
+  margin-top: 60px;
+}
+
+.name-input {
+  display: flex;
+  margin: 15px;
+  justify-content: space-between;
+}
+
+.score {
+  color: green
+}
+
 .red-border {
   border: 1px solid red;
 }

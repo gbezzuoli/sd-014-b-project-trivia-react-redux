@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { setuserdata } from '../../Redux/Actions';
 import { requestToken } from '../../services/Api';
-import { Link } from 'react-router-dom';
 
 class Login extends Component {
   constructor(props) {
@@ -35,8 +35,8 @@ class Login extends Component {
   render() {
     const { name, email } = this.state;
     return (
-      <section>
-        <label htmlFor="name-input">
+      <section className="input-login">
+        <label htmlFor="name-input" className="name-input">
           Nome:
           <input
             type="text"
@@ -47,7 +47,7 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
         </label>
-        <label htmlFor="email-input">
+        <label htmlFor="email-input" className="name-input">
           Email:
           <input
             type="email"
