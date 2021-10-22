@@ -20,11 +20,6 @@ class QuestionCard extends React.Component {
     this.nextQuestion = this.nextQuestion.bind(this);
   }
 
-  componentDidMount() {
-    const { stateToLocalStorage } = this.state;
-    localStorage.setItem('state', JSON.stringify(stateToLocalStorage));
-  }
-
   listAnswersMultiple(questionIndex) {
     const { apiResult } = this.props;
     const incorrectAnswers = apiResult[questionIndex].incorrect_answers;
