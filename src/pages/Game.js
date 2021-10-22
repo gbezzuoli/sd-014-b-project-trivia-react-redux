@@ -41,6 +41,7 @@ class Game extends Component {
 
   answerClickHandler({ target }) {
     const { id } = target;
+    clearInterval(this.test);
     this.setState({ next: true });
     if (id === 'incorrect') {
       console.log('Resposta errada!');
@@ -69,7 +70,7 @@ class Game extends Component {
 
   timer() {
     const time = 1000;
-    setInterval(() => {
+    this.test = setInterval(() => {
       const { timer } = this.state;
       if (timer === 0) {
         clearInterval();
