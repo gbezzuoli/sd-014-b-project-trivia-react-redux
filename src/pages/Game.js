@@ -70,12 +70,11 @@ import { fecthTrivia } from '../redux/actions';
 //   ],
 // };
 
-class GameTest extends Component {
+class Game extends Component {
   constructor() {
     super();
-
     this.state = {
-      questions: {},
+      questions: [],
       index: 0,
       next: false,
     };
@@ -92,8 +91,9 @@ class GameTest extends Component {
 
   async fetchQuestionsState() {
     const dataQuestions = await fecthTrivia();
+    const { results } = dataQuestions;
     console.log(dataQuestions);
-    this.setState({ questions: dataQuestions.results });
+    this.setState({ questions: results });
   }
 
   answerClickHandler(event) {
@@ -158,4 +158,4 @@ class GameTest extends Component {
   }
 }
 
-export default GameTest;
+export default Game;
