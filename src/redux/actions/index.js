@@ -3,6 +3,8 @@ export const SUCCESS_ACTION = 'SUCCESS_ACTION';
 export const FAIL_ACTION = 'FAIL_ACTION';
 export const GET_TOKEN = 'GET_TOKEN';
 export const LOGIN = 'LOGIN';
+export const REQUEST_API = 'REQUEST_API';
+export const SUCCESS_API = 'SUCCESS_API';
 
 const setLogin = (login, email) => ({
   type: LOGIN, login, email,
@@ -26,4 +28,13 @@ export const failAction = (payload) => ({
 export const getToken = (payload) => ({
   type: GET_TOKEN,
   payload,
+});
+
+export const requestApi = () => ({
+  type: REQUEST_API,
+});
+
+export const finishAPI = (token) => ({
+  type: SUCCESS_API,
+  token,
 });

@@ -1,23 +1,29 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types'
-// import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import md5 from 'crypto-js/md5';
 
-export default class Header extends Component {
+class Header extends Component {
   render() {
+    const { email, score = 0, login } = this.props;
+    const hash = md5(email).toString();
     return (
-      <div>
-        <header className="header-game">
-          <img
-            src={ `https://www.gravatar.com/avatar/${img}` }
-            alt="Gravatar"
-            data-testid="header-´profile-picture"
-          />
-          <p data-testid="header-player-name">name</p>
-          <p data-testid="header-score">{score}</p>
-        </header>
-      </div>
+      <header>
+        <img data-testid="header-profile-picture" src={ `https://www.gravatar.com/avatar/${hash}` } alt="" />
+        <h2 data-testid="header-player-name">{ login }</h2>
+        <h2 data-testid="header-score">{ score }</h2>
+      </header>
     );
   }
 }
 
-Header.propTypes = {};
+Header.propTypes = {
+  login: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
+  email: PropTypes.string.isRequired,
+};
+const mapStateToProps = (state) => ({
+  email: state.login.email,
+  login: state.login.login,
+});
+export default connect(mapStateToProps)(Header);
