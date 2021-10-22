@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import setLogin from '../redux/actions';
-import { Buttons } from '../components/Buttons';
+import { Buttons } from './Buttons';
 import '../App.css';
 
 class LoginForm extends React.Component {
@@ -27,8 +27,8 @@ class LoginForm extends React.Component {
     const { loginSet } = this.props;
     const { login, email } = this.state;
     loginSet(login, email);
-    const { token } = this.props;
-    localStorage.setItem('token', JSON.stringify(token));
+    // const { token } = this.props;
+    // localStorage.setItem('token', JSON.stringify(token));
   }
 
   render() {
@@ -71,7 +71,7 @@ class LoginForm extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = () => ({
 });
 
 const mapDispatchToState = (dispatch) => ({
