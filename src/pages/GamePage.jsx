@@ -8,13 +8,19 @@ class GamePage extends Component {
     super();
     this.getQuestions = this.getQuestions.bind(this);
     this.onClickAnswer = this.onClickAnswer.bind(this);
+    this.setBtnAnswerBorder = this.setBtnAnswerBorder.bind(this);
 
     this.state = {
       result: [],
-      questionOne: [],
+      questOne: [],
       wrongAnswersOne: [],
       rightAnswerOne: '',
+      corr: '',
+      incor: '',
+      count: 30,
+      answers: [],
       i: 0,
+      isQuestionAnswered: false,
     };
   }
 
@@ -22,24 +28,52 @@ class GamePage extends Component {
     this.getQuestions();
   }
 
+  componentDidUpdate() {
+    const { count } = this.state;
+    if (count === 0) {
+      clearInterval(this.countInterval);
+    }
+  }
+
   onClickAnswer() {
     const { result } = this.state;
-    let { i } = this.state;
-    console.log(i);
-    if (i === 0) {
-      i += 1;
-    }
+    const { i } = this.state;
+    console.log('O índice atual é: ', i);
+    // if (i === 0) {
+    //   i += 1;
+    // }
+    // Na o início do jogo, ao resposder a primeira pergunta,
+    // o indíce era somado + de 1 vez .
     try {
       this.setState({
         i: i + 1,
-        questionOne: result[i].question,
+        questOne: result[i].question,
         wrongAnswersOne: result[i].incorrect_answers,
         rightAnswerOne: result[i].correct_answer,
+        corr: '',
+        incor: '',
+        count: 30, // resetar o contador na próxima pergunta
+        isQuestionAnswered: false,
 
       });
     } catch (error) {
       console.log(error);
+      console.log('O indíce atual é: ', i);
     }
+  }
+
+  /** */
+  setBtnAnswerBorder() {
+    const { i } = this.state;
+    this.setState({
+      incor: 'btn-answer',
+      corr: 'correct-answer',
+      isQuestionAnswered: true,
+      i: i === 0 ? i + 1 : i,
+    });
+    /** this.setState({
+      i: i + 1, - Tava somando o estado + de 1 vez
+    }, () => this.nextQuestion()) - Tava triggando a próxima pergunta ao clicar na respota  */
   }
 
   async getQuestions() {
@@ -47,17 +81,52 @@ class GamePage extends Component {
     const result = await requestQuestions();
     this.setState({
       result,
-      questionOne: result[i].question,
+      questOne: result[i].question,
+      answers: [...result[i].incorrect_answers, result[i].correct_answer],
+      wrongAnswersOne: result[i].incorrect_answers,
+      rightAnswerOne: result[i].correct_answer,
+    }, () => this.startCounter());
+    this.randomAnswers();
+  }
+
+  nextQuestion() {
+    const { i, result } = this.state;
+    this.setState({
+      questOne: result[i].question,
+      answers: [...result[i].incorrect_answers, result[i].correct_answer],
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
     });
   }
 
-  render() {
-    const { questionOne, wrongAnswersOne, rightAnswerOne } = this.state;
-    const idWrongAns = 'wrong-answer-';
+  randomAnswers() {
+    const { answers } = this.state;
+    const arraySplice = [...answers];
+    const novoArray = [];
 
-    if (questionOne === []) {
+    answers.forEach(() => {
+      const max = arraySplice.length;
+      const randomNumber = Math.floor(Math.random() * (max - 0) + 0);
+      const item = arraySplice.splice(randomNumber, 1)[0];
+      novoArray.push(item);
+    });
+    console.log(novoArray);
+  }
+
+  startCounter() {
+    const ONE_SECOND = 1000;
+    this.countInterval = setInterval(() => {
+      this.setState((state) => ({
+        count: state.count - 1,
+      }));
+    }, ONE_SECOND);
+  }
+
+  render() {
+    const { questOne, wrongAnswersOne,
+      rightAnswerOne, corr, incor, count, isQuestionAnswered } = this.state;
+    const idWrongAns = 'wrong-answer-';
+    if (questOne === []) {
       return null;
     }
     return (
@@ -66,28 +135,40 @@ class GamePage extends Component {
         <section>
           <h1 data-testid="question-category">Categoria</h1>
           <h2 data-testid="question-text">
-            {' '}
-            {questionOne}
+            {questOne}
           </h2>
+          <h2>{ count }</h2>
           {wrongAnswersOne.map((item, index) => (
             <div key={ index }>
               <button
+                className={ incor }
                 type="button"
                 data-testid={ idWrongAns + index }
-                onClick={ this.onClickAnswer }
+                onClick={ this.setBtnAnswerBorder }
+                disabled={ count === 0 }
               >
                 {item}
               </button>
             </div>))}
           <button
-            onClick={ this.onClickAnswer }
+            className={ corr }
+            onClick={ this.setBtnAnswerBorder }
             type="button"
             data-testid="correct-answer"
+            disabled={ count === 0 }
           >
             {rightAnswerOne}
           </button>
+          <br />
+          <button
+            type="button"
+            onClick={ this.onClickAnswer }
+            data-testid="btn-next"
+            style={ { visibility: isQuestionAnswered ? 'visible' : 'hidden' } }
+          >
+            Próximo
+          </button>
         </section>
-
       </div>
     );
   }
