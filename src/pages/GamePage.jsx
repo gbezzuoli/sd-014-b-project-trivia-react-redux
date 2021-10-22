@@ -17,7 +17,8 @@ class GamePage extends Component {
       rightAnswerOne: '',
       corr: '',
       incor: '',
-      count: 5,
+      count: 30,
+      answers: [],
       i: 0,
     };
   }
@@ -54,23 +55,52 @@ class GamePage extends Component {
   }
 
   setBtnAnswerBorder() {
+    const { i } = this.state;
     this.setState({
       incor: 'btn-answer',
       corr: 'correct-answer',
     });
+    this.setState({
+      i: i + 1,
+    }, () => this.nextQuestion());
   }
 
   async getQuestions() {
     const { i } = this.state;
     const result = await requestQuestions();
-    console.log(result);
 
     this.setState({
       result,
       questOne: result[i].question,
+      answers: [...result[i].incorrect_answers, result[i].correct_answer],
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
     }, () => this.startCounter());
+    this.randomAnswers();
+  }
+
+  nextQuestion() {
+    const { i, result } = this.state;
+    this.setState({
+      questOne: result[i].question,
+      answers: [...result[i].incorrect_answers, result[i].correct_answer],
+      wrongAnswersOne: result[i].incorrect_answers,
+      rightAnswerOne: result[i].correct_answer,
+    });
+  }
+
+  randomAnswers() {
+    const { answers } = this.state;
+    const arraySplice = [...answers];
+    const novoArray = [];
+
+    answers.forEach(() => {
+      const max = arraySplice.length;
+      const randomNumber = Math.floor(Math.random() * (max - 0) + 0);
+      const item = arraySplice.splice(randomNumber, 1)[0];
+      novoArray.push(item);
+    });
+    console.log(novoArray);
   }
 
   startCounter() {
@@ -98,7 +128,7 @@ class GamePage extends Component {
             {' '}
             {questOne}
           </h2>
-          <h2>{ counter }</h2>
+          <h2>{ count }</h2>
           {wrongAnswersOne.map((item, index) => (
             <div key={ index }>
               <button
