@@ -17,6 +17,7 @@ class Button extends Component {
         style={ { border: `3px solid rgb(${color})` } }
         onClick={ () => handleAnswersButton(answer, difficulty) }
         className="answers"
+        disabled={ shouldBorderColorChange }
       >
         { answer }
       </button>

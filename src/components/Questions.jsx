@@ -14,16 +14,26 @@ class Questions extends Component {
       shouldBorderColorChange: false,
       sortedAnswers: [],
       currentQuestion: 0,
+      seconds: 30,
     };
 
     this.getAnswersAndSort = this.getAnswersAndSort.bind(this);
     this.handleAnswersButton = this.handleAnswersButton.bind(this);
     this.handleNextQuestion = this.handleNextQuestion.bind(this);
+    this.timerFunction = this.timerFunction.bind(this);
   }
 
   componentDidMount() {
     const { getAnswersAndSort } = this;
     getAnswersAndSort();
+    this.timerFunction();
+  }
+
+  componentDidUpdate() {
+    const { seconds } = this.state;
+    if (seconds === 0) {
+      this.handleAnswersButton();
+    }
   }
 
   getAnswersAndSort() {
@@ -43,39 +53,55 @@ class Questions extends Component {
   }
 
   handleAnswersButton(answer, difficulty) {
+    clearInterval(this.valueInterval);
     const { questions } = this.props;
+    const { shouldBorderColorChange, currentQuestion, seconds } = this.state;
     const difficultyScore = {
       easy: 1,
       medium: 2,
       hard: 3,
       default: 10,
-      timer: 30,
     };
 
     const score = difficultyScore.default + (
-      difficultyScore.timer * difficultyScore[difficulty]);
+      seconds * difficultyScore[difficulty]);
 
-    if (answer === questions[0].correct_answer) {
+    if (answer === questions[currentQuestion].correct_answer) {
       const { player } = JSON.parse(localStorage.getItem('state'));
       player.assertions += 1;
       player.score += score;
       localStorage.setItem('state', JSON.stringify({ player: { ...player } }));
     }
-    this.setState({ shouldBorderColorChange: true });
+    if (!shouldBorderColorChange) {
+      this.setState({ shouldBorderColorChange: true });
+    }
   }
 
   handleNextQuestion() {
     this.setState(({ currentQuestion }) => ({ currentQuestion: currentQuestion + 1,
-      shouldBorderColorChange: false }),
+      shouldBorderColorChange: false,
+      seconds: 30 }),
     () => this.getAnswersAndSort());
+    this.timerFunction();
+  }
+
+  timerFunction() {
+    const interval = 1000;
+    this.valueInterval = setInterval(() => {
+      this.setState((sec) => ({
+        seconds: sec.seconds - 1,
+      }));
+    }, interval);
   }
 
   render() {
+    console.log('Question:', this.handleNextQuestion);
     const {
-      state: { shouldBorderColorChange, sortedAnswers, currentQuestion },
+      state: { shouldBorderColorChange, sortedAnswers, currentQuestion, seconds },
       props: { questions },
       handleAnswersButton,
     } = this;
+    const finalSeconds = 10;
 
     return (
       <section className="container">
@@ -89,6 +115,11 @@ class Questions extends Component {
             </h1>
           </div>
           <p data-testid="question-text">{ questions[currentQuestion].question }</p>
+        </div>
+        <div>
+          <h1>
+            {seconds < finalSeconds ? `0${seconds}` : seconds}
+          </h1>
         </div>
         <div className="container-answers">
           {sortedAnswers.map((answer) => {
