@@ -4,22 +4,6 @@ import { connect } from 'react-redux';
 import Alternative from './Alternative';
 
 class AlternativeCard extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      index: 0,
-    };
-  }
-
-  increaseIndex() {
-    const { index } = this.state;
-
-    this.setState({
-      index: index + 1,
-    });
-  }
-
   render() {
     const NUMBER = 0.5;
     const { questions, controller } = this.props;
@@ -36,7 +20,7 @@ class AlternativeCard extends Component {
               accum += 1;
               return (<Alternative
                 key={ index }
-                testid={ `wrong-answer-${accum}` }
+                testid={ `wrong-answer-${accum - 1}` }
                 alternative={ answer }
               />);
             }

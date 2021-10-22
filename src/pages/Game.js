@@ -52,6 +52,7 @@ class Game extends Component {
         justifyContent: 'space-around',
       },
     };
+
     const { loading, controller } = this.state;
     return (
       <>
