@@ -20,6 +20,7 @@ class GamePage extends Component {
       count: 30,
       answers: [],
       i: 0,
+      isQuestionAnswered: false,
     };
   }
 
@@ -36,11 +37,13 @@ class GamePage extends Component {
 
   onClickAnswer() {
     const { result } = this.state;
-    let { i } = this.state;
-    console.log(i);
-    if (i === 0) {
-      i += 1;
-    }
+    const { i } = this.state;
+    console.log('O índice atual é: ', i);
+    // if (i === 0) {
+    //   i += 1;
+    // }
+    // Na o início do jogo, ao resposder a primeira pergunta,
+    // o indíce era somado + de 1 vez .
     try {
       this.setState({
         i: i + 1,
@@ -49,21 +52,28 @@ class GamePage extends Component {
         rightAnswerOne: result[i].correct_answer,
         corr: '',
         incor: '',
+        count: 30, // resetar o contador na próxima pergunta
+        isQuestionAnswered: false,
+
       });
     } catch (error) {
       console.log(error);
+      console.log('O indíce atual é: ', i);
     }
   }
 
+  /** */
   setBtnAnswerBorder() {
     const { i } = this.state;
     this.setState({
       incor: 'btn-answer',
       corr: 'correct-answer',
+      isQuestionAnswered: true,
+      i: i === 0 ? i + 1 : i,
     });
-    this.setState({
-      i: i + 1,
-    }, () => this.nextQuestion());
+    /** this.setState({
+      i: i + 1, - Tava somando o estado + de 1 vez
+    }, () => this.nextQuestion()) - Tava triggando a próxima pergunta ao clicar na respota  */
   }
 
   async getQuestions() {
@@ -114,9 +124,9 @@ class GamePage extends Component {
   }
 
   render() {
-    const { questOne, wrongAnswersOne, rightAnswerOne, corr, incor, count } = this.state;
+    const { questOne, wrongAnswersOne,
+      rightAnswerOne, corr, incor, count, isQuestionAnswered } = this.state;
     const idWrongAns = 'wrong-answer-';
-
     if (questOne === []) {
       return null;
     }
@@ -126,7 +136,6 @@ class GamePage extends Component {
         <section>
           <h1 data-testid="question-category">Categoria</h1>
           <h2 data-testid="question-text">
-            {' '}
             {questOne}
           </h2>
           <h2>{ count }</h2>
@@ -155,11 +164,12 @@ class GamePage extends Component {
           <button
             type="button"
             onClick={ this.onClickAnswer }
+            data-testid="btn-next"
+            style={ { visibility: isQuestionAnswered ? 'visible' : 'hidden' } }
           >
             Próximo
           </button>
         </section>
-
       </div>
     );
   }
