@@ -56,8 +56,12 @@ class CardGame extends React.Component {
     // this.setState({ hidden: false });
   }
 
+  shouldComponentUpdate(prevState) {
+
+  }
+
   render() {
-    const { question: { category, question }, next, timer } = this.props;
+    const { question: { category, question }, next, disabled } = this.props;
     const randomAnswers = this.parseAnswerInObject();
     let count = 0;
     // const timer = Number(document.querySelector('#timer'));
@@ -72,7 +76,7 @@ class CardGame extends React.Component {
                 type="button"
                 data-testid="correct-answer"
                 onClick={ this.handleAnswerClick }
-                disabled={ timer === 0 }
+                disabled={ disabled }
               >
                 { answerButton.answer }
               </button>);
@@ -109,6 +113,7 @@ CardGame.propTypes = {
     incorrect_answers: PropTypes.arrayOf(PropTypes.any),
   }).isRequired,
   next: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default CardGame;

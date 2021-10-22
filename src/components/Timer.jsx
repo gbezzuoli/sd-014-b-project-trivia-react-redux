@@ -21,6 +21,12 @@ class Timer extends React.Component {
     clearInterval(this.tiktak);
   }
 
+  resetTimer() {
+    this.setState({
+      timer: 30,
+    });
+  }
+
   tiktak() {
     setInterval(() => {
       this.setState(({ timer }) => ({ timer: timer === 0 ? 0 : timer - 1 }));

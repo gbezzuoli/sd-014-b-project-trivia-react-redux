@@ -5,7 +5,8 @@ import CardGame from '../components/CardGame';
 import Header from '../components/Header';
 // import getQuestions from '../services/fetchQuestionsAPI';
 import { addCount, fetchQuestions } from '../redux/actions';
-import Timer from '../components/Timer';
+
+const ONE_SECOND = 1000;
 
 class Game extends React.Component {
   constructor(props) {
@@ -17,11 +18,18 @@ class Game extends React.Component {
 
     this.retriveQuestions = this.retriveQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.tiktak = this.tiktak.bind(this);
   }
 
   componentDidMount() {
     this.retriveQuestions();
-    // this.handleTimeOut();
+    this.tiktak();
+  }
+
+  tiktak() {
+    setInterval(() => {
+      this.setState(({ timer }) => ({ timer: timer === 0 ? 0 : timer - 1 }));
+    }, ONE_SECOND);
   }
 
   async retriveQuestions() {
@@ -34,16 +42,15 @@ class Game extends React.Component {
 
   handleClick() {
     const { history, count, increaseCount } = this.props;
+    this.setState({ timer: 30 });
     const FOUR = 4;
     const buttons = document.querySelectorAll('button');
     buttons.forEach((button) => { button.className = ''; });
     if (count < FOUR) {
       increaseCount(count + 1);
-      this.setState({ timer: 30 });
     } else {
       history.push('/result');
     }
-    console.log(count);
   }
 
   render() {
@@ -52,11 +59,15 @@ class Game extends React.Component {
     return (
       <div>
         <Header />
-        <Timer timer={ timer } />
+        <h1>{timer}</h1>
         TRIVIA
         { questions.length === 0
           ? <span>Loading ...</span>
-          : <CardGame question={ questions[count] } next={ this.handleClick } timer={ timer } /> }
+          : <CardGame
+            question={ questions[count] }
+            next={ this.handleClick }
+            disabled={ timer === 0 }
+          />}
       </div>
     );
   }
