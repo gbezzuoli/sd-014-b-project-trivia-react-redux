@@ -47,11 +47,12 @@ class GamePage extends Component {
         questOne: result[i].question,
         wrongAnswersOne: result[i].incorrect_answers,
         rightAnswerOne: result[i].correct_answer,
+        corr: '',
+        incor: '',
       });
     } catch (error) {
       console.log(error);
     }
-    this.setBtnAnswerBorder();
   }
 
   setBtnAnswerBorder() {
