@@ -34,9 +34,8 @@ class Timer extends Component {
   }
 
   render() {
-    const { timeIsOver } = this.props;
     const { counter } = this.state;
-    return <div>{timeIsOver ? <div>Timer: 0</div> : `Timer: ${counter}`}</div>;
+    return <div>{ `Timer: ${counter}` }</div>;
   }
 }
 

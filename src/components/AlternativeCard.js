@@ -8,20 +8,20 @@ import Alternative from './Alternative';
 const EASY = 1;
 const MEDIUM = 2;
 const HARD = 3;
-const TEN = 10;
+const BASE_SCORE = 10;
 
 class AlternativeCard extends Component {
   constructor() {
     super();
     this.state = {
-      ready: false,
+      showAnswer: false,
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick({ target: { name } }) {
     this.setState((state) => ({
-      ready: !state.ready,
+      showAnswer: !state.showAnswer,
     }));
 
     const { timeIsOverDispatch } = this.props;
@@ -31,33 +31,34 @@ class AlternativeCard extends Component {
       const { player } = JSON.parse(localStorage.getItem('state'));
       console.log(player);
       const { counter, questions, controller } = this.props;
-      const questionsObject = questions[controller];
+      const questionObject = questions[controller];
 
       console.log(counter);
 
-      const updateScore = (diff, count) => {
-        console.log(count);
-        console.log(diff);
-        switch (diff) {
+      const updateScore = (questionDifficulty, timeLeft) => {
+        switch (questionDifficulty) {
         case 'easy':
-          return TEN + (count * EASY);
+          return BASE_SCORE + (timeLeft * EASY);
         case 'medium':
-          return TEN + (count * MEDIUM);
+          return BASE_SCORE + (timeLeft * MEDIUM);
         case 'hard':
-          return TEN + (count * HARD);
+          return BASE_SCORE + (timeLeft * HARD);
         default:
           break;
         }
       };
 
+      console.log(counter);
+
       player.assertions += 1;
-      player.score += updateScore(questionsObject.difficulty, counter);
-      localStorage.setItem('state', JSON.stringify(player));
+      player.score += updateScore(questionObject.difficulty, counter);
+      localStorage.setItem('state', JSON.stringify({ player }));
+      console.log(counter);
     }
   }
 
   render() {
-    const { ready } = this.state;
+    const { showAnswer } = this.state;
     const { questions, controller, disabled } = this.props;
     const array = questions[controller];
     let accum = 0;
@@ -71,7 +72,7 @@ class AlternativeCard extends Component {
             return (
               <Alternative
                 disabled={ disabled }
-                className={ ready ? 'incorrect' : '' }
+                className={ showAnswer ? 'incorrect' : '' }
                 name="incorrect"
                 key={ index }
                 testid={ `wrong-answer-${accum - 1}` }
@@ -83,7 +84,7 @@ class AlternativeCard extends Component {
           return (
             <Alternative
               disabled={ disabled }
-              className={ ready ? 'correct' : '' }
+              className={ showAnswer ? 'correct' : '' }
               name="correct"
               key={ index }
               testid="correct-answer"
