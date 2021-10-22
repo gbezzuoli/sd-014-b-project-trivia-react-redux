@@ -59,6 +59,10 @@ class Questions extends React.Component {
     const pts = pontsExt + (timer * pontDifficulty[questions[0].difficulty]);
     console.log(pts);
     this.setState({ ponts: ponts + pts });
+
+    const objCurrent = JSON.parse(localStorage.getItem('state'));
+    objCurrent.player.score = ponts + pts;
+    localStorage.setItem('state', JSON.stringify(objCurrent));
   }
 
   boolean = () => {
