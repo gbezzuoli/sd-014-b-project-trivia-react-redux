@@ -45,16 +45,35 @@ class Trivia extends Component {
   }
 
   createAnswerButtons() {
-    const { results, actualQuestion } = this.state;
+    const { results, actualQuestion, buttonCondition } = this.state;
     const ZERO_PONTO_CINCO = 0.5;
     const questionsList = getQuestions(results[actualQuestion])
       .sort(() => Math.random() - ZERO_PONTO_CINCO);
 
-    return questionsList;
+    return questionsList.map((question, index) => (
+      question !== results[actualQuestion].correct_answer
+        ? (
+          <Button
+            key={ index }
+            textButton={ question }
+            className="wrong-answer"
+            dataTestId={ `wrong-answer-${index}` }
+            onClick={ this.handleAnswerClick }
+            disabled={ buttonCondition }
+          />)
+        : (
+          <Button
+            key={ index }
+            textButton={ question }
+            className="correct-answer"
+            dataTestId="correct-answer"
+            onClick={ this.handleAnswerClick }
+            disabled={ buttonCondition }
+          />)));
   }
 
   render() {
-    const { results, actualQuestion, buttonCondition } = this.state;
+    const { results, actualQuestion } = this.state;
     return (
       results.length < 1
         ? <div>Carregando...</div> : (
@@ -65,26 +84,7 @@ class Trivia extends Component {
             <p data-testid="question-text">
               { results[actualQuestion].question }
             </p>
-            { this.createAnswerButtons().map((question, index) => (
-              question !== results[actualQuestion].correct_answer
-                ? (
-                  <Button
-                    key={ index }
-                    textButton={ question }
-                    className="wrong-answer"
-                    dataTestId={ `wrong-answer-${index}` }
-                    onClick={ this.handleAnswerClick }
-                    disabled={ buttonCondition }
-                  />)
-                : (
-                  <Button
-                    key={ index }
-                    textButton={ question }
-                    className="correct-answer"
-                    dataTestId="correct-answer"
-                    onCLick={ this.handleAnswerClick }
-                    disabled={ buttonCondition }
-                  />))) }
+            { this.createAnswerButtons() }
           </section>)
 
     );
