@@ -5,7 +5,7 @@ import '../Answers.css';
 
 class WrongAnswer extends React.Component {
   render() {
-    const { incorrect, key, clickAnswer, borderColor } = this.props;
+    const { incorrect, key, clickAnswer, borderColor, disabled } = this.props;
     return (
       <div>
         <button
@@ -13,6 +13,7 @@ class WrongAnswer extends React.Component {
           id="incorrect"
           className={ borderColor }
           data-testid={ `wrong-answer-${key}` }
+          disabled={ disabled }
           onClick={ clickAnswer }
         >
           { incorrect }
@@ -23,6 +24,7 @@ class WrongAnswer extends React.Component {
 }
 
 WrongAnswer.propTypes = {
+  disabled: PropTypes.bool.isRequired,
   borderColor: PropTypes.string.isRequired,
   clickAnswer: PropTypes.func.isRequired,
   incorrect: PropTypes.string.isRequired,

@@ -73,12 +73,14 @@ class Game extends Component {
         <WrongAnswer
           incorrect={ wrong }
           key={ i }
+          disabled={ !!next }
           borderColor={ !next ? 'answer' : 'incorrectAnswer' }
           clickAnswer={ this.answerClickHandler }
         />));
     const correctAnswers = (
       <CorrectAnswer
         correct={ questions[index].correct_answer }
+        disabled={ !!next }
         borderColor={ !next ? 'answer' : 'correctAnswer' }
         clickAnswer={ this.answerClickHandler }
       />);

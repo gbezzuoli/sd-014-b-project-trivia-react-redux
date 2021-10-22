@@ -5,7 +5,7 @@ import '../Answers.css';
 
 class CorrectAnswer extends React.Component {
   render() {
-    const { correct, clickAnswer, borderColor } = this.props;
+    const { correct, clickAnswer, borderColor, disabled } = this.props;
     return (
       <div>
         <button
@@ -13,6 +13,7 @@ class CorrectAnswer extends React.Component {
           id="correct"
           className={ borderColor }
           data-testid="correct-answer"
+          disabled={ disabled }
           onClick={ clickAnswer }
         >
           { correct }
@@ -23,6 +24,7 @@ class CorrectAnswer extends React.Component {
 }
 
 CorrectAnswer.propTypes = {
+  disabled: PropTypes.bool.isRequired,
   borderColor: PropTypes.string.isRequired,
   clickAnswer: PropTypes.func.isRequired,
   correct: PropTypes.string.isRequired,
