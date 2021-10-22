@@ -52,6 +52,7 @@ class Game extends Component {
     return (
       <button
         type="button"
+        data-testid="btn-next"
         disabled={ next === false }
         onClick={ () => this.nextButtonClick() }
       >
