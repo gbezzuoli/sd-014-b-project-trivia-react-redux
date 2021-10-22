@@ -5,7 +5,8 @@ import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import store from './redux/store';
 import Login from './pages/Login';
-import Game from './pages/Game';
+import Trivia from './pages/Trivia';
+import Settings from './pages/Settings';
 
 export default function App() {
   return (
@@ -13,7 +14,8 @@ export default function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={ Login } />
-          <Route exact path="/Game" component={ Game } />
+          <Route path="/trivia" component={ Trivia } />
+          <Route path="/settings" component={ Settings } />
         </Switch>
       </BrowserRouter>
     </Provider>
