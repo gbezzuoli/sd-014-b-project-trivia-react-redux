@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { setuserdata } from '../../Redux/Actions';
 import { requestToken } from '../../services/Api';
+import getGravatar from '../../services/getGravatar';
 
 class Login extends Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class Login extends Component {
     const { dispatchSetValue } = this.props;
     dispatchSetValue(name, email);
     requestToken();
+    getGravatar(email);
   }
 
   render() {
