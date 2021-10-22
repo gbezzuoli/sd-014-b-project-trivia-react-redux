@@ -11,6 +11,7 @@ class Trivia extends Component {
       questionIndex: 0,
       timer: 30,
     };
+    this.handleColorClick = this.handleColorClick.bind(this);
     this.startTimer = this.startTimer.bind(this);
   }
 
@@ -29,10 +30,22 @@ class Trivia extends Component {
     }
   }
 
+  // consultado o pr do grupo 9
+  handleColorClick() {
+    const getAllButtons = document.querySelectorAll('button');
+    getAllButtons.forEach((btn) => {
+      if (btn.value === 'wrong-ans') {
+        btn.style.border = '3px solid rgb(255, 0, 0)';
+      }
+      if (btn.value === 'correct-ans') {
+        btn.style.border = '3px solid rgb(6, 240, 15)';
+      }
+    });
+  }
+
   render() {
     const { receviQuestions } = this.props;
     const { questionIndex, timer } = this.state;
-
     return (
       <div>
         <Header />
@@ -43,8 +56,10 @@ class Trivia extends Component {
           <div key={ index }>
             <button
               data-testid={ `wrong-answer-${index}` }
+              onClick={ this.handleColorClick }
               type="button"
               disabled={ timer === 0 }
+              value="wrong-ans"
             >
               {question}
             </button>
@@ -52,8 +67,10 @@ class Trivia extends Component {
         ))}
         <button
           data-testid="correct-answer"
+          onClick={ this.handleColorClick }
           type="button"
           disabled={ timer === 0 }
+          value="correct-ans"
         >
           { receviQuestions[questionIndex].correct_answer }
         </button>
