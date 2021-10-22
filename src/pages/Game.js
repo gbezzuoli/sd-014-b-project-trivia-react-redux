@@ -11,6 +11,8 @@ class Game extends Component {
       questions: '',
       correctAnswer: '',
       // answered: false,
+      assertions: 0, // acertos antes da formula
+      score: 0, // acertos depois da formula
       count: -1,
       disabledState: false,
       currentTime: 35,
@@ -32,6 +34,21 @@ class Game extends Component {
       clearInterval(this.timerID);
       this.addStyle();
     }
+    this.saveScore();
+  }
+
+  saveScore() {
+    const { name, email } = this.props;
+    const { assertions, score } = this.state;
+    const playerInfo = {
+      player: {
+        name,
+        assertions,
+        score,
+        gravatarEmail: email,
+      },
+    };
+    localStorage.setItem('state', JSON.stringify(playerInfo));
   }
 
   tick() {
@@ -133,10 +150,15 @@ class Game extends Component {
 
 Game.propTypes = {
   token: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   token: state.gameReducers.token,
+  name: state.gameReducers.name,
+  score: state.gameReducers.score,
+  email: state.gameReducers.email,
 });
 
 export default connect(mapStateToProps, null)(Game);
