@@ -36,7 +36,7 @@ class Game extends Component {
             data-testid="header-profile-picture"
           />
         </header>
-        <Questions />
+        <Questions history={ history } />
       </>
     );
   }

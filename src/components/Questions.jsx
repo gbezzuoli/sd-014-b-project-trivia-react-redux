@@ -8,6 +8,9 @@ class Questions extends React.Component {
     this.state = {
       timer: 30,
       ponts: 0,
+      questionIndex: 0,
+      buttonNext: true,
+      assertions: 0,
     };
   }
 
@@ -25,7 +28,10 @@ class Questions extends React.Component {
 
   timesUp = (tempo) => {
     const { timer } = this.state;
-    if (timer === 1) clearInterval(tempo);
+    if (timer === 1) {
+      clearInterval(tempo);
+      this.setState({ buttonNext: false });
+    }
   }
 
   /*   componentDidUpdate = (prevProps, prevState) => {
@@ -44,11 +50,12 @@ class Questions extends React.Component {
       console.log('chamada');
       this.calcPonts();
     }
+    this.setState({ buttonNext: false });
   }
 
   calcPonts = () => {
     const { questions } = this.props;
-    const { ponts, timer } = this.state;
+    const { ponts, timer, assertions } = this.state;
     const pontsExt = 10;
     const pontDifficulty = {
       hard: 3,
@@ -58,18 +65,37 @@ class Questions extends React.Component {
     console.log(pontDifficulty[questions.difficulty]);
     const pts = pontsExt + (timer * pontDifficulty[questions[0].difficulty]);
     console.log(pts);
-    this.setState({ ponts: ponts + pts });
+    this.setState({
+      ponts: ponts + pts,
+      assertions: assertions + 1,
+    });
 
     const objCurrent = JSON.parse(localStorage.getItem('state'));
     objCurrent.player.score = ponts + pts;
+    objCurrent.player.assertions = assertions + 1;
     localStorage.setItem('state', JSON.stringify(objCurrent));
+  }
+
+  handleNext = () => {
+    const { questionIndex, timer } = this.state;
+    const { history } = this.props;
+    const questionFinish = 4;
+    this.setState({
+      questionIndex: questionIndex + 1,
+      timer: 30,
+      buttonNext: true,
+    });
+    if (timer === 0) this.setTimer();
+    if (questionIndex === questionFinish) {
+      history.push('/feedback');
+    }
   }
 
   boolean = () => {
     const { questions } = this.props;
-    const { timer } = this.state;
-    const incorrect = questions[0].incorrect_answers[0];
-    const correct = questions[0].correct_answer;
+    const { timer, questionIndex } = this.state;
+    const incorrect = questions[questionIndex].incorrect_answers[0];
+    const correct = questions[questionIndex].correct_answer;
     return (
       <>
         <button
@@ -96,9 +122,9 @@ class Questions extends React.Component {
 
   multiple = () => {
     const { questions } = this.props;
-    const { timer } = this.state;
+    const { timer, questionIndex } = this.state;
 
-    const incorrect = questions[0].incorrect_answers.map((item, index) => (
+    const incorrect = questions[questionIndex].incorrect_answers.map((item, index) => (
       <button
         key={ item }
         onClick={ this.handleClick }
@@ -114,13 +140,13 @@ class Questions extends React.Component {
     const correct = (
       <button
         type="button"
-        key={ questions[0].correct_answer }
+        key={ questions[questionIndex].correct_answer }
         data-testid="correct-answer"
         className="correct-answer"
         onClick={ this.handleClick }
         disabled={ timer === 0 }
       >
-        { questions[0].correct_answer }
+        { questions[questionIndex].correct_answer }
       </button>
     );
 
@@ -135,19 +161,31 @@ class Questions extends React.Component {
 
   render() {
     const { questions } = this.props;
-    const { timer, ponts } = this.state;
-    if (!questions[0]) {
+    const { timer, questionIndex, buttonNext } = this.state;
+    const currentPonts = JSON.parse(localStorage.getItem('state'));
+    if (!questions[questionIndex]) {
       return (
         <div>Carregando...</div>
       );
     }
     return (
       <div>
-        <span data-testid="header-score">{ ponts }</span>
-        <h2 data-testid="question-category">{ questions[0].category }</h2>
-        <h2 data-testid="question-text">{ questions[0].question}</h2>
+        <span data-testid="header-score">{ currentPonts.player.score }</span>
+        <h2 data-testid="question-category">{ questions[questionIndex].category }</h2>
+        <h2 data-testid="question-text">{ questions[questionIndex].question}</h2>
         <div>{ timer }</div>
-        { ((questions[0].type === 'boolean') ? this.boolean() : this.multiple()) }
+        { questions[questionIndex].type === 'boolean' ? this.boolean() : this.multiple() }
+        { !buttonNext
+          && (
+            <button
+              type="button"
+              data-testid="btn-next"
+              disabled={ buttonNext }
+              onClick={ this.handleNext }
+            >
+              Próxima
+            </button>
+          )}
       </div>
     );
   }
@@ -157,6 +195,9 @@ Questions.propTypes = {
   questions: PropTypes.arrayOf(
     PropTypes.any,
   ).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 const mapStateToProps = (state) => ({
