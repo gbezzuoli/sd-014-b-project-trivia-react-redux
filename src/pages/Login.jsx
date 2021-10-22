@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { getToken } from '../helper';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import getApiToken from '../services/ApiRequest';
 import * as userActions from '../redux/actions/index';
 
 class Login extends Component {
@@ -28,8 +28,7 @@ class Login extends Component {
     const { name, email } = this.state;
     getName(name);
     getEmail(email);
-    const getResultsFromAPI = await getApiToken();
-    localStorage.setItem('token', JSON.stringify(getResultsFromAPI.token));
+    await getToken();
   }
 
   handleClickSettings() {
@@ -62,7 +61,7 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
         </label>
-        <Link to="/Trivia">
+        <Link to="/trivia">
           <button
             data-testid="btn-play"
             type="button"
