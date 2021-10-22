@@ -5,6 +5,7 @@ import requestTrivia from '../services/trivia';
 import { addResultsToState } from '../Redux/actions';
 import getQuestions from '../services/getQuestions';
 import Button from './Button';
+import Timer from './Timer';
 
 class Trivia extends Component {
   constructor() {
@@ -76,8 +77,12 @@ class Trivia extends Component {
     const { results, actualQuestion } = this.state;
     return (
       results.length < 1
-        ? <div>Carregando...</div> : (
+        ? <div>Carregando...</div>
+        : (
           <section className="game-board">
+
+            <Timer answerClick={ this.handleAnswerClick } />
+
             <span data-testid="question-category">
               { results[actualQuestion].category }
             </span>
@@ -93,7 +98,11 @@ class Trivia extends Component {
 
 Trivia.propTypes = {
   dispatchResultsToState: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired,
+  token: PropTypes.string,
+};
+
+Trivia.defaultProps = {
+  token: '',
 };
 
 const mapStateToProps = (state) => ({
