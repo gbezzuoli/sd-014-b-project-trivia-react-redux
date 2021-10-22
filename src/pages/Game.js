@@ -39,15 +39,28 @@ class Game extends Component {
     });
   }
 
-  answerClickHandler(event) {
-    const { id } = event.target;
+  answerClickHandler({ target }) {
+    const { id } = target;
+    this.setState({ next: true });
     if (id === 'incorrect') {
       console.log('Resposta errada!');
-      this.setState({ next: true });
     } else if (id === 'correct') {
       console.log('Certa resposta!');
-      this.setState({ next: true });
     }
+  }
+
+  nextButtonRender() {
+    const { next } = this.state;
+    return (
+      <button
+        type="button"
+        data-testid="btn-next"
+        disabled={ next === false }
+        onClick={ () => this.nextButtonClick() }
+      >
+        Próxima
+      </button>
+    );
   }
 
   nextButtonClick() {
@@ -70,18 +83,22 @@ class Game extends Component {
   }
 
   renderQuestionsRandomAnswers() {
-    const { questions, index } = this.state;
+    const { questions, index, next } = this.state;
     const MAGIC_NUMBER = 0.5;
     const incorrectAnswers = questions[index].incorrect_answers
       .map((wrong, i) => (
         <WrongAnswer
           incorrect={ wrong }
           key={ i }
+          disabled={ !!next }
+          borderColor={ !next ? 'answer' : 'incorrectAnswer' }
           clickAnswer={ this.answerClickHandler }
         />));
     const correctAnswers = (
       <CorrectAnswer
         correct={ questions[index].correct_answer }
+        disabled={ !!next }
+        borderColor={ !next ? 'answer' : 'correctAnswer' }
         clickAnswer={ this.answerClickHandler }
       />);
     const allAnswers = [...incorrectAnswers, correctAnswers]
@@ -96,6 +113,7 @@ class Game extends Component {
   render() {
     const { loading, questions, index, next, timer } = this.state;
     if (loading) return <h1>Loading</h1>;
+    console.log('Renderizou');
     return (
       <div>
         <h1>{timer}</h1>
@@ -106,13 +124,7 @@ class Game extends Component {
         />
         { this.renderQuestionsRandomAnswers() }
         <br />
-        <button
-          type="button"
-          disabled={ next === false }
-          onClick={ () => this.nextButtonClick() }
-        >
-          Próxima
-        </button>
+        { next && this.nextButtonRender() }
       </div>
     );
   }
