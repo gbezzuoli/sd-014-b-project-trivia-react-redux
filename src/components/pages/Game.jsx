@@ -8,10 +8,10 @@ export default class Game extends Component {
       questions: {
         results: [
           {
-            category: '',
+            category: 'question-category',
             type: '',
             difficulty: '',
-            question: '',
+            question: 'question-text',
             correct_answer: '',
             incorrect_answers: '',
           },
