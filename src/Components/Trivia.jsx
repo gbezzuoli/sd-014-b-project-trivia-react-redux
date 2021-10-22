@@ -80,7 +80,6 @@ class Trivia extends Component {
           : (
             <>
               <Timer answerClick={ this.handleAnswerClick } />
-
               <span data-testid="question-category">
                 { results[actualQuestion].category }
               </span>
