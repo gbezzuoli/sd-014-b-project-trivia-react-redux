@@ -28,6 +28,8 @@ export default class Game extends Component {
     this.setQuestionState(questions);
   }
 
+  sortArray = (array) => array.sort(() => Math.random() - 0.5)
+
   render() {
     const {questions: {results}, index} = this.state;
     console.log(results);
