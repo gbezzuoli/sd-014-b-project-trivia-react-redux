@@ -1,17 +1,46 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import '../css/game.css';
 
 export default class GameCard extends Component {
+  constructor() {
+    super();
+    this.state = {
+      correctColor: '',
+      wrongColor: '',
+    };
+    this.onClickColor = this.onClickColor.bind(this);
+  }
+
+  onClickColor() {
+    this.setState({
+      correctColor: 'correctColor',
+      wrongColor: 'wrongColor',
+    });
+  }
+
   render() {
+    const { correctColor, wrongColor } = this.state;
     const { question } = this.props;
     const RANDOM = 5;
     const correct = (
-      <button data-testid="correct-answer" type="button">
+      <button
+        onClick={ this.onClickColor }
+        data-testid="correct-answer"
+        type="button"
+        className={ correctColor }
+      >
         {question.correct_answer}
       </button>
     );
     const incorrects = question.incorrect_answers.map((element, index) => (
-      <button data-testid={ `wrong-answer-${index}` } type="button" key={ element }>
+      <button
+        onClick={ this.onClickColor }
+        data-testid={ `wrong-answer-${index}` }
+        type="button"
+        key={ element }
+        className={ wrongColor }
+      >
         {element}
       </button>
     ));
