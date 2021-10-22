@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
+import { savePlayerAction } from '../Redux/actions';
 
 const correctAnswer = 'correct-answer';
 const wrongAnswer = 'wrong-answer';
@@ -33,12 +34,6 @@ class Game extends Component {
   componentDidMount() {
     const { requestTriviaAPI } = this;
     requestTriviaAPI();
-    // const second = 1000;
-    // this.interval = setInterval(() => {
-    //   this.setState((prevState) => ({
-    //     count: prevState.count - 1,
-    //   }));
-    // }, second);
     this.setIntervalNew();
   }
 
@@ -149,10 +144,16 @@ class Game extends Component {
   }
 
   changeQuestion() {
-    const { game } = this.state;
-    const { history } = this.props;
+    const { game, score, assertions } = this.state;
+    const { history, sendPlayerScore } = this.props;
     const MAX_QUESTION = 4;
-    if (game >= MAX_QUESTION) history.push('/feedbacks');
+    if (game >= MAX_QUESTION) {
+      history.push('/feedbacks');
+      sendPlayerScore({
+        score,
+        assertions,
+      });
+    }
     this.setState((prev) => ({
       game: prev.game + 1,
       count: 30,
@@ -176,7 +177,7 @@ class Game extends Component {
       const allAnswers = [question.correct_answer, ...question.incorrect_answers];
       return (
         <div>
-          <Header score={ score } />
+          <Header scores={ score } />
           <div key={ game }>
             <p data-testid="question-category">{question.category}</p>
             <p data-testid="question-text">{question.question}</p>
@@ -204,6 +205,10 @@ class Game extends Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  sendPlayerScore: (player) => dispatch(savePlayerAction(player)),
+});
+
 const mapStateToProps = (state) => ({
   player: state.playerInfo.player,
 });
@@ -213,6 +218,7 @@ Game.propTypes = {
     PropTypes.any,
   ).isRequired,
   history: PropTypes.objectOf(PropTypes.any).isRequired,
+  sendPlayerScore: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps)(Game);
+export default connect(mapStateToProps, mapDispatchToProps)(Game);

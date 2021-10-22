@@ -21,7 +21,7 @@ class Header extends Component {
   }
 
   render() {
-    const { player, score } = this.props;
+    const { player, score, scores } = this.props;
     return (
       <div>
         <img
@@ -30,7 +30,7 @@ class Header extends Component {
           alt="imagem-avatar"
         />
         <h4 data-testid="header-player-name">{ player.name }</h4>
-        <h4 data-testid="header-score">{score}</h4>
+        <h4 data-testid="header-score">{scores || score}</h4>
       </div>
     );
   }
@@ -39,10 +39,12 @@ class Header extends Component {
 Header.propTypes = {
   player: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
+  scores: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   player: state.playerInfo.player,
+  score: state.playerInfo.player.score,
 });
 
 export default connect(mapStateToProps, null)(Header);
