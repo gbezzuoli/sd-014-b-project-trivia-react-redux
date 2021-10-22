@@ -50,7 +50,7 @@ class Game extends Component {
     };
 
     const { controller } = this.state;
-    const { loading, timeIsOver } = this.props;
+    const { loading } = this.props;
     return (
       <>
         <Header />
@@ -60,15 +60,14 @@ class Game extends Component {
               <QuestionCard controller={ controller } />
               <AlternativeCard controller={ controller } />
               <button onClick={ this.handleClick } type="button">Proxima</button>
-              {timeIsOver ? <div>Timer: 0</div> : <Timer />}
+              <Timer />
             </main>)}
       </>
     );
   }
 }
 
-const mapStateToProps = ({ questionsReducer: { timeIsOver, loading } }) => ({
-  timeIsOver,
+const mapStateToProps = ({ questionsReducer: { loading } }) => ({
   loading,
 });
 
@@ -78,7 +77,6 @@ const mapDispatchToProps = (dispatch) => ({
 
 Game.propTypes = {
   saveQuestions: PropTypes.func.isRequired,
-  timeIsOver: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 

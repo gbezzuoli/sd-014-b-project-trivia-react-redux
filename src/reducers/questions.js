@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   questions: [],
   timeIsOver: false,
   loading: true,
+  counter: 0,
 };
 
 function questionsReducer(state = INITIAL_STATE, action) {
@@ -17,7 +18,8 @@ function questionsReducer(state = INITIAL_STATE, action) {
   case TIME_IS_OVER:
     return {
       ...state,
-      timeIsOver: action.payload,
+      timeIsOver: action.timerInfo.timeOver,
+      counter: action.timerInfo.counter,
     };
   default:
     return state;
