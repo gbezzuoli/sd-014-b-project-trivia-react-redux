@@ -1,3 +1,6 @@
+// Referência para implementação da Contagem Regressiva: Zhiyue Yi
+// src: https://dev.to/zhiyueyi/how-to-create-a-simple-react-countdown-timer-4mc3
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -5,6 +8,12 @@ import { fetchAvatar, fetchQuestions } from '../redux/actions/actions';
 import GameCard from '../components/GameCard';
 
 class Game extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { counter: 30 };
+    this.setCounter = this.setCounter.bind(this);
+  }
+
   componentDidMount() {
     const { email, token, getAvatar, getQuestions } = this.props;
     getAvatar(email);
@@ -12,8 +21,21 @@ class Game extends Component {
     localStorage.setItem('token', JSON.stringify(token));
   }
 
+  componentDidUpdate() {
+    const { counter } = this.state;
+    const ONE_SECOND = 1000;
+    return (
+      counter > 0 && setTimeout(() => this.setCounter(counter - 1), ONE_SECOND)
+    );
+  }
+
+  setCounter(value) {
+    this.setState({ counter: value });
+  }
+
   render() {
     const { name, avatar, questions, isGameReady } = this.props;
+    const { counter } = this.state;
 
     return (
       <>
@@ -23,7 +45,10 @@ class Game extends Component {
           <span data-testid="header-score">{`Pontos: ${0}`}</span>
         </header>
         <hr />
-        <main>{!isGameReady && <GameCard question={ questions[0] } />}</main>
+        <main>
+          {!isGameReady && <GameCard question={ questions[0] } />}
+          <div>{`Tempo Restante: ${counter}`}</div>
+        </main>
       </>
     );
   }
