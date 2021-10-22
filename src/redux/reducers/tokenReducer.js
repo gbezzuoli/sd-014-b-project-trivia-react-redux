@@ -1,11 +1,11 @@
 import { GET_TOKEN, FAILED_REQUEST } from '../actions/TokenAction';
 
-const initialState = {
+const INITIAL_STATE = {
   token: '',
   erro: '',
 };
 
-export default function UserReducer(state = initialState, action) {
+const tokenReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case GET_TOKEN:
     return {
@@ -20,4 +20,6 @@ export default function UserReducer(state = initialState, action) {
   default:
     return state;
   }
-}
+};
+
+export default tokenReducer;
