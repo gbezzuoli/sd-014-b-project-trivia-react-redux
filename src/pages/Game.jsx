@@ -16,11 +16,8 @@ export default function Game() {
     <>
       <Header />
       <main>
-        <h1>game page</h1>
-        <section>
-          <div>
-            {questions && <Questions />}
-          </div>
+        <section className="content-questions">
+          {questions && <Questions />}
         </section>
       </main>
     </>

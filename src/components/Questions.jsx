@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from './Button';
+import './Questions.css';
 
 const HALF = 0.5;
 
@@ -16,7 +17,7 @@ class Questions extends Component {
     };
 
     this.getAnswersAndSort = this.getAnswersAndSort.bind(this);
-    this.changeBorderColor = this.changeBorderColor.bind(this);
+    this.handleAnswersButton = this.handleAnswersButton.bind(this);
     this.handleNextQuestion = this.handleNextQuestion.bind(this);
   }
 
@@ -41,7 +42,25 @@ class Questions extends Component {
     this.setState({ sortedAnswers });
   }
 
-  changeBorderColor() {
+  handleAnswersButton(answer, difficulty) {
+    const { questions } = this.props;
+    const difficultyScore = {
+      easy: 1,
+      medium: 2,
+      hard: 3,
+      default: 10,
+      timer: 30,
+    };
+
+    const score = difficultyScore.default + (
+      difficultyScore.timer * difficultyScore[difficulty]);
+
+    if (answer === questions[0].correct_answer) {
+      const { player } = JSON.parse(localStorage.getItem('state'));
+      player.assertions += 1;
+      player.score += score;
+      localStorage.setItem('state', JSON.stringify({ player: { ...player } }));
+    }
     this.setState({ shouldBorderColorChange: true });
   }
 
@@ -55,53 +74,65 @@ class Questions extends Component {
     const {
       state: { shouldBorderColorChange, sortedAnswers, currentQuestion },
       props: { questions },
-      changeBorderColor,
+      handleAnswersButton,
     } = this;
 
     return (
-      <div>
-        <h1
-          key={ questions[currentQuestion].category }
-          data-testid="question-category"
-        >
-          { questions[currentQuestion].category }
-        </h1>
-        <h2 data-testid="question-text">{ questions[currentQuestion].question }</h2>
-        {sortedAnswers.map((answer) => {
-          const currentQIndex = questions[currentQuestion]
-            .incorrect_answers.indexOf(answer);
-          if (answer === questions[currentQuestion].correct_answer) {
+      <section className="container">
+        <div className="container-question">
+          <div>
+            <h1
+              key={ questions[currentQuestion].category }
+              data-testid="question-category"
+            >
+              { questions[currentQuestion].category }
+            </h1>
+          </div>
+          <p data-testid="question-text">{ questions[currentQuestion].question }</p>
+        </div>
+        <div className="container-answers">
+          {sortedAnswers.map((answer) => {
+            const currentQIndex = questions[currentQuestion]
+              .incorrect_answers.indexOf(answer);
+            if (answer === questions[currentQuestion].correct_answer) {
+              return (
+                <Button
+                  answer={ answer }
+                  key={ answer }
+                  id="correct-answer"
+                  buttonBorderColor="6, 240, 15"
+                  handleAnswersButton={ handleAnswersButton }
+                  shouldBorderColorChange={ shouldBorderColorChange }
+                  difficulty={ questions[currentQuestion].difficulty }
+                />
+              );
+            }
             return (
               <Button
                 answer={ answer }
                 key={ answer }
-                id="correct-answer"
-                buttonBorderColor="6, 240, 15"
-                changeBorderColor={ changeBorderColor }
+                id={ `wrong-answer-${currentQIndex}` }
+                buttonBorderColor="255, 0, 0"
+                handleAnswersButton={ handleAnswersButton }
                 shouldBorderColorChange={ shouldBorderColorChange }
-              />
-            );
-          }
-          return (
-            <Button
-              answer={ answer }
-              key={ answer }
-              id={ `wrong-answer-${currentQIndex}` }
-              buttonBorderColor="255, 0, 0"
-              changeBorderColor={ changeBorderColor }
-              shouldBorderColorChange={ shouldBorderColorChange }
-            />);
-        })}
-        { shouldBorderColorChange
+                difficulty={ questions[currentQuestion].difficulty }
+              />);
+          })}
+          { shouldBorderColorChange
           && (
-            <button
-              type="button"
-              onClick={ this.handleNextQuestion }
-              data-testid="btn-next"
-            >
-              Próxima
-            </button>) }
-      </div>
+            <div className="container-btn">
+              <button
+                type="button"
+                onClick={ this.handleNextQuestion }
+                data-testid="btn-next"
+                className="btn-next"
+              >
+                Próxima
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
     );
   }
 }

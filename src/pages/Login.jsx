@@ -12,8 +12,10 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      email: '',
+      gravatarEmail: '',
       name: '',
+      assertions: 0,
+      score: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -27,9 +29,14 @@ class Login extends Component {
     this.setState({ [name]: value });
   }
 
+  savePlayer() {
+    localStorage.setItem('state', JSON.stringify({ player: { ...this.state } }));
+  }
+
   handleClick() {
     const { dispatchLogin, history } = this.props;
     dispatchLogin({ ...this.state });
+    this.savePlayer();
     history.push('/game');
   }
 
@@ -40,7 +47,7 @@ class Login extends Component {
   }
 
   formElement() {
-    const { email, name } = this.state;
+    const { gravatarEmail, name } = this.state;
     return (
       <section className="center">
         <div className="form-login">
@@ -61,10 +68,10 @@ class Login extends Component {
             Email:
             <input
               type="text"
-              name="email"
+              name="gravatarEmail"
               id="email"
               onChange={ this.handleChange }
-              value={ email }
+              value={ gravatarEmail }
               placeholder="Insira seu Email"
               data-testid="input-gravatar-email"
             />
@@ -76,9 +83,9 @@ class Login extends Component {
   }
 
   renderButtons() {
-    const { email, name } = this.state;
+    const { gravatarEmail, name } = this.state;
     const { startFetching } = this.props;
-    const isValid = this.handleValidation(email, name);
+    const isValid = this.handleValidation(gravatarEmail, name);
 
     return (
       <div className="form-buttons">

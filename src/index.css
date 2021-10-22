@@ -12,6 +12,12 @@ code {
     monospace;
 }
 
-#root {
+#root, main {
   height: 100vh;
+}
+
+.content-questions {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
 }
