@@ -16,6 +16,7 @@ class Game extends Component {
       count: 30,
       score: 0,
       assertions: 0,
+      nextButton: false,
     };
 
     this.requestTriviaAPI = this.requestTriviaAPI.bind(this);
@@ -23,6 +24,7 @@ class Game extends Component {
     this.calculateScore = this.calculateScore.bind(this);
     this.difficultyQuestion = this.difficultyQuestion.bind(this);
     this.saveOnStorage = this.saveOnStorage.bind(this);
+    this.activateNextButton = this.activateNextButton.bind(this);
   }
 
   componentDidMount() {
@@ -85,7 +87,6 @@ class Game extends Component {
 
   changeColor() {
     const btn = document.querySelectorAll('button');
-    console.log(btn);
     btn.forEach((button) => {
       if (button.value === correctAnswer) {
         button.style.border = '3px solid rgb(6, 240, 15)';
@@ -93,6 +94,12 @@ class Game extends Component {
       if (button.value === wrongAnswer) {
         button.style.border = '3px solid rgb(255, 0, 0)';
       }
+    });
+  }
+
+  activateNextButton() {
+    this.setState({
+      nextButton: true,
     });
   }
 
@@ -105,11 +112,10 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, game, count, score } = this.state;
-    const { changeColor, calculateScore, interval } = this;
+    const { questions, game, count, score, nextButton } = this.state;
+    const { changeColor, calculateScore, interval, activateNextButton } = this;
     if (questions.length > 0) {
       const question = questions[game];
-      console.log(question);
       const allAnswers = [question.correct_answer, ...question.incorrect_answers];
       return (
         <div>
@@ -127,6 +133,7 @@ class Game extends Component {
                   clearInterval(interval);
                   changeColor();
                   calculateScore(event, question.difficulty);
+                  activateNextButton();
                 } }
                 value={ question.correct_answer === answer
                   ? correctAnswer : 'wrong-answer' }
@@ -137,6 +144,12 @@ class Game extends Component {
               >
                 {answer}
               </button>))}
+            {nextButton
+              ? (
+                <button data-testid="btn-next" type="button">
+                  Próxima
+                </button>
+              ) : ''}
             <p>{ count }</p>
           </div>
         </div>
