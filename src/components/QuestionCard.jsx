@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import QuestionInfo from './QuestionInfo';
 
 class QuestionCard extends React.Component {
   constructor() {
@@ -9,6 +10,7 @@ class QuestionCard extends React.Component {
       answerListState: [],
       correctAnswerC: 'answer', // State referente a Classe das respostas
       wrongAnswerC: 'answer', // State referente a Classe das respostas
+      showbutton: false,
     };
 
     this.nextQuestion = this.nextQuestion.bind(this);
@@ -21,6 +23,7 @@ class QuestionCard extends React.Component {
   }
 
   setColorAndScore() {
+    this.setState({ showbutton: true });
     const { answerListState } = this.state;
     answerListState.forEach((answer) => {
       if (answer.value === true) {
@@ -64,26 +67,23 @@ class QuestionCard extends React.Component {
       questionIndex: questionIndex + 1,
       wrongAnswerC: 'answer',
       correctAnswerC: 'answer',
+      showbutton: false,
+
     }, () => this.listAnswersMultiple());
   }
 
   render() {
     const { apiResult } = this.props;
-    const { questionIndex, answerListState, correctAnswerC, wrongAnswerC } = this.state;
+    const {
+      questionIndex,
+      answerListState,
+      correctAnswerC,
+      wrongAnswerC,
+      showbutton,
+    } = this.state;
     return (
       <section className="question-card">
-        <h3
-          data-testid="question-category"
-          className="question-category"
-        >
-          { apiResult[questionIndex].category }
-        </h3>
-        <p
-          data-testid="question-text"
-          className="question-text"
-        >
-          { apiResult[questionIndex].question }
-        </p>
+        <QuestionInfo apiResult={ apiResult } questionIndex={ questionIndex } />
         {answerListState.map((question, index) => (
           question.value === true
             ? (
@@ -109,7 +109,13 @@ class QuestionCard extends React.Component {
                 { question.answer }
               </button>)
         ))}
-        <button type="button" onClick={ this.nextQuestion }>
+        <button
+          type="button"
+          onClick={ this.nextQuestion }
+          className="button-next"
+          style={ { visibility: showbutton ? 'visible' : 'hidden' } }
+          data-testid="btn-next"
+        >
           Próximo
         </button>
       </section>
