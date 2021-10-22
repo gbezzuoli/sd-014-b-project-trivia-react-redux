@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import requestTrivia from '../services/trivia';
-import { addResultsToState } from '../Redux/actions';
+import { addResultsToState, addScore } from '../Redux/actions';
 import getQuestions from '../services/getQuestions';
 import Button from './Button';
 import Timer from './Timer';
@@ -12,14 +12,17 @@ class Trivia extends Component {
     super();
 
     this.getTriviaGame = this.getTriviaGame.bind(this);
+    this.sumScore = this.sumScore.bind(this);
     this.createAnswerButtons = this.createAnswerButtons.bind(this);
     this.handleAnswerClick = this.handleAnswerClick.bind(this);
+    this.handleCorrectAnswer = this.handleCorrectAnswer.bind(this);
     this.goToNextQuestion = this.goToNextQuestion.bind(this);
 
     this.state = {
       results: [],
       actualQuestion: 0,
       endQuestion: false,
+      clickCorrectAnswer: false,
     };
   }
 
@@ -45,6 +48,34 @@ class Trivia extends Component {
     this.setState({ endQuestion: true });
   }
 
+  handleCorrectAnswer() {
+    this.setState({ clickCorrectAnswer: true, endQuestion: true });
+  }
+
+  sumScore(timer) {
+    const { results, score, dispatchScore } = this.props;
+    const { actualQuestion } = this.state;
+    const { difficulty } = results[actualQuestion];
+    let scoreSum = score;
+    const TEN = 10;
+    const HARD_NUM = 3;
+    const MEDIUM_NUM = 2;
+
+    if (difficulty === 'hard') {
+      scoreSum += TEN + (timer * HARD_NUM);
+    }
+
+    if (difficulty === 'medium') {
+      scoreSum += TEN + (timer * MEDIUM_NUM);
+    }
+
+    if (difficulty === 'easy') {
+      scoreSum += TEN + timer;
+    }
+
+    dispatchScore(scoreSum);
+  }
+
   createAnswerButtons() {
     const { results, actualQuestion, endQuestion } = this.state;
     const questionsList = getQuestions(results[actualQuestion]);
@@ -66,20 +97,25 @@ class Trivia extends Component {
             textButton={ question }
             className="correct-answer"
             dataTestId="correct-answer"
-            onClick={ this.handleAnswerClick }
+            onClick={ this.handleCorrectAnswer }
             disabled={ endQuestion }
           />)));
   }
 
   render() {
-    const { results, actualQuestion, endQuestion } = this.state;
+    const { results, actualQuestion, clickCorrectAnswer, endQuestion } = this.state;
     return (
       <section className="game-board">
         { results.length < 1
           ? <div className="loading">Carregando...</div>
           : (
             <>
-              <Timer answerClick={ this.handleAnswerClick } />
+              <Timer
+                answerClick={ this.handleAnswerClick }
+                clickCorrectAnswer={ clickCorrectAnswer }
+                sumScore={ this.sumScore }
+                endQuestion={ endQuestion }
+              />
               <span data-testid="question-category">
                 { results[actualQuestion].category }
               </span>
@@ -102,19 +138,23 @@ class Trivia extends Component {
 
 Trivia.propTypes = {
   dispatchResultsToState: PropTypes.func.isRequired,
-  token: PropTypes.string,
-};
-
-Trivia.defaultProps = {
-  token: '',
+  token: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
+  results: PropTypes.arrayOf(PropTypes.shape({
+    difficulty: PropTypes.string.isRequired,
+  })).isRequired,
+  dispatchScore: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   token: state.player.token,
+  score: state.player.score,
+  results: state.game.results,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchResultsToState: (results) => dispatch(addResultsToState(results)),
+  dispatchScore: (score) => dispatch(addScore(score)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Trivia);

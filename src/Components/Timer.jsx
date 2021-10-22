@@ -24,8 +24,11 @@ export default class Timer extends Component {
 
   clearTimer(interval) {
     const { timer } = this.state;
-    const { answerClick } = this.props;
-    if (timer === 0) {
+    const { answerClick, clickCorrectAnswer, sumScore, endQuestion } = this.props;
+
+    if (clickCorrectAnswer) sumScore(timer);
+
+    if (timer === 0 || clickCorrectAnswer || endQuestion) {
       clearInterval(interval);
       return answerClick();
     }
@@ -46,4 +49,7 @@ export default class Timer extends Component {
 
 Timer.propTypes = {
   answerClick: PropTypes.func.isRequired,
+  clickCorrectAnswer: PropTypes.bool.isRequired,
+  endQuestion: PropTypes.bool.isRequired,
+  sumScore: PropTypes.func.isRequired,
 };

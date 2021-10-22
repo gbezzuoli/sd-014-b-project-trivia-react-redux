@@ -2,6 +2,8 @@ import { ADD_RESULTS_TO_STATE } from '../actions';
 
 const INITIAL_STATE = {
   results: [],
+  endQuestion: false,
+  clickCorrectAnswer: false,
 };
 
 const gameReducer = (state = INITIAL_STATE, action) => {
