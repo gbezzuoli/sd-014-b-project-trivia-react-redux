@@ -2,7 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class GameCard extends Component {
+  constructor() {
+    super();
+    this.state = {
+      nextQuestion: false,
+    };
+  }
+
   render() {
+    const { nextQuestion } = this.state;
     const { question } = this.props;
     const RANDOM = 5;
     const correct = (
@@ -24,6 +32,13 @@ export default class GameCard extends Component {
         <p data-testid="question-category">{question.category}</p>
         <h1 data-testid="question-text">{question.question}</h1>
         <ul>{options}</ul>
+        {nextQuestion
+          && <button
+            type="button"
+            data-testid="btn-next"
+          >
+            Próxima
+          </button>}
       </div>
     );
   }
