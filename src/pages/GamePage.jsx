@@ -35,35 +35,17 @@ class GamePage extends Component {
   }
 
   onClickAnswer() {
-    const { result } = this.state;
-    let { i } = this.state;
-    console.log(i);
-    if (i === 0) {
-      i += 1;
-    }
-    try {
-      this.setState({
-        i: i + 1,
-        questOne: result[i].question,
-        wrongAnswersOne: result[i].incorrect_answers,
-        rightAnswerOne: result[i].correct_answer,
-        corr: '',
-        incor: '',
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const { i } = this.state;
+    this.setState({
+      i: i + 1,
+    }, () => this.nextQuestion());
   }
 
   setBtnAnswerBorder() {
-    const { i } = this.state;
     this.setState({
       incor: 'btn-answer',
       corr: 'correct-answer',
     });
-    this.setState({
-      i: i + 1,
-    }, () => this.nextQuestion());
   }
 
   async getQuestions() {
@@ -77,7 +59,6 @@ class GamePage extends Component {
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
     }, () => this.startCounter());
-    this.randomAnswers();
   }
 
   nextQuestion() {
@@ -159,7 +140,6 @@ class GamePage extends Component {
             Próximo
           </button>
         </section>
-
       </div>
     );
   }
