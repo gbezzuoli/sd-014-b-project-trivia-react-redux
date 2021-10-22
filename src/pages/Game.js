@@ -11,6 +11,7 @@ class Game extends Component {
     super();
     this.state = {
       questions: [],
+      timer: 30,
       index: 0,
       next: false,
       loading: true,
@@ -20,10 +21,12 @@ class Game extends Component {
     this.answerClickHandler = this.answerClickHandler.bind(this);
     this.nextButtonClick = this.nextButtonClick.bind(this);
     this.fetchQuestionsState = this.fetchQuestionsState.bind(this);
+    this.timer = this.timer.bind(this);
   }
 
-  async componentDidMount() {
-    await this.fetchQuestionsState();
+  componentDidMount() {
+    this.fetchQuestionsState();
+    this.timer();
   }
 
   async fetchQuestionsState() {
@@ -48,7 +51,22 @@ class Game extends Component {
   }
 
   nextButtonClick() {
-    this.setState((state) => ({ index: state.index + 1, next: false }));
+    this.setState((state) => ({ index: state.index + 1, next: false, timer: 30 }));
+  }
+
+  timer() {
+    const time = 1000;
+    setInterval(() => {
+      const { timer } = this.state;
+      if (timer === 0) {
+        clearInterval();
+        this.setState({ next: true });
+      } else {
+        this.setState((prevState) => ({
+          timer: prevState.timer - 1,
+        }));
+      }
+    }, time);
   }
 
   renderQuestionsRandomAnswers() {
@@ -76,10 +94,11 @@ class Game extends Component {
   }
 
   render() {
-    const { loading, questions, index, next } = this.state;
+    const { loading, questions, index, next, timer } = this.state;
     if (loading) return <h1>Loading</h1>;
     return (
       <div>
+        <h1>{timer}</h1>
         <GameHeader />
         <TriviaQuestion
           category={ questions[index].category }
