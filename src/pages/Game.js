@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Header from '../components/Header';
+import { savePlayerAction } from '../Redux/actions';
 
 const correctAnswer = 'correct-answer';
 const wrongAnswer = 'wrong-answer';
@@ -12,10 +15,14 @@ class Game extends Component {
       questions: [],
       game: 0,
       count: 30,
+      score: 0,
+      assertions: 0,
     };
 
     this.requestTriviaAPI = this.requestTriviaAPI.bind(this);
     this.changeColor = this.changeColor.bind(this);
+    this.calculateScore = this.calculateScore.bind(this);
+    this.difficultyQuestion = this.difficultyQuestion.bind(this);
   }
 
   componentDidMount() {
@@ -34,6 +41,35 @@ class Game extends Component {
     if (count === 0) {
       clearInterval(this.interval);
     }
+  }
+
+  difficultyQuestion(difficulty) {
+    const easy = 1;
+    const medium = 2;
+    const hard = 3;
+    if (difficulty === 'easy') {
+      return easy;
+    } if (difficulty === 'medium') {
+      return medium;
+    } if (difficulty === 'hard') {
+      return hard;
+    }
+  }
+
+  calculateScore({ target: { value } }, difficulty) {
+    const { saveScore, player } = this.props;
+    const { count, score, assertions } = this.state;
+    const difficultyQuestion = this.difficultyQuestion(difficulty);
+    const number = 10;
+    if (value === correctAnswer) {
+      this.setState((prev) => ({
+        score: prev.score + (number + (count * difficultyQuestion)),
+        assertions: prev.assertions + 1,
+      }));
+    }
+    const saveScoreCall = () => saveScore({ score, assertions });
+    saveScoreCall();
+    localStorage.setItem('state', JSON.stringify({ player }));
   }
 
   changeColor() {
@@ -58,14 +94,15 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, game, count } = this.state;
-    const { changeColor } = this;
+    const { questions, game, count, score } = this.state;
+    const { changeColor, calculateScore, interval } = this;
     if (questions.length > 0) {
       const question = questions[game];
+      console.log(question);
       const allAnswers = [question.correct_answer, ...question.incorrect_answers];
       return (
         <div>
-          <Header />
+          <Header score={ score } />
           <div key={ game }>
             <p data-testid="question-category">{question.category}</p>
             <p data-testid="question-text">{question.question}</p>
@@ -75,7 +112,11 @@ class Game extends Component {
                 type="button"
                 key={ answerIndex }
                 style={ {} }
-                onClick={ () => changeColor() }
+                onClick={ (event) => {
+                  clearInterval(interval);
+                  changeColor();
+                  calculateScore(event, question.difficulty);
+                } }
                 value={ question.correct_answer === answer
                   ? correctAnswer : 'wrong-answer' }
                 data-testid={
@@ -95,5 +136,19 @@ class Game extends Component {
     );
   }
 }
+const mapDispatchToProps = (dispatch) => ({
+  saveScore: (player) => dispatch(savePlayerAction(player)),
+});
 
-export default Game;
+const mapStateToProps = (state) => ({
+  player: state.playerInfo.player,
+});
+
+Game.propTypes = {
+  player: PropTypes.objectOf(
+    PropTypes.any,
+  ).isRequired,
+  saveScore: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);

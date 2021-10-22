@@ -2,8 +2,10 @@ import { SAVE_PLAYER_INFO } from '../actions';
 
 const INITIAL_STATE = {
   player: {
-    email: '',
     name: '',
+    assertions: 0,
+    score: 0,
+    gravatarEmail: '',
   },
 };
 
@@ -12,7 +14,7 @@ function playerInfo(state = INITIAL_STATE, action) {
   case SAVE_PLAYER_INFO:
     return {
       ...state,
-      player: action.player,
+      player: { ...state.player, ...action.player },
     };
   default:
     return state;

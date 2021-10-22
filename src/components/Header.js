@@ -15,13 +15,13 @@ class Header extends Component {
   }
 
   requestGravatar() {
-    const { player: { email } } = this.props;
-    const hash = md5(email).toString();
+    const { player: { gravatarEmail } } = this.props;
+    const hash = md5(gravatarEmail).toString();
     return `https://www.gravatar.com/avatar/${hash}`;
   }
 
   render() {
-    const { player } = this.props;
+    const { player, score } = this.props;
     return (
       <div>
         <img
@@ -30,7 +30,7 @@ class Header extends Component {
           alt="imagem-avatar"
         />
         <h4 data-testid="header-player-name">{ player.name }</h4>
-        <h4 data-testid="header-score">0</h4>
+        <h4 data-testid="header-score">{score}</h4>
       </div>
     );
   }
@@ -38,6 +38,7 @@ class Header extends Component {
 
 Header.propTypes = {
   player: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
