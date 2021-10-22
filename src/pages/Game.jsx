@@ -1,37 +1,30 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import QuestionCard from '../components/QuestionCard';
 
-export default class Game extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      asks: [],
-      loading: true,
-    };
-
-    this.requestTrivia = this.requestTrivia.bind(this);
-  }
-
-  async componentDidMount() {
-    await this.requestTrivia();
-  }
-
-  // Função de requisição do Trivia
-  async requestTrivia() {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
-    const data = await response.json();
-    this.setState({ asks: data.results, loading: false });
-  }
-
+class Game extends React.Component {
   render() {
-    const { asks, loading } = this.state;
+    const { questions, loading } = this.props;
+    if (loading) return 'Loading...';
+    console.log(questions);
     return (
       <div className="question-card">
-        {loading
-          ? <span>Loading...</span>
-          : <QuestionCard apiResult={ asks } index={ 0 } />}
+        <QuestionCard apiResult={ questions } index={ 0 } />
       </div>
     );
   }
 }
+
+Game.propTypes = {
+  getQuestions: PropTypes.func,
+  loading: PropTypes.bool,
+  questions: PropTypes.arrayOf(PropTypes.object),
+}.isRequired;
+
+const mapStateToProps = (state) => ({
+  questions: state.setQuestionsReducer.questions,
+  loading: state.setQuestionsReducer.loading,
+});
+
+export default connect(mapStateToProps)(Game);
