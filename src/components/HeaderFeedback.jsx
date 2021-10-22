@@ -27,7 +27,6 @@ const mapStateToProps = (state) => ({
 HeaderFeedback.propTypes = {
   getDataPlayer: PropTypes.objectOf(PropTypes.shape({
     name: PropTypes.string,
-    assertions: PropTypes.string,
     score: PropTypes.string,
     gravatarEmail: PropTypes.string,
   })).isRequired,

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 // import Question from '../components/Question';
 import requestQuestions from '../services/requestQuestions';
@@ -36,8 +37,9 @@ class GamePage extends Component {
   }
 
   onClickAnswer() {
-    const { result } = this.state;
-    const { i } = this.state;
+    const { result, i } = this.state;
+    const { history } = this.props;
+    const MAX_ANSWERS = 4;
     console.log('O índice atual é: ', i);
     // if (i === 0) {
     //   i += 1;
@@ -45,6 +47,7 @@ class GamePage extends Component {
     // Na o início do jogo, ao resposder a primeira pergunta,
     // o indíce era somado + de 1 vez .
     try {
+      if (i > MAX_ANSWERS) history.push('/feedback');
       this.setState({
         i: i + 1,
         questOne: result[i].question,
@@ -173,5 +176,11 @@ class GamePage extends Component {
     );
   }
 }
+
+GamePage.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 
 export default GamePage;
