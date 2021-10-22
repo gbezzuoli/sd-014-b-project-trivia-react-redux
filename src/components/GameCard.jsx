@@ -44,7 +44,6 @@ export default class GameCard extends Component {
         {element}
       </button>
     ));
-    // fazer o sort com essa callback não é a melhor coisa do mundo
     const answers = [correct, ...incorrects].sort(() => Math.random() - RANDOM);
     const options = answers.map((answer) => <li key={ answer }>{answer}</li>);
     const buttonNext = (
