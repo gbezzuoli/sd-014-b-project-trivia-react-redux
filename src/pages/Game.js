@@ -5,8 +5,8 @@ import Header from '../components/Header';
 import fetchQuestions from '../services/FetchQuestions';
 
 class Game extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       questions: '',
       correctAnswer: '',
@@ -16,6 +16,7 @@ class Game extends Component {
       count: -1,
       disabledState: false,
       currentTime: 35,
+      difficulty: '',
     };
     this.requestAPI = this.requestAPI.bind(this);
     this.mapQuestions = this.mapQuestions.bind(this);
@@ -51,6 +52,37 @@ class Game extends Component {
     localStorage.setItem('state', JSON.stringify(playerInfo));
   }
 
+  scoreCalculator() {
+    const { difficulty, currentTime } = this.state;
+    const dez = 10;
+    const easy = 1;
+    const medium = 2;
+    const hard = 3;
+
+    const scoreEasy = dez + (easy * currentTime);
+    const scoreMedium = dez + (medium * currentTime);
+    const scoreHard = dez + (hard * currentTime);
+    switch (difficulty) {
+    case 'easy':
+      this.setState((prevState) => ({
+        score: prevState.score + scoreEasy,
+      }));
+      break;
+    case 'medium':
+      this.setState((prevState) => ({
+        score: prevState.score + scoreMedium,
+      }));
+      break;
+    case 'hard':
+      this.setState((prevState) => ({
+        score: prevState.score + scoreHard,
+      }));
+      break;
+    default:
+      return this.state;
+    }
+  }
+
   tick() {
     const ONE_SECOND = 1000;
     this.timerID = setInterval(() => this.setState((prevState) => ({
@@ -63,6 +95,7 @@ class Game extends Component {
     const givenAnswer = target.innerHTML;
     if (givenAnswer === correctAnswer) {
       this.setState({ count: count + 1 });
+      this.scoreCalculator();
     }
     this.addStyle();
     this.setState({ disabledState: true });
@@ -74,6 +107,7 @@ class Game extends Component {
     this.setState({
       questions: allQuestions.results,
       correctAnswer: allQuestions.results[0].correct_answer,
+      difficulty: allQuestions.results[0].difficulty,
     });
     console.log(allQuestions);
   }
@@ -135,14 +169,16 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, currentTime } = this.state;
+    const { questions, currentTime, difficulty, score } = this.state;
     return (
       <div>
         <Header />
         <h1>TRIVIA</h1>
+        {`Dificuldade: ${difficulty}`}
         {questions ? this.mapQuestions(questions)
           : <span>CARREGANDO</span>}
-        { `TIMER: ${currentTime}` }
+        <span>{ `TIMER: ${currentTime}` }</span>
+        <span>{ `Sua pontuação é ${score}`}</span>
       </div>
     );
   }
