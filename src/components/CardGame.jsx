@@ -9,9 +9,7 @@ class CardGame extends React.Component {
     this.state = {
       answers: [],
       answerObjects: [],
-      correct: '',
-      hidden: true,
-      incorrect: [],
+      // hidden: true,
     };
 
     this.setAnswer = this.setAnswer.bind(this);
@@ -27,17 +25,13 @@ class CardGame extends React.Component {
   async setAnswer() {
     const { question } = this.props;
     await this.setState({
-      correct: question.correct_answer,
-      incorrect: question.incorrect_answers,
+      answers: [question.correct_answer, ...question.incorrect_answers],
     });
+    await this.parseAnswerInObject();
+  }
 
-    const { incorrect, correct } = this.state;
-    await this.setState({
-      answers: [correct, ...incorrect],
-    });
-
+  parseAnswerInObject() {
     const { answers } = this.state;
-
     const answersObjects = answers.map((answer, index) => {
       if (index === 0) {
         return {
@@ -50,8 +44,9 @@ class CardGame extends React.Component {
         correct: false,
       };
     });
-    await this.setState({
-      answerObjects: [...answersObjects],
+    const randomAnswers = this.shuffleArray(answersObjects);
+    this.setState({
+      answerObjects: [...randomAnswers],
     });
   }
 
@@ -67,29 +62,30 @@ class CardGame extends React.Component {
   }
 
   handleAnswerClick() {
-    this.setState({ hidden: false });
     const brothers = document.querySelectorAll('button');
     // getAttribute feito com base no stackoverflow
     brothers.forEach((brother) => {
       if (brother.getAttribute('data-testid') === 'correct-answer') {
         brother.classList.add('right-answer');
+        // this.setState({ hidden: false });
       } else if (brother.getAttribute('data-testid').includes('wrong-answer')) {
         brother.classList.add('wrong-answer');
+        // this.setState({ hidden: false });
       }
     });
+    // this.setState({ hidden: false });
   }
 
   render() {
     const { question: { category, question }, next } = this.props;
     const { answerObjects, hidden } = this.state;
-    const randomAnswers = this.shuffleArray(answerObjects);
     let count = 0;
-
+    console.log(answerObjects);
     return (
       <div>
         <h2 data-testid="question-category">{ category }</h2>
         <h3 data-testid="question-text">{ question }</h3>
-        { randomAnswers.map((answerButton, index) => {
+        { answerObjects.map((answerButton, index) => {
           if (answerButton.correct) {
             return (
               <button
@@ -113,7 +109,7 @@ class CardGame extends React.Component {
           );
         }) }
         <input
-          style={ { display: hidden ? 'none' : 'inline-block' } }
+          // style={ { display: hidden ? 'none' : 'inline-block' } }
           type="button"
           value="Proxima"
           onClick={ () => { this.setState({ hidden: true }); this.setAnswer(); next(); } }

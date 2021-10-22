@@ -50,8 +50,9 @@ class Game extends React.Component {
     } else {
       history.push('/result');
     }
+    console.log(count)
   }
-
+  
   render() {
     const { count, questions } = this.props;
     return (
