@@ -27,11 +27,13 @@ export default function gameReducers(state = INITIAL_STATE, action) {
       ...state,
       profileImage: action.profileImage,
     };
-  case ACTIONS.GET_SCORE:
+
+  case ACTIONS.SET_SCORE:
     return {
       ...state,
-      score: action.score,
+      score: action.payload,
     };
+
   case ACTIONS.GET_QUESTIONS:
     return {
       ...state,

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import fetchQuestions from '../services/FetchQuestions';
+import { setScoreAction } from '../redux/actions';
 
 class Game extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class Game extends Component {
     this.mapQuestions = this.mapQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.addStyle = this.addStyle.bind(this);
+    this.scoreCalculator = this.scoreCalculator.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +40,42 @@ class Game extends Component {
     this.saveScore();
   }
 
+  setScoreState(score) {
+    const { setScoreInRedux } = this.props;
+    this.setState({
+      score,
+    });
+    setScoreInRedux(score);
+  }
+
+  scoreCalculator() {
+    const { difficulty, currentTime, score } = this.state;
+    const dez = 10;
+    const easy = 1;
+    const medium = 2;
+    const hard = 3;
+
+    const scoreEasy = dez + (easy * currentTime);
+    const scoreMedium = dez + (medium * currentTime);
+    const scoreHard = dez + (hard * currentTime);
+
+    let scoreFinal = score;
+    switch (difficulty) {
+    case 'easy':
+      scoreFinal += scoreEasy;
+      return scoreFinal;
+    case 'medium':
+      scoreFinal += scoreMedium;
+      return scoreFinal;
+    case 'hard':
+      scoreFinal += scoreHard;
+      return scoreFinal;
+    default:
+      return this.state;
+    }
+    // this.setState({ score: scoreFinal });
+  }
+
   saveScore() {
     const { name, email } = this.props;
     const { assertions, score } = this.state;
@@ -52,37 +90,6 @@ class Game extends Component {
     localStorage.setItem('state', JSON.stringify(playerInfo));
   }
 
-  scoreCalculator() {
-    const { difficulty, currentTime } = this.state;
-    const dez = 10;
-    const easy = 1;
-    const medium = 2;
-    const hard = 3;
-
-    const scoreEasy = dez + (easy * currentTime);
-    const scoreMedium = dez + (medium * currentTime);
-    const scoreHard = dez + (hard * currentTime);
-    switch (difficulty) {
-    case 'easy':
-      this.setState((prevState) => ({
-        score: prevState.score + scoreEasy,
-      }));
-      break;
-    case 'medium':
-      this.setState((prevState) => ({
-        score: prevState.score + scoreMedium,
-      }));
-      break;
-    case 'hard':
-      this.setState((prevState) => ({
-        score: prevState.score + scoreHard,
-      }));
-      break;
-    default:
-      return this.state;
-    }
-  }
-
   tick() {
     const ONE_SECOND = 1000;
     this.timerID = setInterval(() => this.setState((prevState) => ({
@@ -95,7 +102,7 @@ class Game extends Component {
     const givenAnswer = target.innerHTML;
     if (givenAnswer === correctAnswer) {
       this.setState({ count: count + 1 });
-      this.scoreCalculator();
+      this.setScoreState(this.scoreCalculator());
     }
     this.addStyle();
     this.setState({ disabledState: true });
@@ -178,6 +185,7 @@ class Game extends Component {
         {questions ? this.mapQuestions(questions)
           : <span>CARREGANDO</span>}
         <span>{ `TIMER: ${currentTime}` }</span>
+        <br />
         <span>{ `Sua pontuação é ${score}`}</span>
       </div>
     );
@@ -188,6 +196,7 @@ Game.propTypes = {
   token: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
+  setScoreInRedux: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -197,4 +206,8 @@ const mapStateToProps = (state) => ({
   email: state.gameReducers.email,
 });
 
-export default connect(mapStateToProps, null)(Game);
+const mapDispatchToProps = (dispatch) => ({
+  setScoreInRedux: (score) => dispatch(setScoreAction(score)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
