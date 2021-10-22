@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getToken } from '../helper';
 import * as userActions from '../redux/actions/index';
+import { fetchQuestions } from '../redux/actions';
 
 class Login extends Component {
   constructor(props) {
@@ -24,11 +24,13 @@ class Login extends Component {
   }
 
   async handleClickTrivia() {
-    const { getName, getEmail } = this.props;
+    const { getName, getEmail, history, getQuestions } = this.props;
     const { name, email } = this.state;
     getName(name);
     getEmail(email);
     await getToken();
+    await getQuestions();
+    history.push('/trivia');
   }
 
   handleClickSettings() {
@@ -61,16 +63,14 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
         </label>
-        <Link to="/trivia">
-          <button
-            data-testid="btn-play"
-            type="button"
-            onClick={ this.handleClickTrivia }
-            disabled={ disabled }
-          >
-            Jogar
-          </button>
-        </Link>
+        <button
+          data-testid="btn-play"
+          type="button"
+          onClick={ this.handleClickTrivia }
+          disabled={ disabled }
+        >
+          Jogar
+        </button>
         <button
           data-testid="btn-settings"
           type="button"
@@ -84,14 +84,16 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  history: PropTypes.objectOf(PropTypes.any).isRequired,
-  getName: PropTypes.func.isRequired,
   getEmail: PropTypes.func.isRequired,
+  getName: PropTypes.func.isRequired,
+  getQuestions: PropTypes.func.isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   getEmail: (email) => dispatch(userActions.addEmail(email)),
   getName: (name) => dispatch(userActions.addName(name)),
+  getQuestions: (payload) => dispatch(fetchQuestions(payload)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
