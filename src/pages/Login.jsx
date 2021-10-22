@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 import { Link } from 'react-router-dom';
-import { setInfo } from '../redux/actions';
+import { setInfo, fetchTriviaAPI } from '../redux/actions';
 
 // Requisito 1
 class Login extends React.Component {
@@ -41,11 +41,13 @@ class Login extends React.Component {
 
   // Função que seta o token no LocalStorage
   async getTokenFromAPI() {
+    const { getQuestions } = this.props;
     const URL = 'https://opentdb.com/api_token.php?command=request';
     const result = await fetch(URL);
     const response = await result.json();
     const { token } = response;
     localStorage.setItem('token', token);
+    getQuestions();
   }
 
   // Função que pega os values dos inputs
@@ -115,10 +117,12 @@ Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  getQuestions: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   userInfo: (info) => dispatch(setInfo(info)),
+  getQuestions: () => dispatch(fetchTriviaAPI()),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
