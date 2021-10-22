@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import fetchQuestions from '../services/FetchQuestions';
+import Question from '../components/Question';
 
 class Game extends Component {
   constructor() {
@@ -14,10 +15,9 @@ class Game extends Component {
       // answered: false,
       count: -1,
       disabledState: false,
-      currentTime: 35,
+      timer: 35,
     };
     this.requestAPI = this.requestAPI.bind(this);
-    this.mapQuestions = this.mapQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.addStyle = this.addStyle.bind(this);
   }
@@ -28,8 +28,8 @@ class Game extends Component {
   }
 
   componentDidUpdate() {
-    const { currentTime } = this.state;
-    if (currentTime === 0) {
+    const { timer } = this.state;
+    if (timer === 0) {
       clearInterval(this.timerID);
       this.addStyle();
     }
@@ -38,7 +38,7 @@ class Game extends Component {
   tick() {
     const ONE_SECOND = 1000;
     this.timerID = setInterval(() => this.setState((prevState) => ({
-      currentTime: prevState.currentTime - 1,
+      timer: prevState.timer - 1,
     })), ONE_SECOND);
   }
 
@@ -49,7 +49,7 @@ class Game extends Component {
       this.setState({ count: count + 1 });
     }
     this.addStyle();
-    this.setState({ disabledState: true, currentTime: 0 });
+    this.setState({ disabledState: true, timer: 0 });
   }
 
   async requestAPI() {
@@ -71,62 +71,16 @@ class Game extends Component {
     btnCorrect.setAttribute('style', 'border: 3px solid rgb(6, 240, 15)');
   }
 
-  mapQuestions(questions) {
-    const { disabledState, currentTime } = this.state;
-    const mappedQuestions = questions.map((question, index1) => {
-      const incorrectAnswers = question.incorrect_answers.map((alternative, index2) => (
-        <button
-          type="button"
-          disabled={ disabledState || currentTime === 0 }
-          data-testid={ `wrong-answer-${index2}` }
-          className="wrongButton"
-          key={ index2 }
-          onClick={ this.handleClick }
-        >
-          {alternative}
-        </button>
-      ));
-      const correctAnswer = (
-        <button
-          type="button"
-          disabled={ disabledState || currentTime === 0 }
-          data-testid="correct-answer"
-          className="correctButton"
-          key="4"
-          onClick={ this.handleClick }
-        >
-          { question.correct_answer }
-        </button>
-      );
-      const alternatives = [...incorrectAnswers, correctAnswer];
-      const metade = 0.5;
-      const shuffledQuestions = alternatives.sort(() => metade - Math.random());
-      return (
-        <div key={ index1 }>
-          <h5 data-testid="question-category">
-            {`Category: ${question.category}`}
-          </h5>
-          <h3 data-testid="question-text">
-            {`Question: ${question.question}`}
-          </h3>
-          <h3 data-testid="question-text">
-            { shuffledQuestions.map((e) => (e))}
-          </h3>
-        </div>
-      );
-    });
-    return mappedQuestions;
-  }
-
   render() {
-    const { questions, currentTime } = this.state;
+    const { questions, timer, disabledState } = this.state;
     return (
       <div>
         <Header />
         <h1>TRIVIA</h1>
-        {questions ? this.mapQuestions(questions)
+        {questions
+          ? <Question questions={ questions } timer={ timer } disable={ disabledState } />
           : <Loading />}
-        { `TIMER: ${currentTime}` }
+        { `TIMER: ${timer}` }
       </div>
     );
   }
