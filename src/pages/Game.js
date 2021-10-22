@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import QuestionCard from '../components/QuestionCard';
 import Timer from '../components/Timer';
 import AlternativeCard from '../components/AlternativeCard';
+import PlayAgainButton from '../components/PlayAgainButton';
 
 class Game extends Component {
   constructor() {
@@ -49,18 +50,23 @@ class Game extends Component {
       },
     };
     const { controller } = this.state;
-    const { loading, timeIsOver } = this.props;
+    const { loading, timeIsOver, history } = this.props;
     return (
       <>
         <Header />
-        { loading ? <span>loading</span>
-          : (
-            <main style={ styles.main }>
-              <QuestionCard controller={ controller } />
-              <AlternativeCard controller={ controller } />
-              <button onClick={ this.handleClick } type="button">Proxima</button>
-              {timeIsOver ? <div>Timer: 0</div> : <Timer />}
-            </main>)}
+        {loading ? (
+          <span>loading</span>
+        ) : (
+          <main style={ styles.main }>
+            <QuestionCard controller={ controller } />
+            <AlternativeCard controller={ controller } />
+            <button onClick={ this.handleClick } type="button" data-testid="btn-next">
+              Proxima
+            </button>
+            {timeIsOver ? <div>Timer: 0</div> : <Timer />}
+          </main>
+        )}
+        <PlayAgainButton history={ history } />
       </>
     );
   }
@@ -79,6 +85,7 @@ Game.propTypes = {
   saveQuestions: PropTypes.func.isRequired,
   timeIsOver: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
+  history: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
