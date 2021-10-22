@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
-import { savePlayerAction } from '../Redux/actions';
 
 const correctAnswer = 'correct-answer';
 const wrongAnswer = 'wrong-answer';
@@ -23,6 +22,7 @@ class Game extends Component {
     this.changeColor = this.changeColor.bind(this);
     this.calculateScore = this.calculateScore.bind(this);
     this.difficultyQuestion = this.difficultyQuestion.bind(this);
+    this.saveOnStorage = this.saveOnStorage.bind(this);
   }
 
   componentDidMount() {
@@ -37,10 +37,12 @@ class Game extends Component {
   }
 
   componentDidUpdate() {
+    const { saveOnStorage } = this;
     const { count } = this.state;
     if (count === 0) {
       clearInterval(this.interval);
     }
+    saveOnStorage();
   }
 
   difficultyQuestion(difficulty) {
@@ -56,9 +58,21 @@ class Game extends Component {
     }
   }
 
+  saveOnStorage() {
+    const { player } = this.props;
+    const { assertions, score } = this.state;
+    localStorage.setItem('state', JSON.stringify({
+      player: {
+        name: player.name,
+        assertions,
+        score,
+        gravatarEamil: player.gravatarEamil,
+      },
+    }));
+  }
+
   calculateScore({ target: { value } }, difficulty) {
-    const { saveScore, player } = this.props;
-    const { count, score, assertions } = this.state;
+    const { count } = this.state;
     const difficultyQuestion = this.difficultyQuestion(difficulty);
     const number = 10;
     if (value === correctAnswer) {
@@ -67,9 +81,6 @@ class Game extends Component {
         assertions: prev.assertions + 1,
       }));
     }
-    const saveScoreCall = () => saveScore({ score, assertions });
-    saveScoreCall();
-    localStorage.setItem('state', JSON.stringify({ player }));
   }
 
   changeColor() {
@@ -136,9 +147,6 @@ class Game extends Component {
     );
   }
 }
-const mapDispatchToProps = (dispatch) => ({
-  saveScore: (player) => dispatch(savePlayerAction(player)),
-});
 
 const mapStateToProps = (state) => ({
   player: state.playerInfo.player,
@@ -148,7 +156,6 @@ Game.propTypes = {
   player: PropTypes.objectOf(
     PropTypes.any,
   ).isRequired,
-  saveScore: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Game);
+export default connect(mapStateToProps)(Game);
