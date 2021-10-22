@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 class QuestionCard extends React.Component {
@@ -6,9 +7,22 @@ class QuestionCard extends React.Component {
     super();
     this.state = {
       questionIndex: 0,
+      stateToLocalStorage: {
+        player: {
+          name: '',
+          assertions: 0,
+          score: 0,
+          gravatarEmail: '',
+        },
+      },
     };
 
     this.nextQuestion = this.nextQuestion.bind(this);
+  }
+
+  componentDidMount() {
+    const { stateToLocalStorage } = this.state;
+    localStorage.setItem('state', JSON.stringify(stateToLocalStorage));
   }
 
   listAnswersMultiple(questionIndex) {
@@ -34,8 +48,50 @@ class QuestionCard extends React.Component {
   }
 
   nextQuestion() {
+    const { questionIndex, stateToLocalStorage } = this.state;
+    this.setState({
+      questionIndex: questionIndex + 1,
+    });
+    localStorage.setItem('state', JSON.stringify(stateToLocalStorage));
+    const teste = localStorage.getItem('state');
+    console.log(typeof teste);
+    console.log(JSON.parse(teste).player.score);
+  }
+
+  buttonRedirect() {
     const { questionIndex } = this.state;
-    this.setState({ questionIndex: questionIndex + 1 });
+    const LAST_QUESTION = 4;
+    return (
+      (questionIndex === LAST_QUESTION)
+        ? (
+          <Link to="/feedback">
+            <button
+              type="button"
+              data-testid="btn-next"
+              onClick={ () => this.nextQuestion() }
+            >
+              Próximo
+            </button>
+          </Link>)
+        : (
+          <button type="button" onClick={ this.nextQuestion } data-testid="btn-next">
+            Próximo
+          </button>
+        )
+    );
+  }
+
+  submitAnswer(boolean) {
+    const { stateToLocalStorage } = this.state;
+    if (boolean) {
+      this.setState({
+        stateToLocalStorage: {
+          player: {
+            score: stateToLocalStorage.player.score + 1,
+          },
+        },
+      });
+    }
   }
 
   render() {
@@ -61,7 +117,7 @@ class QuestionCard extends React.Component {
               <button
                 type="button"
                 key={ index }
-                onClick={ this.submitAnswer }
+                onClick={ () => this.submitAnswer(true) }
                 data-testid="correct-answer"
                 className="correct-answer"
               >
@@ -71,16 +127,14 @@ class QuestionCard extends React.Component {
               <button
                 type="button"
                 key={ index }
-                onClick={ this.submitAnswer }
+                onClick={ () => this.submitAnswer(false) }
                 data-testid={ `wrong-answer-${index}` }
                 className="wrong-answer"
               >
                 { question.answer }
               </button>)
         ))}
-        <button type="button" onClick={ this.nextQuestion }>
-          Próximo
-        </button>
+        { this.buttonRedirect() }
       </section>
     );
   }
