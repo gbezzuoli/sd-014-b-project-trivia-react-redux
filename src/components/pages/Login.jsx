@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { setuserdata } from '../../Redux/Actions';
 import { requestToken } from '../../services/Api';
 import getGravatar from '../../services/getGravatar';
@@ -26,12 +27,13 @@ class Login extends Component {
     });
   }
 
-  handleClick() {
+  async handleClick(path) {
     const { name, email } = this.state;
-    const { dispatchSetValue } = this.props;
+    const { dispatchSetValue, history } = this.props;
     dispatchSetValue(name, email);
-    requestToken();
+    await requestToken();
     getGravatar(email);
+    history.push(path);
   }
 
   render() {
@@ -61,19 +63,19 @@ class Login extends Component {
           />
         </label>
         <Buttons
-          path="/game"
           disabled={ !email || !name }
           dataTestid="btn-play"
           id="button-form"
-          onClick={ this.handleClick }
+          onClick={ () => this.handleClick('/game') }
           text="Jogar"
         />
-        <Buttons
-          path="/settings"
-          dataTestid="btn-settings"
-          id="button-config"
-          text="Configurar"
-        />
+        <Link to="/settings">
+          <Buttons
+            dataTestid="btn-settings"
+            id="button-config"
+            text="Configurar"
+          />
+        </Link>
       </section>
     );
   }

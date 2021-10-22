@@ -28,7 +28,7 @@ export const requestTriviaApi = async (questionUrl) => { // questionUrl opcional
   if (token) {
     const tokeIsValid = requestQuestionAndSave(token, questionUrl);
     if (!(await tokeIsValid).boolean) {
-      token = requestToken();
+      token = await requestToken();
       requestQuestionAndSave(token);
     }
     return (await tokeIsValid).questionObject;

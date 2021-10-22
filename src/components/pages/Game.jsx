@@ -13,7 +13,7 @@ export default class Game extends Component {
             difficulty: '',
             question: 'question-text',
             correct_answer: '',
-            incorrect_answers: '',
+            incorrect_answers: [],
           },
         ],
       },
