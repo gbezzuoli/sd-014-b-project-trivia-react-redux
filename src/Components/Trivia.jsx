@@ -5,20 +5,21 @@ import requestTrivia from '../services/trivia';
 import { addResultsToState } from '../Redux/actions';
 import getQuestions from '../services/getQuestions';
 import Button from './Button';
+import Timer from './Timer';
 
 class Trivia extends Component {
   constructor() {
     super();
 
     this.getTriviaGame = this.getTriviaGame.bind(this);
-    this.dispatchQuestionsToState = this.dispatchQuestionsToState.bind(this);
     this.createAnswerButtons = this.createAnswerButtons.bind(this);
     this.handleAnswerClick = this.handleAnswerClick.bind(this);
+    this.goToNextQuestion = this.goToNextQuestion.bind(this);
 
     this.state = {
       results: [],
       actualQuestion: 0,
-      buttonCondition: false,
+      endQuestion: false,
     };
   }
 
@@ -27,25 +28,25 @@ class Trivia extends Component {
   }
 
   async getTriviaGame() {
-    const { token } = this.props;
+    const { token, dispatchResultsToState } = this.props;
     const response = await requestTrivia(token);
-    this.setState({
-      results: [...response.results],
-    }, () => this.dispatchQuestionsToState());
+    this.setState({ results: [...response.results] });
+    dispatchResultsToState([...response.results]);
+  }
+
+  goToNextQuestion() {
+    this.setState((prevSt) => ({
+      actualQuestion: prevSt.actualQuestion + 1,
+      endQuestion: false,
+    }));
   }
 
   handleAnswerClick() {
-    this.setState({ buttonCondition: true });
-  }
-
-  dispatchQuestionsToState() {
-    const { dispatchResultsToState } = this.props;
-    const { results } = this.state;
-    dispatchResultsToState(results);
+    this.setState({ endQuestion: true });
   }
 
   createAnswerButtons() {
-    const { results, actualQuestion, buttonCondition } = this.state;
+    const { results, actualQuestion, endQuestion } = this.state;
     const ZERO_PONTO_CINCO = 0.5;
     const questionsList = getQuestions(results[actualQuestion])
       .sort(() => Math.random() - ZERO_PONTO_CINCO);
@@ -59,7 +60,7 @@ class Trivia extends Component {
             className="wrong-answer"
             dataTestId={ `wrong-answer-${index}` }
             onClick={ this.handleAnswerClick }
-            disabled={ buttonCondition }
+            disabled={ endQuestion }
           />)
         : (
           <Button
@@ -68,32 +69,47 @@ class Trivia extends Component {
             className="correct-answer"
             dataTestId="correct-answer"
             onClick={ this.handleAnswerClick }
-            disabled={ buttonCondition }
+            disabled={ endQuestion }
           />)));
   }
 
   render() {
-    const { results, actualQuestion } = this.state;
+    const { results, actualQuestion, endQuestion } = this.state;
     return (
-      results.length < 1
-        ? <div>Carregando...</div> : (
-          <section className="game-board">
-            <span data-testid="question-category">
-              { results[actualQuestion].category }
-            </span>
-            <p data-testid="question-text">
-              { results[actualQuestion].question }
-            </p>
-            { this.createAnswerButtons() }
-          </section>)
+      <section className="game-board">
+        { results.length < 1
+          ? <div className="loading">Carregando...</div>
+          : (
+            <>
+              <Timer answerClick={ this.handleAnswerClick } />
 
+              <span data-testid="question-category">
+                { results[actualQuestion].category }
+              </span>
+              <p data-testid="question-text">
+                { results[actualQuestion].question }
+              </p>
+              { this.createAnswerButtons() }
+              { endQuestion && (
+                <Button
+                  dataTestId="btn-next"
+                  className="btn-next"
+                  textButton="Próxima Pergunta"
+                  onClick={ this.goToNextQuestion }
+                />) }
+            </>) }
+      </section>
     );
   }
 }
 
 Trivia.propTypes = {
   dispatchResultsToState: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired,
+  token: PropTypes.string,
+};
+
+Trivia.defaultProps = {
+  token: '',
 };
 
 const mapStateToProps = (state) => ({
