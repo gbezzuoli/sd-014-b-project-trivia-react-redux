@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import setLogin from '../redux/actions';
-import { Buttons } from './Buttons';
+import Buttons from './Buttons';
 import '../App.css';
 
 class LoginForm extends React.Component {

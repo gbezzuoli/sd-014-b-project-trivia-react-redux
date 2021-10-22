@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../App.css';
 
-export class Buttons extends React.Component {
+export default class Buttons extends React.Component {
   render() {
     const { handleClick, validadeButton } = this.props;
     return (
