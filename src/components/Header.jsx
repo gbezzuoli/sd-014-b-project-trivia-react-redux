@@ -19,6 +19,7 @@ class Header extends React.Component {
         >
           {`Jogador: ${name}`}
           <div data-testid="header-score">{`Pontos: ${score}`}</div>
+          {gravatarEmail}
         </div>
       </header>
     );
