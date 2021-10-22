@@ -47,9 +47,7 @@ class Trivia extends Component {
 
   createAnswerButtons() {
     const { results, actualQuestion, endQuestion } = this.state;
-    const ZERO_PONTO_CINCO = 0.5;
-    const questionsList = getQuestions(results[actualQuestion])
-      .sort(() => Math.random() - ZERO_PONTO_CINCO);
+    const questionsList = getQuestions(results[actualQuestion]);
 
     return questionsList.map((question, index) => (
       question !== results[actualQuestion].correct_answer
