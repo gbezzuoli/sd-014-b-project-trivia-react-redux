@@ -18,3 +18,17 @@
 .wrong-answer:disabled {
   border: 3px solid red;
 }
+
+.loading {
+  animation: loading 1s linear infinite;
+  font-size: large;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+@keyframes loading {
+
+  0% { transform: matrix(3, 2, 1, 3, 0, 0) rotate(-360deg); }
+
+  50% { transform: none; }
+}
