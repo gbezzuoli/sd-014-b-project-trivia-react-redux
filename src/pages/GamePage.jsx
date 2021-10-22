@@ -31,7 +31,7 @@ class GamePage extends React.Component {
     }
     return (
       <>
-          <header>
+        <header>
           <img
             data-testid="header-profile-picture"
             src={ avatar }
@@ -40,19 +40,18 @@ class GamePage extends React.Component {
           <span data-testid="header-player-name">{name}</span>
           <span data-testid="header-score">{`Pontos: ${0}`}</span>
         </header>
-      
-      <div>
-        <CardGame
-          index={ index }
-          onClick={ this.handleClick }
-          questions={ question }
-        />
-      </div>
+
+        <div>
+          <CardGame
+            index={ index }
+            onClick={ this.handleClick }
+            questions={ question }
+          />
+        </div>
       </>
     );
   }
 }
-
 
 const mapStateToProps = (state) => ({
   name: state.userReducer.name,

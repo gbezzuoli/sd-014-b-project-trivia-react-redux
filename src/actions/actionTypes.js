@@ -7,7 +7,6 @@ export const GET_AVATAR = 'GET_AVATAR';
 
 const urlToken = 'https://opentdb.com/api_token.php?command=request';
 
-
 export const setUser = (payload) => ({
   type: SET_USER,
   payload,
@@ -15,11 +14,13 @@ export const setUser = (payload) => ({
 
 export const getToken = (payload) => ({ type: GET_TOKEN, payload });
 
-
 export const getAsk = (payload) => ({ type: GET_ASK, payload });
 
 export const requestTokenApi = async () => {
   const response = await fetch(urlToken);
+  const data = await response.json();
+  return data;
+};
 
 export const getAvatar = (payload) => ({
   type: GET_AVATAR,
@@ -48,6 +49,7 @@ export const requestAskApi = async () => {
 export const resultAsk = () => async (dispatch) => {
   const result = await requestAskApi();
   dispatch(getAsk(result));
+};
 
 export const requestAvatar = async (email) => {
   const hash = await md5(email).toString();
