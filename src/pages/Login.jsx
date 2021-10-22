@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { getToken } from '../helper';
 
 class Login extends Component {
   constructor(props) {
@@ -39,13 +41,16 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
         </label>
-        <button
-          data-testid="btn-play"
-          type="button"
-          disabled={ disabled }
-        >
-          Jogar
-        </button>
+        <Link to="/Game">
+          <button
+            data-testid="btn-play"
+            type="button"
+            disabled={ disabled }
+            onClick={ getToken }
+          >
+            Jogar
+          </button>
+        </Link>
       </div>
     );
   }
