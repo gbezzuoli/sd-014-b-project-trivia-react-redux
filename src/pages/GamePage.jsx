@@ -45,8 +45,6 @@ class GamePage extends Component {
   async getQuestions() {
     const { i } = this.state;
     const result = await requestQuestions();
-    console.log(result);
-
     this.setState({
       result,
       questionOne: result[i].question,
