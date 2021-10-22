@@ -27,26 +27,27 @@ class Login extends React.Component {
     const { userName, userEmail } = this.state;
     const { fetchAPI } = this.props;
     return (
-      <form>
-        <label htmlFor="user">
-          <input
-            data-testid="input-player-name"
-            type="text"
-            name="userName"
-            value={ userName }
-            onChange={ this.handleChange }
-          />
-        </label>
-        <label htmlFor="email">
-          <input
-            data-testid="input-gravatar-email"
-            type="email"
-            name="userEmail"
-            value={ userEmail }
-            onChange={ this.handleChange }
-          />
-        </label>
-        <Link to="/game">
+      <div>
+        <form>
+          <label htmlFor="user">
+            <input
+              data-testid="input-player-name"
+              type="text"
+              name="userName"
+              value={ userName }
+              onChange={ this.handleChange }
+            />
+          </label>
+          <label htmlFor="email">
+            <input
+              data-testid="input-gravatar-email"
+              type="email"
+              name="userEmail"
+              value={ userEmail }
+              onChange={ this.handleChange }
+            />
+          </label>
+          <Link to="/game">
           <button
             data-testid="btn-play"
             type="submit"
@@ -57,7 +58,11 @@ class Login extends React.Component {
             Jogar
           </button>
         </Link>
-      </form>
+        </form>
+        <Link to="/settings">
+          <button data-testid="btn-settings" type="button">Configurações</button>
+        </Link>
+      </div>
     );
   }
 }
