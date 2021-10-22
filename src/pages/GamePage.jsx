@@ -135,7 +135,7 @@ class GamePage extends Component {
                 className={ incor }
                 type="button"
                 data-testid={ idWrongAns + index }
-                onClick={ this.onClickAnswer }
+                onClick={ this.setBtnAnswerBorder }
                 disabled={ count === 0 }
               >
                 {item}
