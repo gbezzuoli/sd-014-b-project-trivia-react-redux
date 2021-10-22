@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { fetchTrivia } from '../services/triviaAPI';
 import { submitPlayerAction } from '../redux/actions';
 
+// Referência para setar o objeto no localStorage: https://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage
+
 const REGEX_EMAIL = /\S+@\S+\.\S+/;
 
 class Login extends Component {
@@ -12,24 +14,31 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      name: '',
-      email: '',
       disabled: true,
+      player: {
+        name: '',
+        assertions: '',
+        score: 0,
+        gravatarEmail: '',
+      },
     };
     this.handleChange = this.handleChange.bind(this);
     this.submitPlayer = this.submitPlayer.bind(this);
   }
 
   handleChange({ target: { name, value } }) {
+    const { player } = this.state;
     this.setState({
-      [name]: value,
+      player: {
+        ...player,
+        [name]: value,
+      },
     }, this.validatePlayer);
   }
 
   validatePlayer() {
-    const { name, email } = this.state;
-    localStorage.setItem('name', name);
-    const validEmail = REGEX_EMAIL.test(email);
+    const { player: { name, gravatarEmail } } = this.state;
+    const validEmail = REGEX_EMAIL.test(gravatarEmail);
 
     if (name && validEmail) {
       this.setState({ disabled: false });
@@ -38,12 +47,13 @@ class Login extends Component {
     }
   }
 
+  // Analisar essa função
   submitPlayer() {
     const { dispatchSetValue } = this.props;
-    const { name, email } = this.state;
+    const { player } = this.state;
     fetchTrivia();
-    const token = localStorage.getItem('token');
-    dispatchSetValue(name, token, email);
+    localStorage.setItem('state', JSON.stringify(this.state));
+    dispatchSetValue(player);
   }
 
   render() {
@@ -63,7 +73,7 @@ class Login extends Component {
         <label htmlFor>
           E-mail
           <input
-            name="email"
+            name="gravatarEmail"
             data-testid="input-gravatar-email"
             type="text"
             onChange={ this.handleChange }
@@ -98,9 +108,10 @@ Login.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  dispatchSetValue: (player, token, email) => (
-    dispatch(submitPlayerAction(player, token, email))
+  dispatchSetValue: (state) => (
+    dispatch(submitPlayerAction(state))
   ),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
+// export default Login;

@@ -47,7 +47,7 @@ class Game extends Component {
     return (
       <div>
         <Header />
-        <GameCard questions={ questions } />
+        <GameCard gameQuestions={ questions } />
       </div>
     );
   }

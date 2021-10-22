@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import fetchAvatar from '../services/gravatarAPI';
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
       img: '',
@@ -48,6 +48,7 @@ const mapStateToProps = (state) => ({
   email: state.player.gravatarEmail,
   name: state.player.name,
   score: state.player.score,
+  assertio: state.player.score,
 });
 
 export default connect(mapStateToProps)(Header);

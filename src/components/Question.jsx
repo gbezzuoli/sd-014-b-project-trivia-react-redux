@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import renderQuestions from '../redux/reducers/renderQuestions';
 import Loading from './Loading';
+import questions from '../redux/reducers/questions';
 
 class Question extends Component {
   constructor(props) {
@@ -13,30 +13,30 @@ class Question extends Component {
       endGame: false,
     };
 
-    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  // componentDidMount() {
-  //   this.handleSubmit();
-  // }
+  componentDidMount() {
+    this.handleSubmit();
+  }
 
-  // handleSubmit() {
-  //   const { index, incrementQuestion } = this.props;
-  //   const lastQuestion = 4;
-  //   incrementQuestion(index);
-  //   if (index === lastQuestion) {
-  //     this.setState({ endGame: true });
-  //   }
-  // }
+  handleSubmit() {
+    const { index, incrementQuestion } = this.props;
+    const lastQuestion = 4;
+    incrementQuestion(index);
+    if (index === lastQuestion) {
+      this.setState({ endGame: true });
+    }
+  }
 
   showQuestion() {
-    const { questions, index } = this.props;
+    const { gameQuestions, index } = this.props;
     return (
       <div>
         <h1>{`Question #${index}`}</h1>
-        <h2 data-testid="question-text">{questions[index].question}</h2>
+        <h2 data-testid="question-text">{gameQuestions[index].question}</h2>
         <h3 data-testid="question-category">
-          {`Category: ${questions[index].category}`}
+          {`Category: ${gameQuestions[index].category}`}
         </h3>
       </div>
     );
@@ -44,7 +44,7 @@ class Question extends Component {
 
   render() {
     // const { finally } = this.state;
-    const { questions, index } = this.props;
+    const { questions } = this.props;
     const { endGame } = this.state;
 
     if (endGame) {
@@ -67,17 +67,18 @@ class Question extends Component {
 
 Question.propTypes = {
   index: PropTypes.number.isRequired,
-  questions: PropTypes.string.isRequired,
+  gameQuestions: PropTypes.string.isRequired,
+  questions: PropTypes.arrayOf.isRequired,
   incrementQuestion: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   questions: state.questions.questions,
-  index: state.renderQuestions.num,
+  index: state.questions.index,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  incrementQuestion: (value) => dispatch(renderQuestions(value)),
+  incrementQuestion: (value) => dispatch(questions(value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Question);
