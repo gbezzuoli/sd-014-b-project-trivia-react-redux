@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import PropTypes from 'prop-types';
-import { sendPlayerInfo, fetchAPI } from '../redux/actions';
+import { sendPlayerInfo, fetchAPI } from '../../redux/actions';
+import './style.css';
 
 class LoginForm extends Component {
   constructor(props) {
@@ -52,6 +53,7 @@ class LoginForm extends Component {
         <label htmlFor="email">
           Email
           <input
+            className="text-input"
             type="email"
             data-testid="input-gravatar-email"
             name="email"
@@ -61,6 +63,7 @@ class LoginForm extends Component {
         <label htmlFor="name">
           Nome
           <input
+            className="text-input"
             type="text"
             data-testid="input-player-name"
             name="name"

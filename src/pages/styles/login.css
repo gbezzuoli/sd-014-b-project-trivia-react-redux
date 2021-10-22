@@ -1,0 +1,32 @@
+body {
+  animation: 14s ease 0s infinite alternate none running animation;
+  background-color: rgb(69, 163, 229);
+}
+
+.content {
+  font-family: sans-serif;
+  font-size: 35px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+@keyframes animation {
+
+  25% {
+    background: rgb(65, 196, 222);
+  }
+
+  50% {
+    background: rgb(140, 199, 63);
+  }
+
+  75% {
+    background: rgb(243, 211, 51);
+  }
+
+  100% {
+    background: rgb(247, 142, 86);
+  }
+}
