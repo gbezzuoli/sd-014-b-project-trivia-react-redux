@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { resultAsk } from '../actions/actionTypes';
+import { resultAsk, resultAvatar } from '../actions/actionTypes';
 import CardGame from '../components/CardGame';
 
 class GamePage extends React.Component {
@@ -13,7 +13,8 @@ class GamePage extends React.Component {
   }
 
   componentDidMount() {
-    const { dispatchAskGame } = this.props;
+    const { dispatchAskGame, email, getAvatar } = this.props;
+    getAvatar(email);
     dispatchAskGame();
   }
 
@@ -22,13 +23,24 @@ class GamePage extends React.Component {
   }
 
   render() {
-    const { question } = this.props;
+    const { question, name, avatar } = this.props;
     const { index } = this.state;
     console.log(question);
     if (!question) {
       return <h1>Loading ...</h1>;
     }
     return (
+      <>
+          <header>
+          <img
+            data-testid="header-profile-picture"
+            src={ avatar }
+            alt="Imagem de Avatar"
+          />
+          <span data-testid="header-player-name">{name}</span>
+          <span data-testid="header-score">{`Pontos: ${0}`}</span>
+        </header>
+      
       <div>
         <CardGame
           index={ index }
@@ -36,16 +48,28 @@ class GamePage extends React.Component {
           questions={ question }
         />
       </div>
+      </>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  dispatchAskGame: () => dispatch(resultAsk()),
+
+const mapStateToProps = (state) => ({
+  name: state.userReducer.name,
+  email: state.userReducer.email,
+  avatar: state.userReducer.avatar,
+  question: state.gameReducer.questions.results,
 });
 
-function mapStateToProps(state) {
-  return { question: state.gameReducer.questions.results };
-}
+const mapDispatchToProps = (dispatch) => ({
+  getAvatar: (email) => dispatch(resultAvatar(email)),
+  ispatchAskGame: () => dispatch(resultAsk()),
+});
+
+GamePage.propTypes = {
+  name: PropTypes.string,
+  email: PropTypes.string,
+  avatar: PropTypes.string,
+}.isRequired;
 
 export default connect(mapStateToProps, mapDispatchToProps)(GamePage);

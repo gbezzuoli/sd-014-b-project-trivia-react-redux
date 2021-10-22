@@ -34,7 +34,6 @@ class LoginPage extends React.Component {
 
   setLocalStorage() {
     const { token } = this.props;
-    console.log(token);
     localStorage.setItem('token', JSON.stringify(token));
   }
 
