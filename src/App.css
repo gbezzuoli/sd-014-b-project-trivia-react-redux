@@ -13,12 +13,12 @@
 
 .name-input {
   display: flex;
-  margin: 15px;
   justify-content: space-between;
+  margin: 15px;
 }
 
 .score {
-  color: green
+  color: green;
 }
 
 .red-border {
