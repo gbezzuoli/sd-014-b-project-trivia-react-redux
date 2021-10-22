@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { fetchTokenAction } from '../redux/actions/TokenAction';
+import { getUser } from '../redux/actions/userAction';
 
 class Login extends React.Component {
   constructor() {
@@ -14,6 +15,7 @@ class Login extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(event) {
@@ -23,9 +25,15 @@ class Login extends React.Component {
     });
   }
 
+  handleClick() {
+    const { userName, userEmail } = this.state;
+    const { fetchAPI, setUserInfo } = this.props;
+    fetchAPI();
+    setUserInfo(userName, userEmail);
+  }
+
   render() {
     const { userName, userEmail } = this.state;
-    const { fetchAPI } = this.props;
     return (
       <div>
         <form>
@@ -53,7 +61,7 @@ class Login extends React.Component {
               type="submit"
               name="button"
               disabled={ userName.length <= 0 || userEmail.length <= 0 }
-              onClick={ () => fetchAPI() }
+              onClick={ this.handleClick }
             >
               Jogar
             </button>
@@ -68,10 +76,12 @@ class Login extends React.Component {
 }
 const mapDispatchToProps = (dispatch) => ({
   fetchAPI: () => dispatch(fetchTokenAction()),
+  setUserInfo: (userName, userEmail) => dispatch(getUser(userName, userEmail)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
 
 Login.propTypes = {
   fetchAPI: PropTypes.func.isRequired,
+  setUserInfo: PropTypes.func.isRequired,
 };
