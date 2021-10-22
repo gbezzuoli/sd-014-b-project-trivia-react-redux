@@ -23,7 +23,8 @@ class Home extends Component {
 
   handleSubmit() {
     const { history, setLogin, getToken } = this.props;
-    setLogin(this.state);
+    const { name, email } = this.state;
+    setLogin({ name, email });
     getToken();
     history.push('/game');
   }

@@ -21,7 +21,6 @@ export default function userReducer(state = initialState, action) {
       avatar: action.payload,
     };
   case USER_TOKEN:
-    localStorage.setItem('token', JSON.stringify(action.payload.token));
     return ({
       ...state,
       token: action.payload.token,

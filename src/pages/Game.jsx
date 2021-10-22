@@ -9,10 +9,11 @@ class Game extends Component {
     const { email, token, getAvatar, getQuestions } = this.props;
     getAvatar(email);
     getQuestions(token);
+    localStorage.setItem('token', JSON.stringify(token));
   }
 
   render() {
-    const { name, avatar, questions, loading } = this.props;
+    const { name, avatar, questions, isGameReady } = this.props;
 
     return (
       <>
@@ -22,7 +23,7 @@ class Game extends Component {
           <span data-testid="header-score">{`Pontos: ${0}`}</span>
         </header>
         <hr />
-        <main>{!loading && <GameCard question={ questions[0] } />}</main>
+        <main>{!isGameReady && <GameCard question={ questions[0] } />}</main>
       </>
     );
   }
@@ -34,7 +35,7 @@ const mapStateToProps = (state) => ({
   avatar: state.user.avatar,
   token: state.user.token,
   questions: state.game.questions,
-  loading: state.game.loading,
+  isGameReady: state.game.isGameReady,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -48,7 +49,7 @@ Game.propTypes = {
   avatar: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
   questions: PropTypes.arrayOf(PropTypes.any).isRequired,
-  loading: PropTypes.bool.isRequired,
+  isGameReady: PropTypes.bool.isRequired,
   getAvatar: PropTypes.func.isRequired,
   getQuestions: PropTypes.func.isRequired,
 };

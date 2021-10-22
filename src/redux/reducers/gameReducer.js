@@ -2,7 +2,7 @@ import { GAME_QUESTIONS } from '../actions/actions';
 
 const initialState = {
   questions: [],
-  loading: true,
+  isGameReady: true,
 };
 
 export default function gameReducer(state = initialState, action) {
@@ -11,7 +11,7 @@ export default function gameReducer(state = initialState, action) {
     return {
       ...state,
       questions: action.payload.results,
-      loading: false,
+      isGameReady: false,
     };
   default:
     return state;
