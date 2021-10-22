@@ -20,10 +20,10 @@ export default class Ranking extends Component {
               data-testid={ `player-name-${indice}` }
               key={ indice }
             >
-              <span>{ indice + 1 }</span>
+              <div>{ indice + 1 }</div>
               <img src={ result.picture } alt={ result.name } />
-              <span>{`name: ${result.name}`}</span>
-              <span>{`score: ${result.score}`}</span>
+              <div>{ result.name }</div>
+              <div>{ result.score }</div>
             </li>
           ))}
         </ul>
