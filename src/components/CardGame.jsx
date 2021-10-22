@@ -6,32 +6,14 @@ class CardGame extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      answers: [],
-      answerObjects: [],
-      // hidden: true,
-    };
-
-    this.setAnswer = this.setAnswer.bind(this);
     this.handleAnswerClick = this.handleAnswerClick.bind(this);
-    // this.handleWrongClick = this.handleWrongClick.bind(this);
     this.shuffleArray = this.shuffleArray.bind(this);
-  }
-
-  componentDidMount() {
-    this.setAnswer();
-  }
-
-  async setAnswer() {
-    const { question } = this.props;
-    await this.setState({
-      answers: [question.correct_answer, ...question.incorrect_answers],
-    });
-    await this.parseAnswerInObject();
+    this.parseAnswerInObject = this.parseAnswerInObject.bind(this);
   }
 
   parseAnswerInObject() {
-    const { answers } = this.state;
+    const { question } = this.props;
+    const answers = [question.correct_answer, ...question.incorrect_answers];
     const answersObjects = answers.map((answer, index) => {
       if (index === 0) {
         return {
@@ -45,9 +27,7 @@ class CardGame extends React.Component {
       };
     });
     const randomAnswers = this.shuffleArray(answersObjects);
-    this.setState({
-      answerObjects: [...randomAnswers],
-    });
+    return randomAnswers;
   }
 
   shuffleArray(array) {
@@ -77,21 +57,22 @@ class CardGame extends React.Component {
   }
 
   render() {
-    const { question: { category, question }, next } = this.props;
-    const { answerObjects, hidden } = this.state;
+    const { question: { category, question }, next, timer } = this.props;
+    const randomAnswers = this.parseAnswerInObject();
     let count = 0;
-    console.log(answerObjects);
+    // const timer = Number(document.querySelector('#timer'));
     return (
       <div>
         <h2 data-testid="question-category">{ category }</h2>
         <h3 data-testid="question-text">{ question }</h3>
-        { answerObjects.map((answerButton, index) => {
+        {randomAnswers.map((answerButton, index) => {
           if (answerButton.correct) {
             return (
               <button
                 type="button"
                 data-testid="correct-answer"
                 onClick={ this.handleAnswerClick }
+                disabled={ timer === 0 }
               >
                 { answerButton.answer }
               </button>);
@@ -112,7 +93,7 @@ class CardGame extends React.Component {
           // style={ { display: hidden ? 'none' : 'inline-block' } }
           type="button"
           value="Proxima"
-          onClick={ () => { this.setState({ hidden: true }); this.setAnswer(); next(); } }
+          onClick={ () => { next(); } }
         />
         <div />
       </div>
