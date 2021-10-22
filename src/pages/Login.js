@@ -9,7 +9,7 @@ class Login extends React.Component {
     super();
     this.state = {
       name: '',
-      email: '',
+      gravatarEmail: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.validateEmailAndName = this.validateEmailAndName.bind(this);
@@ -32,13 +32,13 @@ class Login extends React.Component {
   }
 
   validateEmailAndName() {
-    const { name, email } = this.state;
-    if (name.length > 0 && email.length > 0) return false;
+    const { name, gravatarEmail } = this.state;
+    if (name.length > 0 && gravatarEmail.length > 0) return false;
     return true;
   }
 
   render() {
-    const { name, email } = this.state;
+    const { name, gravatarEmail } = this.state;
     const { handleChange, validateEmailAndName, state, requestAPI } = this;
     const { savePlayerInfoToGlobal } = this.props;
     return (
@@ -53,13 +53,13 @@ class Login extends React.Component {
             type="text"
           />
         </label>
-        <label htmlFor="email">
+        <label htmlFor="gravatarEmail">
           Email:
           <input
-            value={ email }
+            value={ gravatarEmail }
             onChange={ handleChange }
             data-testid="input-gravatar-email"
-            id="email"
+            id="gravatarEmail"
             type="email"
           />
         </label>
@@ -82,7 +82,6 @@ class Login extends React.Component {
             Configurações
           </button>
         </Link>
-
       </form>
     );
   }
@@ -90,7 +89,9 @@ class Login extends React.Component {
 
 Login.propTypes = {
   savePlayerInfoToGlobal: PropTypes.func.isRequired,
-  history: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(
+    PropTypes.any,
+  ).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
