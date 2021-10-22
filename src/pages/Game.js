@@ -25,17 +25,21 @@ class Game extends Component {
     this.difficultyQuestion = this.difficultyQuestion.bind(this);
     this.saveOnStorage = this.saveOnStorage.bind(this);
     this.activateNextButton = this.activateNextButton.bind(this);
+    this.changeQuestion = this.changeQuestion.bind(this);
+    this.generationAnswers = this.generationAnswers.bind(this);
+    this.setIntervalNew = this.setIntervalNew.bind(this);
   }
 
   componentDidMount() {
     const { requestTriviaAPI } = this;
     requestTriviaAPI();
-    const second = 1000;
-    this.interval = setInterval(() => {
-      this.setState((prevState) => ({
-        count: prevState.count - 1,
-      }));
-    }, second);
+    // const second = 1000;
+    // this.interval = setInterval(() => {
+    //   this.setState((prevState) => ({
+    //     count: prevState.count - 1,
+    //   }));
+    // }, second);
+    this.setIntervalNew();
   }
 
   componentDidUpdate() {
@@ -45,6 +49,47 @@ class Game extends Component {
       clearInterval(this.interval);
     }
     saveOnStorage();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  setIntervalNew() {
+    const second = 1000;
+    this.interval = setInterval(() => {
+      this.setState((prevState) => ({
+        count: prevState.count - 1,
+      }));
+      console.log('abaate');
+    }, second);
+  }
+
+  generationAnswers(answer, answerIndex, question) {
+    const { count } = this.state;
+    const { changeColor, calculateScore, interval, activateNextButton } = this;
+    return (
+      <button
+        disabled={ count === 0 }
+        type="button"
+        key={ answerIndex }
+        style={ {} }
+        onClick={ (event) => {
+          clearInterval(interval);
+          changeColor();
+          calculateScore(event, question.difficulty);
+          activateNextButton();
+        } }
+        value={ question.correct_answer === answer
+          ? correctAnswer : 'wrong-answer' }
+        data-testid={
+          question.correct_answer === answer
+            ? correctAnswer : `wrong-answer-${answerIndex}`
+        }
+      >
+        {answer}
+      </button>
+    );
   }
 
   difficultyQuestion(difficulty) {
@@ -103,6 +148,19 @@ class Game extends Component {
     });
   }
 
+  changeQuestion() {
+    const { game } = this.state;
+    const { history } = this.props;
+    const MAX_QUESTION = 4;
+    if (game >= MAX_QUESTION) history.push('/feedbacks');
+    this.setState((prev) => ({
+      game: prev.game + 1,
+      count: 30,
+      nextButton: false,
+    }));
+    this.setIntervalNew();
+  }
+
   async requestTriviaAPI() {
     const TOKEN = localStorage.getItem('token');
     const URL = `https://opentdb.com/api.php?amount=5&token=${TOKEN}`;
@@ -113,7 +171,6 @@ class Game extends Component {
 
   render() {
     const { questions, game, count, score, nextButton } = this.state;
-    const { changeColor, calculateScore, interval, activateNextButton } = this;
     if (questions.length > 0) {
       const question = questions[game];
       const allAnswers = [question.correct_answer, ...question.incorrect_answers];
@@ -124,29 +181,15 @@ class Game extends Component {
             <p data-testid="question-category">{question.category}</p>
             <p data-testid="question-text">{question.question}</p>
             {allAnswers.sort().map((answer, answerIndex) => (
-              <button
-                disabled={ count === 0 }
-                type="button"
-                key={ answerIndex }
-                style={ {} }
-                onClick={ (event) => {
-                  clearInterval(interval);
-                  changeColor();
-                  calculateScore(event, question.difficulty);
-                  activateNextButton();
-                } }
-                value={ question.correct_answer === answer
-                  ? correctAnswer : 'wrong-answer' }
-                data-testid={
-                  question.correct_answer === answer
-                    ? correctAnswer : `wrong-answer-${answerIndex}`
-                }
-              >
-                {answer}
-              </button>))}
+              this.generationAnswers(answer, answerIndex, question)
+            ))}
             {nextButton
               ? (
-                <button data-testid="btn-next" type="button">
+                <button
+                  onClick={ this.changeQuestion }
+                  data-testid="btn-next"
+                  type="button"
+                >
                   Próxima
                 </button>
               ) : ''}
@@ -169,6 +212,7 @@ Game.propTypes = {
   player: PropTypes.objectOf(
     PropTypes.any,
   ).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default connect(mapStateToProps)(Game);
