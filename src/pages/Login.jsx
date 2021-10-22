@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { fetchQuestions } from '../redux/actions';
 import getApiToken from '../services/ApiRequest';
 
 class Login extends Component {
@@ -10,8 +11,8 @@ class Login extends Component {
       name: '',
       email: '',
     };
-    this.handleClickTrivia = this.handleClickTrivia.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleClickTrivia = this.handleClickTrivia.bind(this);
     this.handleClickSettings = this.handleClickSettings.bind(this);
   }
 
@@ -22,8 +23,11 @@ class Login extends Component {
   }
 
   async handleClickTrivia() {
-    const getResultsFromAPI = await getApiToken();
-    localStorage.setItem('token', JSON.stringify(getResultsFromAPI.token));
+    const { history, dispatchFetchQuestions } = this.props;
+    const { token } = await getApiToken();
+    localStorage.setItem('token', token);
+    dispatchFetchQuestions();
+    history.push('/trivia');
   }
 
   handleClickSettings() {
@@ -54,19 +58,10 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
         </label>
-        <Link to="/Trivia">
-          <button
-            data-testid="btn-play"
-            type="button"
-            onClick={ this.handleClickTrivia }
-            disabled={ disabled }
-          >
-            Jogar
-          </button>
-        </Link>
         <button
           data-testid="btn-play"
           type="button"
+          onClick={ this.handleClickTrivia }
           disabled={ disabled }
         >
           Jogar
@@ -83,8 +78,14 @@ class Login extends Component {
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatchFetchQuestions: () => dispatch(fetchQuestions()),
+  };
+}
+
+export default connect(null, mapDispatchToProps)(Login);
+
 Login.propTypes = {
   history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
-
-export default Login;

@@ -14,7 +14,7 @@ export default function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={ Login } />
-          <Route path="/Trivia" component={ Trivia } />
+          <Route path="/trivia" component={ Trivia } />
           <Route path="/settings" component={ Settings } />
         </Switch>
       </BrowserRouter>
