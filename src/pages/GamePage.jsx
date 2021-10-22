@@ -8,14 +8,17 @@ class GamePage extends Component {
     super();
     this.getQuestions = this.getQuestions.bind(this);
     this.onClickAnswer = this.onClickAnswer.bind(this);
+    this.setBtnAnswerBorder = this.setBtnAnswerBorder.bind(this);
 
     this.state = {
       result: [],
-      questionOne: [],
-      answers: [],
+      questOne: [],
       wrongAnswersOne: [],
       rightAnswerOne: '',
-      counter: 30,
+      corr: '',
+      incor: '',
+      count: 30,
+      answers: [],
       i: 0,
     };
   }
@@ -25,14 +28,39 @@ class GamePage extends Component {
   }
 
   componentDidUpdate() {
-    const { counter } = this.state;
-    if (counter === 0) {
+    const { count } = this.state;
+    if (count === 0) {
       clearInterval(this.countInterval);
     }
   }
 
   onClickAnswer() {
+    const { result } = this.state;
+    let { i } = this.state;
+    console.log(i);
+    if (i === 0) {
+      i += 1;
+    }
+    try {
+      this.setState({
+        i: i + 1,
+        questOne: result[i].question,
+        wrongAnswersOne: result[i].incorrect_answers,
+        rightAnswerOne: result[i].correct_answer,
+        corr: '',
+        incor: '',
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  setBtnAnswerBorder() {
     const { i } = this.state;
+    this.setState({
+      incor: 'btn-answer',
+      corr: 'correct-answer',
+    });
     this.setState({
       i: i + 1,
     }, () => this.nextQuestion());
@@ -44,7 +72,7 @@ class GamePage extends Component {
 
     this.setState({
       result,
-      questionOne: result[i].question,
+      questOne: result[i].question,
       answers: [...result[i].incorrect_answers, result[i].correct_answer],
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
@@ -55,7 +83,7 @@ class GamePage extends Component {
   nextQuestion() {
     const { i, result } = this.state;
     this.setState({
-      questionOne: result[i].question,
+      questOne: result[i].question,
       answers: [...result[i].incorrect_answers, result[i].correct_answer],
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
@@ -80,21 +108,16 @@ class GamePage extends Component {
     const ONE_SECOND = 1000;
     this.countInterval = setInterval(() => {
       this.setState((state) => ({
-        counter: state.counter - 1,
+        count: state.count - 1,
       }));
     }, ONE_SECOND);
   }
 
   render() {
-    const {
-      questionOne,
-      wrongAnswersOne,
-      rightAnswerOne,
-      counter,
-    } = this.state;
+    const { questOne, wrongAnswersOne, rightAnswerOne, corr, incor, count } = this.state;
     const idWrongAns = 'wrong-answer-';
 
-    if (questionOne === []) {
+    if (questOne === []) {
       return null;
     }
     return (
@@ -104,27 +127,36 @@ class GamePage extends Component {
           <h1 data-testid="question-category">Categoria</h1>
           <h2 data-testid="question-text">
             {' '}
-            {questionOne}
+            {questOne}
           </h2>
-          <h2>{ counter }</h2>
+          <h2>{ count }</h2>
           {wrongAnswersOne.map((item, index) => (
             <div key={ index }>
               <button
+                className={ incor }
                 type="button"
                 data-testid={ idWrongAns + index }
-                onClick={ this.onClickAnswer }
-                disabled={ counter === 0 }
+                onClick={ this.setBtnAnswerBorder }
+                disabled={ count === 0 }
               >
                 {item}
               </button>
             </div>))}
           <button
-            onClick={ this.onClickAnswer }
+            className={ corr }
+            onClick={ this.setBtnAnswerBorder }
             type="button"
             data-testid="correct-answer"
-            disabled={ counter === 0 }
+            disabled={ count === 0 }
           >
             {rightAnswerOne}
+          </button>
+          <br />
+          <button
+            type="button"
+            onClick={ this.onClickAnswer }
+          >
+            Próximo
           </button>
         </section>
 
