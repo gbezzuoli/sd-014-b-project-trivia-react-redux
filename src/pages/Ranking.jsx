@@ -17,12 +17,11 @@ export default class Ranking extends Component {
         <ul>
           { ranking.map((result, indice) => (
             <li
-              data-testid={ `player-name-${indice}` }
               key={ indice }
             >
               <div>{ indice + 1 }</div>
               <img src={ result.picture } alt={ result.name } />
-              <div>{ result.name }</div>
+              <div data-testid={ `player-name-${indice}` }>{ result.name }</div>
               <div>{ result.score }</div>
             </li>
           ))}
