@@ -5,7 +5,7 @@ const INITIAL_STATE = {
   index: 0,
 };
 
-const questions = (state = INITIAL_STATE, action) => {
+const questionsRedux = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case SAVE_QUESTIONS:
     return {
@@ -18,4 +18,4 @@ const questions = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default questions;
+export default questionsRedux;

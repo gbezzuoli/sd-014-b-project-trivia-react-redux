@@ -17,13 +17,17 @@ class Login extends Component {
       disabled: true,
       player: {
         name: '',
-        assertions: '',
+        assertions: 0,
         score: 0,
         gravatarEmail: '',
       },
     };
     this.handleChange = this.handleChange.bind(this);
     this.submitPlayer = this.submitPlayer.bind(this);
+  }
+
+  componentDidMount() {
+    fetchTrivia();
   }
 
   handleChange({ target: { name, value } }) {
@@ -47,11 +51,9 @@ class Login extends Component {
     }
   }
 
-  // Analisar essa função
   submitPlayer() {
     const { dispatchSetValue } = this.props;
     const { player } = this.state;
-    fetchTrivia();
     localStorage.setItem('state', JSON.stringify(this.state));
     dispatchSetValue(player);
   }
@@ -114,4 +116,3 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(null, mapDispatchToProps)(Login);
-// export default Login;

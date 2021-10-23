@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Loading from './Loading';
-import questions from '../redux/reducers/questions';
+import questionsRedux from '../redux/reducers/questions';
 
 class Question extends Component {
   constructor(props) {
@@ -43,7 +43,6 @@ class Question extends Component {
   }
 
   render() {
-    // const { finally } = this.state;
     const { questions } = this.props;
     const { endGame } = this.state;
 
@@ -78,7 +77,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  incrementQuestion: (value) => dispatch(questions(value)),
+  incrementQuestion: (value) => dispatch(questionsRedux(value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Question);

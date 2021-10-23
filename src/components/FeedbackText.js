@@ -29,7 +29,7 @@ class FeedbackText extends React.Component {
 
   render() {
     const { message } = this.state;
-    return <h4 data-testid="feedback-text">{ message }</h4>;
+    return <h4 data-testid="feedback-text">{`FeedBack ${message}`}</h4>;
   }
 }
 
