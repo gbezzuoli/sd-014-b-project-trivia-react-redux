@@ -64,7 +64,6 @@ class Game extends Component {
               <AlternativeCard controller={ controller } />
               { timeIsOver && <ButtonNext
                 handleClick={ this.handleClick }
-                controller={ controller }
               /> }
               {timeIsOver ? 'timer: 0' : <Timer />}
             </main>)}
