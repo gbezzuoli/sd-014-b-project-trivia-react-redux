@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import Header from '../components/Header';
+import PropTypes from 'prop-types';
+import PlayAgainButton from '../components/PlayAgainButton';
 
-export class Feedback extends Component {
+class Feedback extends Component {
   render() {
+    const { history } = this.props;
     return (
-      <div>
-        <Header />
-      </div>
+      <PlayAgainButton history={ history } />
     );
   }
 }
+
+Feedback.propTypes = {
+  history: PropTypes.objectOf(PropTypes.object).isRequired,
+};
 
 export default Feedback;

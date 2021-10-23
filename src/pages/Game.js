@@ -7,6 +7,8 @@ import ButtonNext from '../components/ButtonNext';
 import Header from '../components/Header';
 import QuestionCard from '../components/QuestionCard';
 import Timer from '../components/Timer';
+import PlayAgainButton from '../components/PlayAgainButton';
+import GoRankingButton from '../components/GoRankingButton';
 
 class Game extends Component {
   constructor() {
@@ -51,7 +53,7 @@ class Game extends Component {
     };
 
     const { controller } = this.state;
-    const { loading, timeIsOver } = this.props;
+    const { loading, timeIsOver, history } = this.props;
     return (
       <>
         <Header />
@@ -63,6 +65,8 @@ class Game extends Component {
               { timeIsOver && <ButtonNext handleClick={ this.handleClick } /> }
               <Timer />
             </main>)}
+        <PlayAgainButton history={ history } />
+        <GoRankingButton history={ history } />
       </>
     );
   }
@@ -81,6 +85,7 @@ Game.propTypes = {
   saveQuestions: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   timeIsOver: PropTypes.bool.isRequired,
+  history: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
