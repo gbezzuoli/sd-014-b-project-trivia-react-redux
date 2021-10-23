@@ -18,7 +18,10 @@ export const thunkQuestions = () => async (dispatch) => {
   }
 };
 
-export const timeIsOver = (payload) => ({
+export const timeIsOver = (timeOver, counter) => ({
   type: TIME_IS_OVER,
-  payload,
+  timerInfo: {
+    timeOver,
+    counter,
+  },
 });

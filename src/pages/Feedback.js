@@ -12,7 +12,7 @@ class Feedback extends Component {
 }
 
 Feedback.propTypes = {
-  history: PropTypes.arrayOf(Object).isRequired,
+  history: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default Feedback;
