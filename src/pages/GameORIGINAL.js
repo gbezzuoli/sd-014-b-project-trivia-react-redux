@@ -115,54 +115,57 @@ class Game extends Component {
     const { token } = this.props;
     const allQuestions = await fetchQuestions(token);
     this.setState({
-      questions: allQuestions.results[0],
+      questions: allQuestions.results,
       correctAnswer: allQuestions.results[0].correct_answer,
       difficulty: allQuestions.results[0].difficulty,
     });
   }
 
-  mapQuestions() {
-    const { disable, currentTime, questions } = this.state;
-    const incorrectAnswers = questions.incorrect_answers.map((alternative, index2) => (
-      <button
-        type="button"
-        disabled={ disable || currentTime === 0 }
-        data-testid={ `wrong-answer-${index2}` }
-        className="wrongButton"
-        key={ index2 }
-        onClick={ this.handleClick }
-      >
-        {alternative}
-      </button>
-    ));
-    const correctAnswer = (
-      <button
-        type="button"
-        disabled={ disable || currentTime === 0 }
-        data-testid="correct-answer"
-        className="correctButton"
-        key="4"
-        onClick={ this.handleClick }
-      >
-        { questions.correct_answer }
-      </button>
-    );
-    const alternatives = [...incorrectAnswers, correctAnswer];
-    const half = 0.5;
-    const shuffledQuestions = alternatives.sort(() => half - Math.random());
-    return (
-      <div>
-        <h5 data-testid="question-category">
-          {`Category: ${questions.category}`}
-        </h5>
-        <h3 data-testid="question-text">
-          {`Question: ${questions.question}`}
-        </h3>
-        <h3 data-testid="question-text">
-          { shuffledQuestions.map((e) => (e))}
-        </h3>
-      </div>
-    );
+  mapQuestions(questions) {
+    const { disable, currentTime } = this.state;
+    const mappedQuestions = questions.map((question, index1) => {
+      const incorrectAnswers = question.incorrect_answers.map((alternative, index2) => (
+        <button
+          type="button"
+          disabled={ disable || currentTime === 0 }
+          data-testid={ `wrong-answer-${index2}` }
+          className="wrongButton"
+          key={ index2 }
+          onClick={ this.handleClick }
+        >
+          {alternative}
+        </button>
+      ));
+      const correctAnswer = (
+        <button
+          type="button"
+          disabled={ disable || currentTime === 0 }
+          data-testid="correct-answer"
+          className="correctButton"
+          key="4"
+          onClick={ this.handleClick }
+        >
+          { question.correct_answer }
+        </button>
+      );
+      const alternatives = [...incorrectAnswers, correctAnswer];
+      const metade = 0.5;
+      const shuffledQuestions = alternatives.sort(() => metade - Math.random());
+      return (
+        <div key={ index1 }>
+          <h5 data-testid="question-category">
+            {`Category: ${question.category}`}
+          </h5>
+          <h3 data-testid="question-text">
+            {`Question: ${question.question}`}
+          </h3>
+          <h3 data-testid="question-text">
+            { shuffledQuestions.map((e) => (e))}
+          </h3>
+        </div>
+      );
+    });
+    return mappedQuestions;
   }
 
   addStyle() {
@@ -181,7 +184,7 @@ class Game extends Component {
         <Header />
         <h1>TRIVIA</h1>
         {`Question difficulty: ${difficulty}`}
-        {questions ? this.mapQuestions() : <Loading />}
+        {questions ? this.mapQuestions(questions) : <Loading />}
         <br />
         <span>{ `TIMER: ${currentTime}` }</span>
         <br />
