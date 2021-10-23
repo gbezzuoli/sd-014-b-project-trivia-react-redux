@@ -27,6 +27,16 @@ class Login extends Component {
 
   addTokenLocalStorage(playerToken) {
     localStorage.setItem('token', playerToken);
+
+    const { name, gravatarEmail } = this.state;
+    const playerScore = {
+      name,
+      assertions: 0,
+      score: 0,
+      gravatarEmail,
+    };
+
+    localStorage.setItem('state', JSON.stringify({ player: playerScore }));
   }
 
   async handlePlay() {

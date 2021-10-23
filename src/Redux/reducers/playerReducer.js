@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   name: '',
   gravatarEmail: '',
   score: 0,
+  assertions: 0,
   token: '',
 };
 
@@ -24,6 +25,7 @@ const playerReducer = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       score: action.payload,
+      assertions: state.assertions + 1,
     };
   default:
     return state;

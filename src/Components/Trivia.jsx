@@ -17,12 +17,14 @@ class Trivia extends Component {
     this.handleAnswerClick = this.handleAnswerClick.bind(this);
     this.handleCorrectAnswer = this.handleCorrectAnswer.bind(this);
     this.goToNextQuestion = this.goToNextQuestion.bind(this);
+    this.sendScoreToLocalStorage = this.sendScoreToLocalStorage.bind(this);
 
     this.state = {
       results: [],
       actualQuestion: 0,
       endQuestion: false,
       clickCorrectAnswer: false,
+      assertions: 0,
     };
   }
 
@@ -52,21 +54,33 @@ class Trivia extends Component {
     this.setState({ clickCorrectAnswer: true, endQuestion: true });
   }
 
+  sendScoreToLocalStorage(score) {
+    const { props: { name, gravatarEmail }, state: { assertions } } = this;
+    const playerScore = {
+      name,
+      assertions,
+      score,
+      gravatarEmail,
+    };
+
+    localStorage.setItem('state', JSON.stringify({ player: playerScore }));
+  }
+
   sumScore(timer) {
+    this.setState((prevSt) => ({ assertions: prevSt.assertions + 1 }));
     const { results, score, dispatchScore } = this.props;
     const { actualQuestion } = this.state;
     const { difficulty } = results[actualQuestion];
     let scoreSum = score;
     const TEN = 10;
     const HARD_NUM = 3;
-    const MEDIUM_NUM = 2;
 
     if (difficulty === 'hard') {
       scoreSum += TEN + (timer * HARD_NUM);
     }
 
     if (difficulty === 'medium') {
-      scoreSum += TEN + (timer * MEDIUM_NUM);
+      scoreSum += TEN + (timer * 2);
     }
 
     if (difficulty === 'easy') {
@@ -74,6 +88,7 @@ class Trivia extends Component {
     }
 
     dispatchScore(scoreSum);
+    this.sendScoreToLocalStorage(scoreSum);
   }
 
   createAnswerButtons() {
@@ -140,6 +155,8 @@ Trivia.propTypes = {
   dispatchResultsToState: PropTypes.func.isRequired,
   token: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  gravatarEmail: PropTypes.string.isRequired,
   results: PropTypes.arrayOf(PropTypes.shape({
     difficulty: PropTypes.string.isRequired,
   })).isRequired,
@@ -150,6 +167,8 @@ const mapStateToProps = (state) => ({
   token: state.player.token,
   score: state.player.score,
   results: state.game.results,
+  name: state.player.name,
+  gravatarEmail: state.player.gravatarEmail,
 });
 
 const mapDispatchToProps = (dispatch) => ({
