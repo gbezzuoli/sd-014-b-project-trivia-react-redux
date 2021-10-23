@@ -25,22 +25,30 @@ class Login extends Component {
     this.setState({ [name]: value });
   }
 
-  addTokenLocalStorage(playerToken) {
+  addTokenLocalStorage(playerToken, { name, gravatarEmail }) {
     localStorage.setItem('token', playerToken);
+
+    const playerScore = {
+      name,
+      assertions: 0,
+      score: 0,
+      gravatarEmail,
+    };
+
+    localStorage.setItem('state', JSON.stringify({ player: playerScore }));
   }
 
   async handlePlay() {
     const { dispatchPlayerToken, dispatchPlayerNameAndEmail } = this.props;
-    const { name, gravatarEmail } = this.state;
 
     const requestObject = await requestToken();
     const playerToken = requestObject.token;
 
     dispatchPlayerToken(playerToken);
 
-    dispatchPlayerNameAndEmail({ name, gravatarEmail });
+    dispatchPlayerNameAndEmail(this.state);
 
-    this.addTokenLocalStorage(playerToken);
+    this.addTokenLocalStorage(playerToken, this.state);
 
     this.setState({ redirect: true });
   }

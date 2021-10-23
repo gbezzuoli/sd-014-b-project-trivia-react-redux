@@ -5,6 +5,8 @@ export default class Timer extends Component {
   constructor() {
     super();
 
+    this.restartTimer = this.restartTimer.bind(this);
+
     this.state = {
       timer: 30,
     };
@@ -14,18 +16,34 @@ export default class Timer extends Component {
     this.updateTimer();
   }
 
+  componentDidUpdate(prevProp, { timer }) {
+    const { clickCorrectAnswer, sumScore, endQuestion } = this.props;
+    if (clickCorrectAnswer && !prevProp.clickCorrectAnswer) {
+      clearInterval(this.intervalIdval);
+      sumScore(timer);
+    }
+    if (!endQuestion && prevProp.endQuestion) {
+      this.restartTimer();
+    }
+  }
+
+  restartTimer() {
+    this.setState({ timer: 30 }, this.updateTimer());
+  }
+
   updateTimer() {
     const numberSeconds = 1000;
-    const interval = setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.setState((prevState) => ({ timer: prevState.timer - 1 }));
-      this.clearTimer(interval);
+      this.clearTimer(this.intervalId);
     }, numberSeconds);
   }
 
   clearTimer(interval) {
     const { timer } = this.state;
-    const { answerClick } = this.props;
-    if (timer === 0) {
+    const { answerClick, endQuestion } = this.props;
+
+    if (timer === 0 || endQuestion) {
       clearInterval(interval);
       return answerClick();
     }
@@ -46,4 +64,7 @@ export default class Timer extends Component {
 
 Timer.propTypes = {
   answerClick: PropTypes.func.isRequired,
+  clickCorrectAnswer: PropTypes.bool.isRequired,
+  endQuestion: PropTypes.bool.isRequired,
+  sumScore: PropTypes.func.isRequired,
 };
