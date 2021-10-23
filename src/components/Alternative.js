@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 
 class Alternative extends Component {
   render() {
-    const { alternative, testid, name, handleClick, disabled } = this.props;
+    const { alternative, testid, name, handleClick, disabled, className } = this.props;
     return (
       <button
-        className={ name }
+        className={ className }
         type="button"
         data-testid={ testid }
         name={ name }
@@ -25,6 +25,7 @@ Alternative.propTypes = {
   disabled: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired,
+  className: PropTypes.string.isRequired,
 };
 
 export default Alternative;

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { thunkQuestions } from '../actions';
 import AlternativeCard from '../components/AlternativeCard';
 import GoRankingButton from '../components/GoRankingButton';
+import ButtonNext from '../components/ButtonNext';
 import Header from '../components/Header';
 import PlayAgainButton from '../components/PlayAgainButton';
 import QuestionCard from '../components/QuestionCard';
@@ -56,18 +57,14 @@ class Game extends Component {
     return (
       <>
         <Header />
-        {loading ? (
-          <span>loading</span>
-        ) : (
-          <main style={ styles.main }>
-            <QuestionCard controller={ controller } />
-            <AlternativeCard controller={ controller } />
-            <button onClick={ this.handleClick } type="button" data-testid="btn-next">
-              Proxima
-            </button>
-            {timeIsOver ? <div>Timer: 0</div> : <Timer />}
-          </main>
-        )}
+        { loading ? <span>loading</span>
+          : (
+            <main style={ styles.main }>
+              <QuestionCard controller={ controller } />
+              <AlternativeCard controller={ controller } />
+              { timeIsOver && <ButtonNext handleClick={ this.handleClick } /> }
+              <Timer />
+            </main>)}
         <PlayAgainButton history={ history } />
         <GoRankingButton history={ history } />
       </>
@@ -75,9 +72,9 @@ class Game extends Component {
   }
 }
 
-const mapStateToProps = ({ questionsReducer: { timeIsOver, loading } }) => ({
-  timeIsOver,
+const mapStateToProps = ({ questionsReducer: { loading, timeIsOver } }) => ({
   loading,
+  timeIsOver,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -86,9 +83,9 @@ const mapDispatchToProps = (dispatch) => ({
 
 Game.propTypes = {
   saveQuestions: PropTypes.func.isRequired,
-  timeIsOver: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
-  history: PropTypes.arrayOf(Object).isRequired,
+  timeIsOver: PropTypes.bool.isRequired,
+  history: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

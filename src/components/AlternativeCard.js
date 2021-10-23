@@ -1,59 +1,89 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { timeIsOver as timeIsOverAction } from '../actions';
 import '../styles/index.css';
 import Alternative from './Alternative';
+
+const EASY = 1;
+const MEDIUM = 2;
+const HARD = 3;
+const BASE_SCORE = 10;
 
 class AlternativeCard extends Component {
   constructor() {
     super();
     this.state = {
-      ready: false,
+      showAnswer: false,
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick() {
+  async handleClick({ target: { name } }) {
     this.setState((state) => ({
-      ready: !state.ready,
+      showAnswer: !state.showAnswer,
     }));
+
+    const { timeIsOverDispatch } = this.props;
+    await timeIsOverDispatch(true);
+
+    if (name === 'correct') {
+      const { player } = JSON.parse(localStorage.getItem('state'));
+      const { counter, questions, controller } = this.props;
+      const questionObject = questions[controller];
+
+      const updateScore = (questionDifficulty, timeLeft) => {
+        switch (questionDifficulty) {
+        case 'easy':
+          return BASE_SCORE + (timeLeft * EASY);
+        case 'medium':
+          return BASE_SCORE + (timeLeft * MEDIUM);
+        case 'hard':
+          return BASE_SCORE + (timeLeft * HARD);
+        default:
+          break;
+        }
+      };
+
+      player.assertions += 1;
+      player.score += updateScore(questionObject.difficulty, counter);
+      localStorage.setItem('state', JSON.stringify({ player }));
+    }
   }
 
   render() {
-    const { ready } = this.state;
-    const NUMBER = 0.5;
+    const { showAnswer } = this.state;
     const { questions, controller, disabled } = this.props;
     const array = questions[controller];
     let accum = 0;
-    let answers = [array.correct_answer, ...array.incorrect_answers];
-    answers = answers.sort(
-      () => Math.random() - NUMBER,
-    ); /* https://flaviocopes.com/how-to-shuffle-array-javascript/ */
+    const answers = [array.correct_answer, ...array.incorrect_answers];
 
     return (
       <section>
-        {answers.map((answer, index) => {
+        {answers.sort().map((answer, index) => {
           if (array.incorrect_answers.includes(answer)) {
             accum += 1;
             return (
               <Alternative
                 disabled={ disabled }
-                name={ ready ? 'incorrect' : '' }
+                className={ showAnswer ? 'incorrect' : '' }
+                name="incorrect"
                 key={ index }
                 testid={ `wrong-answer-${accum - 1}` }
                 alternative={ answer }
-                handleClick={ this.handleClick }
+                handleClick={ (event) => this.handleClick(event) }
               />
             );
           }
           return (
             <Alternative
               disabled={ disabled }
-              name={ ready ? 'correct' : '' }
+              className={ showAnswer ? 'correct' : '' }
+              name="correct"
               key={ index }
               testid="correct-answer"
               alternative={ answer }
-              handleClick={ this.handleClick }
+              handleClick={ (event) => this.handleClick(event) }
             />
           );
         })}
@@ -65,6 +95,12 @@ class AlternativeCard extends Component {
 const mapStateToProps = (state) => ({
   questions: state.questionsReducer.questions,
   disabled: state.questionsReducer.timeIsOver,
+  counter: state.questionsReducer.counter,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  timeIsOverDispatch: (timeOver,
+    counter) => dispatch(timeIsOverAction(timeOver, counter)),
 });
 
 AlternativeCard.propTypes = {
@@ -76,6 +112,7 @@ AlternativeCard.propTypes = {
   }),
   controller: PropTypes.number,
   disabled: PropTypes.bool,
+  timeIsOverDispatch: PropTypes.func.isRequired,
 }.isRequired;
 
-export default connect(mapStateToProps)(AlternativeCard);
+export default connect(mapStateToProps, mapDispatchToProps)(AlternativeCard);

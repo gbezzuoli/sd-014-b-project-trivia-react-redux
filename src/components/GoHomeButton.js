@@ -24,7 +24,7 @@ class GoHomeButton extends Component {
 }
 
 GoHomeButton.propTypes = {
-  history: PropTypes.arrayOf(Object).isRequired,
+  history: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default GoHomeButton;
