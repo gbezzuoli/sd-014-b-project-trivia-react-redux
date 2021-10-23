@@ -12,19 +12,52 @@ class Login extends Component {
       emailInput: '',
     };
     this.handleChange = this.handleChange.bind(this);
-    this.getTokenOnClick = this.getTokenOnClick.bind(this);
+    this.getToken = this.getToken.bind(this);
+    this.saveUser = this.saveUser.bind(this);
   }
 
-  async getTokenOnClick() {
-    const { history, submitHash } = this.props;
-    const { nameInput, emailInput } = this.state;
+  async getToken() {
     const URL = 'https://opentdb.com/api_token.php?command=request';
     const requestToken = await fetch(URL);
     const responseToken = await requestToken.json();
     localStorage.setItem('token', JSON.stringify(responseToken.token));
-    submitHash(nameInput, md5(emailInput).toString());
+    this.saveUser();
+  }
+
+  saveUser() {
+    const { history, submitHash } = this.props;
+    const { nameInput, emailInput } = this.state;
+    const gravatarEmail = md5(emailInput).toString();
+    const state = {
+      player: {
+        name: nameInput,
+        assertions: 0,
+        score: 0,
+        gravatarEmail,
+      },
+    };
+    localStorage.setItem('state', JSON.stringify(state));
+    submitHash(nameInput, gravatarEmail);
     history.push('/paginadojogo');
   }
+
+  /* checkLocalStorage(player) {
+    if (!localStorage.getItem('state')) {
+      const createArrayPlayers = [player];
+      localStorage.setItem('state', JSON.stringify(createArrayPlayers));
+    } else {
+      const players = JSON.parse(localStorage.getItem('state'));
+
+      const alreadyExists = players.some((item) => (
+        item.gravatarEmail === player.gravatarEmail
+      ));
+
+      if (!alreadyExists) {
+        const updatePlayers = [...players, player];
+        localStorage.setItem('state', JSON.stringify(updatePlayers));
+      }
+    }
+  } */
 
   loadConfigsPage() {
     const { history } = this.props;
@@ -38,11 +71,6 @@ class Login extends Component {
       [name]: value,
     });
   }
-
-  // isEmailValid = (email) => {
-  //   const regexEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  //   return regexEmail.test(email) === true;
-  // };
 
   render() {
     const { nameInput, emailInput } = this.state;
@@ -71,7 +99,7 @@ class Login extends Component {
           type="button"
           disabled={ !validInput }
           data-testid="btn-play"
-          onClick={ this.getTokenOnClick }
+          onClick={ this.getToken }
         >
           Jogar
         </button>

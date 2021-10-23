@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import HeaderFeedback from '../components/HeaderFeedback';
+import Header from '../components/Header';
 
 class FeedbackPage extends Component {
   render() {
     return (
       <section>
-        <HeaderFeedback />
-        <h1>Feedback Page</h1>
+        <Header />
+        <h1 data-testid="feedback-text">Feedback Page</h1>
       </section>
     );
   }

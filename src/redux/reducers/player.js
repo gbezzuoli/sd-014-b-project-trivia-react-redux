@@ -1,9 +1,9 @@
-import { SUBMIT_USER } from '../actions';
+import { SUBMIT_SCORE, SUBMIT_USER } from '../actions';
 
 const INITIAL_STATE = {
   name: '',
-  assertions: '',
-  score: '',
+  assertions: 0,
+  score: 0,
   gravatarEmail: '',
 };
 
@@ -14,6 +14,12 @@ const playerReducer = (state = INITIAL_STATE, action) => {
       ...state,
       name: action.name,
       gravatarEmail: action.hashGravatar,
+    };
+  case SUBMIT_SCORE:
+    return {
+      ...state,
+      score: action.score,
+      assertions: action.assertions,
     };
   default:
     return state;
