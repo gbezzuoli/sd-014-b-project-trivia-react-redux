@@ -1,9 +1,10 @@
-import { ADD_COUNT, GET_QUESTIONS, RESET_TIMER } from '../actions';
+import { ADD_COUNT, GET_QUESTIONS, STOP_TIMER, REFRESH_TIMER } from '../actions';
 
 const INITIAL_STATE = {
   count: 0,
   questions: [],
-  timer: 30,
+  timer: false,
+  countdown: 30,
 };
 
 const game = (state = INITIAL_STATE, { type, payload }) => {
@@ -18,10 +19,16 @@ const game = (state = INITIAL_STATE, { type, payload }) => {
       ...state,
       questions: payload,
     };
-  case RESET_TIMER:
+  case STOP_TIMER:
     return {
       ...state,
       timer: payload,
+      countdown: 30,
+    };
+  case REFRESH_TIMER:
+    return {
+      ...state,
+      countdown: payload,
     };
   default:
     return state;

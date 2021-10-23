@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import '../css/buttonCss.css';
 
 class CardGame extends React.Component {
@@ -10,6 +11,11 @@ class CardGame extends React.Component {
     this.shuffleArray = this.shuffleArray.bind(this);
     this.parseAnswerInObject = this.parseAnswerInObject.bind(this);
   }
+
+  // shouldComponentUpdate(nextProps) {
+  //   const { question, timer } = this.props;
+  //   return question.question !== nextProps.question.question;
+  // }
 
   parseAnswerInObject() {
     const { question } = this.props;
@@ -56,12 +62,8 @@ class CardGame extends React.Component {
     // this.setState({ hidden: false });
   }
 
-  shouldComponentUpdate(prevState) {
-
-  }
-
   render() {
-    const { question: { category, question }, next, disabled } = this.props;
+    const { question: { category, question }, next, timer } = this.props;
     const randomAnswers = this.parseAnswerInObject();
     let count = 0;
     // const timer = Number(document.querySelector('#timer'));
@@ -76,7 +78,7 @@ class CardGame extends React.Component {
                 type="button"
                 data-testid="correct-answer"
                 onClick={ this.handleAnswerClick }
-                disabled={ disabled }
+                disabled={ timer }
               >
                 { answerButton.answer }
               </button>);
@@ -105,6 +107,10 @@ class CardGame extends React.Component {
   }
 }
 
+const mapStateToProps = ({ game }) => ({
+  timer: game.timer,
+});
+
 CardGame.propTypes = {
   question: PropTypes.shape({
     category: PropTypes.string,
@@ -113,7 +119,7 @@ CardGame.propTypes = {
     incorrect_answers: PropTypes.arrayOf(PropTypes.any),
   }).isRequired,
   next: PropTypes.func.isRequired,
-  disabled: PropTypes.bool.isRequired,
+  timer: PropTypes.bool.isRequired,
 };
 
-export default CardGame;
+export default connect(mapStateToProps)(CardGame);

@@ -4,21 +4,23 @@ import { connect } from 'react-redux';
 import CardGame from '../components/CardGame';
 import Header from '../components/Header';
 // import getQuestions from '../services/fetchQuestionsAPI';
-import { addCount, fetchQuestions } from '../redux/actions';
+import { addCount, fetchQuestions, refreshTimer as refreshTimerAction,
+  resetTimer as resetTimerAction } from '../redux/actions';
+import Timer from '../components/Timer';
 
 const ONE_SECOND = 1000;
+const RESET_COUNTDOWN = 30;
 
 class Game extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      timer: 30,
+      start: false,
     };
-
     this.retriveQuestions = this.retriveQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.tiktak = this.tiktak.bind(this);
+    this.countdown = this.countdown.bind(this);
   }
 
   componentDidMount() {
@@ -26,25 +28,19 @@ class Game extends React.Component {
     this.tiktak();
   }
 
-  tiktak() {
-    setInterval(() => {
-      this.setState(({ timer }) => ({ timer: timer === 0 ? 0 : timer - 1 }));
-    }, ONE_SECOND);
-  }
-
   async retriveQuestions() {
     const { retrieveQuestions } = this.props;
     const token = localStorage.getItem('token');
     retrieveQuestions(token);
-    // const questions = await getQuestions(token);
-    // this.setState({ arrayQuestions: [...questions] });
   }
 
   handleClick() {
-    const { history, count, increaseCount } = this.props;
-    this.setState({ timer: 30 });
+    const { history, count, increaseCount,
+      refreshTimer, resetTimer } = this.props;
+    resetTimer(false);
     const FOUR = 4;
     const buttons = document.querySelectorAll('button');
+    refreshTimer(RESET_COUNTDOWN);
     buttons.forEach((button) => { button.className = ''; });
     if (count < FOUR) {
       increaseCount(count + 1);
@@ -53,21 +49,32 @@ class Game extends React.Component {
     }
   }
 
+  countdown() {
+    const { countdown, refreshTimer } = this.props;
+    refreshTimer(countdown - 1);
+  }
+
+  tiktak() {
+    const { start } = this.state;
+    if (!start) {
+      this.timer = setInterval(this.countdown, ONE_SECOND);
+      this.setState({ start: true });
+    } else {
+      clearInterval(this.timer);
+      this.setState({ start: false });
+    }
+  }
+
   render() {
-    const { count, questions } = this.props;
-    const { timer } = this.state;
+    const { count, questions, countdown } = this.props;
     return (
       <div>
         <Header />
-        <h1>{timer}</h1>
+        <Timer time={ countdown } />
         TRIVIA
         { questions.length === 0
           ? <span>Loading ...</span>
-          : <CardGame
-            question={ questions[count] }
-            next={ this.handleClick }
-            disabled={ timer === 0 }
-          />}
+          : <CardGame question={ questions[count] } next={ this.handleClick } />}
       </div>
     );
   }
@@ -76,11 +83,15 @@ class Game extends React.Component {
 const mapStateToProps = ({ game }) => ({
   count: game.count,
   questions: game.questions,
+  timer: game.timer,
+  countdown: game.countdown,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   increaseCount: (counter) => dispatch(addCount(counter)),
   retrieveQuestions: (token) => dispatch(fetchQuestions(token)),
+  refreshTimer: (time) => dispatch(refreshTimerAction(time)),
+  resetTimer: (timer) => dispatch(resetTimerAction(timer)),
 });
 
 Game.defaultProps = {
@@ -90,11 +101,14 @@ Game.defaultProps = {
 };
 
 Game.propTypes = {
-  history: PropTypes.objectOf(PropTypes.any).isRequired,
-  questions: PropTypes.arrayOf(PropTypes.object),
   count: PropTypes.number,
+  countdown: PropTypes.number.isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
   increaseCount: PropTypes.func,
+  questions: PropTypes.arrayOf(PropTypes.object),
   retrieveQuestions: PropTypes.func.isRequired,
+  refreshTimer: PropTypes.func.isRequired,
+  resetTimer: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
