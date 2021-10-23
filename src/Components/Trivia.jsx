@@ -6,6 +6,7 @@ import { addResultsToState, addScore } from '../Redux/actions';
 import getQuestions from '../services/getQuestions';
 import Button from './Button';
 import Timer from './Timer';
+import { Redirect } from 'react-router';
 
 class Trivia extends Component {
   constructor() {
@@ -25,6 +26,7 @@ class Trivia extends Component {
       endQuestion: false,
       clickCorrectAnswer: false,
       assertions: 0,
+      endGame: false,
     };
   }
 
@@ -40,10 +42,14 @@ class Trivia extends Component {
   }
 
   goToNextQuestion() {
-    this.setState((prevSt) => ({
-      actualQuestion: prevSt.actualQuestion + 1,
-      endQuestion: false,
-    }));
+    const { actualQuestion, results } = this.state;
+    if (actualQuestion < results.length - 1) {
+      this.setState((prevSt) => ({
+        actualQuestion: prevSt.actualQuestion + 1,
+        endQuestion: false,
+        clickCorrectAnswer: false,
+      }));
+    } else { this.setState({ endGame: true }); }
   }
 
   handleAnswerClick() {
@@ -58,16 +64,17 @@ class Trivia extends Component {
     const { props: { name, gravatarEmail }, state: { assertions } } = this;
     const playerScore = {
       name,
-      assertions,
+      assertions: assertions + 1,
       score,
       gravatarEmail,
     };
 
     localStorage.setItem('state', JSON.stringify({ player: playerScore }));
+
+    this.setState((prevSt) => ({ assertions: prevSt.assertions + 1 }));
   }
 
   sumScore(timer) {
-    this.setState((prevSt) => ({ assertions: prevSt.assertions + 1 }));
     const { results, score, dispatchScore } = this.props;
     const { actualQuestion } = this.state;
     const { difficulty } = results[actualQuestion];
@@ -87,8 +94,8 @@ class Trivia extends Component {
       scoreSum += TEN + timer;
     }
 
-    dispatchScore(scoreSum);
     this.sendScoreToLocalStorage(scoreSum);
+    dispatchScore(scoreSum);
   }
 
   createAnswerButtons() {
@@ -118,9 +125,11 @@ class Trivia extends Component {
   }
 
   render() {
-    const { results, actualQuestion, clickCorrectAnswer, endQuestion } = this.state;
+    const { results, actualQuestion, clickCorrectAnswer,
+      endQuestion, endGame } = this.state;
     return (
       <section className="game-board">
+        { endGame && <Redirect to="/feedbacks" /> }
         { results.length < 1
           ? <div className="loading">Carregando...</div>
           : (
@@ -142,7 +151,8 @@ class Trivia extends Component {
                 <Button
                   dataTestId="btn-next"
                   className="btn-next"
-                  textButton="Próxima Pergunta"
+                  textButton={ actualQuestion > results.length - 2 ? 'Results'
+                    : 'Next Question' }
                   onClick={ this.goToNextQuestion }
                 />) }
             </>) }
