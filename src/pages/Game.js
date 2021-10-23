@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import ButtonNext from '../components/ButtonNext';
+import MyTimer from '../components/MyTimer';
+import QuestionCard from '../components/QuestionCard';
 import fetchQuestions from '../services/FetchQuestions';
 import { setScoreAction } from '../redux/actions';
 
@@ -13,18 +15,21 @@ class Game extends Component {
     this.state = {
       questions: '',
       correctAnswer: '',
-      // answered: false,
-      assertions: 0, // acertos antes da formula
-      score: 0, // acertos depois da formula
+      wrongAnswers: [],
+      alternativesArray: [],
+      assertions: 0,
+      score: 0,
       count: -1,
       disable: false,
       currentTime: 30,
       difficulty: '',
+      category: '',
     };
     this.requestAPI = this.requestAPI.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.addStyle = this.addStyle.bind(this);
     this.scoreCalculator = this.scoreCalculator.bind(this);
+    this.shuffleQuestions = this.shuffleQuestions.bind(this);
   }
 
   componentDidMount() {
@@ -111,58 +116,58 @@ class Game extends Component {
     this.addStyle();
   }
 
+  shuffleQuestions() {
+    const { correctAnswer, wrongAnswers } = this.state;
+    const alternatives = [...wrongAnswers, correctAnswer];
+    const half = 0.5;
+    const shuffledAlternatives = alternatives.sort(() => half - Math.random());
+    this.setState({ alternativesArray: shuffledAlternatives });
+  }
+
   async requestAPI() {
     const { token } = this.props;
-    const allQuestions = await fetchQuestions(token);
+    const questionData = await fetchQuestions(token);
     this.setState({
-      questions: allQuestions.results[0],
-      correctAnswer: allQuestions.results[0].correct_answer,
-      difficulty: allQuestions.results[0].difficulty,
+      questions: questionData.results[0],
+      correctAnswer: questionData.results[0].correct_answer,
+      wrongAnswers: questionData.results[0].incorrect_answers,
+      difficulty: questionData.results[0].difficulty,
+      category: questionData.results[0].category,
     });
+    this.shuffleQuestions();
   }
 
   mapQuestions() {
-    const { disable, currentTime, questions } = this.state;
-    const incorrectAnswers = questions.incorrect_answers.map((alternative, index2) => (
-      <button
-        type="button"
-        disabled={ disable || currentTime === 0 }
-        data-testid={ `wrong-answer-${index2}` }
-        className="wrongButton"
-        key={ index2 }
-        onClick={ this.handleClick }
-      >
-        {alternative}
-      </button>
-    ));
-    const correctAnswer = (
-      <button
-        type="button"
-        disabled={ disable || currentTime === 0 }
-        data-testid="correct-answer"
-        className="correctButton"
-        key="4"
-        onClick={ this.handleClick }
-      >
-        { questions.correct_answer }
-      </button>
-    );
-    const alternatives = [...incorrectAnswers, correctAnswer];
-    const half = 0.5;
-    const shuffledQuestions = alternatives.sort(() => half - Math.random());
-    return (
-      <div>
-        <h5 data-testid="question-category">
-          {`Category: ${questions.category}`}
-        </h5>
-        <h3 data-testid="question-text">
-          {`Question: ${questions.question}`}
-        </h3>
-        <h3 data-testid="question-text">
-          { shuffledQuestions.map((e) => (e))}
-        </h3>
-      </div>
-    );
+    const { alternativesArray, correctAnswer, disable, currentTime } = this.state;
+    const mappedQuestions = alternativesArray.map((alternative, index) => {
+      if (alternative === correctAnswer) {
+        return (
+          <button
+            type="button"
+            disabled={ disable || currentTime === 0 }
+            data-testid="correct-answer"
+            className="correctButton"
+            key="4"
+            onClick={ this.handleClick }
+          >
+            { alternative }
+          </button>
+        );
+      }
+      return (
+        <button
+          type="button"
+          disabled={ disable || currentTime === 0 }
+          data-testid={ `wrong-answer-${index}` }
+          className="wrongButton"
+          key={ index }
+          onClick={ this.handleClick }
+        >
+          {alternative}
+        </button>
+      );
+    });
+    return mappedQuestions;
   }
 
   addStyle() {
@@ -175,16 +180,21 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, currentTime, difficulty, disable } = this.state;
+    const { questions, currentTime, difficulty, disable, category } = this.state;
     return (
       <div>
         <Header />
         <h1>TRIVIA</h1>
+        <br />
         {`Question difficulty: ${difficulty}`}
+        <br />
+        {questions
+          ? <QuestionCard question={ questions.question } category={ category } />
+          : <Loading /> }
+        <br />
         {questions ? this.mapQuestions() : <Loading />}
         <br />
-        <span>{ `TIMER: ${currentTime}` }</span>
-        <br />
+        <span><MyTimer time={ currentTime } /></span>
         <br />
         {disable ? <ButtonNext /> : ''}
         <br />
