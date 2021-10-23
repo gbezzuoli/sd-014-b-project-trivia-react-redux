@@ -40,7 +40,7 @@ class Login extends Component {
     getGameToken(token);
     localStorage.setItem('token', JSON.stringify(token));
 
-    // Salvando nome e email
+    // Salvando nome e email no redux E no storage
     const { getNameAndEmail } = this.props;
     const { nameInput, emailInput } = this.state;
     getNameAndEmail(nameInput, emailInput);
