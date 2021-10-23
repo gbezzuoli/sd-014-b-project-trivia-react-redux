@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
-import ButtonNext from '../components/ButtonNext';
 import MyTimer from '../components/MyTimer';
 import QuestionCard from '../components/QuestionCard';
 import fetchQuestions from '../services/FetchQuestions';
@@ -30,6 +29,8 @@ class Game extends Component {
     this.addStyle = this.addStyle.bind(this);
     this.scoreCalculator = this.scoreCalculator.bind(this);
     this.shuffleQuestions = this.shuffleQuestions.bind(this);
+    this.renderButton = this.renderButton.bind(this);
+    this.handleNextQuestion = this.handleNextQuestion.bind(this);
   }
 
   componentDidMount() {
@@ -179,6 +180,26 @@ class Game extends Component {
     btnCorrect.setAttribute('style', 'border: 3px solid rgb(6, 240, 15)');
   }
 
+  handleNextQuestion() {
+    // Mandar pra um contador global quantas perguntas já foram
+    // Atualizar esse estado global com + 1
+    // Chamar a API de novo e recomeçar
+  }
+
+  renderButton() {
+    return (
+      <div>
+        <button
+          type="button"
+          data-testid="btn-next"
+          onClick={ this.handleNextQuestion() }
+        >
+          Próxima
+        </button>
+      </div>
+    );
+  }
+
   render() {
     const { questions, currentTime, difficulty, disable, category } = this.state;
     return (
@@ -196,7 +217,7 @@ class Game extends Component {
         <br />
         <span><MyTimer time={ currentTime } /></span>
         <br />
-        {disable ? <ButtonNext /> : ''}
+        {disable ? this.renderButton() : ''}
         <br />
       </div>
     );
