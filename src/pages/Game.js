@@ -19,7 +19,7 @@ class Game extends Component {
       alternativesArray: [],
       assertions: 0,
       score: 0,
-      count: -1,
+      count: 0,
       disable: false,
       currentTime: 30,
       difficulty: '',
@@ -191,8 +191,8 @@ class Game extends Component {
         {questions
           ? <QuestionCard question={ questions.question } category={ category } />
           : <Loading /> }
-        <br />
         {questions ? this.mapQuestions() : <Loading />}
+        <br />
         <br />
         <span><MyTimer time={ currentTime } /></span>
         <br />
