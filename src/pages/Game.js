@@ -7,6 +7,7 @@ import QuestionCard from '../components/QuestionCard';
 import Timer from '../components/Timer';
 import AlternativeCard from '../components/AlternativeCard';
 import PlayAgainButton from '../components/PlayAgainButton';
+import GoRankingButton from '../components/GoRankingButton';
 
 class Game extends Component {
   constructor() {
@@ -67,6 +68,7 @@ class Game extends Component {
           </main>
         )}
         <PlayAgainButton history={ history } />
+        <GoRankingButton history={ history } />
       </>
     );
   }

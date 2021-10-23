@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class PlayAgainButton extends Component {
+class GoHomeButton extends Component {
   constructor() {
     super();
     this.handleClick = this.handleClick.bind(this);
@@ -15,11 +15,7 @@ class PlayAgainButton extends Component {
   render() {
     return (
       <div>
-        <button
-          type="button"
-          data-testid="btn-play-again"
-          onClick={ this.handleClick }
-        >
+        <button type="button" data-testid="btn-go-home" onClick={ this.handleClick }>
           Jogar novamente
         </button>
       </div>
@@ -27,8 +23,8 @@ class PlayAgainButton extends Component {
   }
 }
 
-PlayAgainButton.propTypes = {
+GoHomeButton.propTypes = {
   history: PropTypes.arrayOf(Object).isRequired,
 };
 
-export default PlayAgainButton;
+export default GoHomeButton;
