@@ -41,7 +41,8 @@ class Login extends React.Component {
   render() {
     const { name, gravatarEmail } = this.state;
     return (
-      <div>
+      <div className="box">
+        <h1>Login</h1>
         <input
           onChange={ this.handleChange }
           name="name"
