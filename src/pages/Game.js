@@ -4,20 +4,26 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import fetchQuestions from '../services/FetchQuestions';
+import { setScoreAction } from '../redux/actions';
 
 class Game extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       questions: '',
       correctAnswer: '',
+      // answered: false,
+      assertions: 0, // acertos antes da formula
+      score: 0, // acertos depois da formula
       count: -1,
       disable: false,
       currentTime: 35,
+      difficulty: '',
     };
     this.requestAPI = this.requestAPI.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.addStyle = this.addStyle.bind(this);
+    this.scoreCalculator = this.scoreCalculator.bind(this);
   }
 
   componentDidMount() {
@@ -31,6 +37,57 @@ class Game extends Component {
       clearInterval(this.timerID);
       this.addStyle();
     }
+    this.saveScore();
+  }
+
+  setScoreState(score) {
+    const { setScoreInRedux } = this.props;
+    this.setState({
+      score,
+    });
+    setScoreInRedux(score);
+  }
+
+  scoreCalculator() {
+    const { difficulty, currentTime, score } = this.state;
+    const dez = 10;
+    const easy = 1;
+    const medium = 2;
+    const hard = 3;
+
+    const scoreEasy = dez + (easy * currentTime);
+    const scoreMedium = dez + (medium * currentTime);
+    const scoreHard = dez + (hard * currentTime);
+
+    let scoreFinal = score;
+    switch (difficulty) {
+    case 'easy':
+      scoreFinal += scoreEasy;
+      return scoreFinal;
+    case 'medium':
+      scoreFinal += scoreMedium;
+      return scoreFinal;
+    case 'hard':
+      scoreFinal += scoreHard;
+      return scoreFinal;
+    default:
+      return this.state;
+    }
+    // this.setState({ score: scoreFinal });
+  }
+
+  saveScore() {
+    const { name, email } = this.props;
+    const { assertions, score } = this.state;
+    const playerInfo = {
+      player: {
+        name,
+        assertions,
+        score,
+        gravatarEmail: email,
+      },
+    };
+    localStorage.setItem('state', JSON.stringify(playerInfo));
   }
 
   tick() {
@@ -45,6 +102,7 @@ class Game extends Component {
     const givenAnswer = target.innerHTML;
     if (givenAnswer === correctAnswer) {
       this.setState({ count: count + 1 });
+      this.setScoreState(this.scoreCalculator());
     }
     this.addStyle();
     this.setState({ disable: true, currentTime: 0 });
@@ -56,6 +114,7 @@ class Game extends Component {
     this.setState({
       questions: allQuestions.results,
       correctAnswer: allQuestions.results[0].correct_answer,
+      difficulty: allQuestions.results[0].difficulty,
     });
   }
 
@@ -116,13 +175,17 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, currentTime } = this.state;
+    const { questions, currentTime, difficulty, score } = this.state;
     return (
       <div>
         <Header />
         <h1>TRIVIA</h1>
-        {questions ? this.mapQuestions(questions) : <Loading />}
-        { `TIMER: ${currentTime}` }
+        {`Dificuldade: ${difficulty}`}
+        {questions ? this.mapQuestions(questions)
+          : <Loading />}
+        <span>{ `TIMER: ${currentTime}` }</span>
+        <br />
+        <span>{ `Sua pontuação é ${score}`}</span>
       </div>
     );
   }
@@ -130,10 +193,20 @@ class Game extends Component {
 
 Game.propTypes = {
   token: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  setScoreInRedux: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   token: state.gameReducers.token,
+  name: state.gameReducers.name,
+  score: state.gameReducers.score,
+  email: state.gameReducers.email,
 });
 
-export default connect(mapStateToProps, null)(Game);
+const mapDispatchToProps = (dispatch) => ({
+  setScoreInRedux: (score) => dispatch(setScoreAction(score)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);

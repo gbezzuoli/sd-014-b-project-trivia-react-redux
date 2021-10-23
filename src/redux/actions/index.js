@@ -2,7 +2,7 @@ export const ACTIONS = {
   GET_TOKEN: 'GET_TOKEN',
   GET_NAME_AND_EMAIL: 'GET_NAME_AND_EMAIL',
   GET_AVATAR: 'GET_AVATAR',
-  GET_SCORE: 'GET_SCORE',
+  SET_SCORE: 'SET_SCORE',
   GET_QUESTIONS: 'GET_QUESTIONS',
 };
 
@@ -22,8 +22,8 @@ export const getAvatarAction = (profileImage) => ({
   payload: profileImage,
 });
 
-export const getScoreAction = (score) => ({
-  type: ACTIONS.GET_SCORE,
+export const setScoreAction = (score) => ({
+  type: ACTIONS.SET_SCORE,
   payload: score,
 });
 
