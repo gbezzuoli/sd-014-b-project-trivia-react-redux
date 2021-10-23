@@ -19,21 +19,18 @@ class AlternativeCard extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick({ target: { name } }) {
+  async handleClick({ target: { name } }) {
     this.setState((state) => ({
       showAnswer: !state.showAnswer,
     }));
 
     const { timeIsOverDispatch } = this.props;
-    timeIsOverDispatch(true);
+    await timeIsOverDispatch(true);
 
     if (name === 'correct') {
       const { player } = JSON.parse(localStorage.getItem('state'));
-      console.log(player);
       const { counter, questions, controller } = this.props;
       const questionObject = questions[controller];
-
-      console.log(counter);
 
       const updateScore = (questionDifficulty, timeLeft) => {
         switch (questionDifficulty) {
@@ -48,12 +45,9 @@ class AlternativeCard extends Component {
         }
       };
 
-      console.log(counter);
-
       player.assertions += 1;
       player.score += updateScore(questionObject.difficulty, counter);
       localStorage.setItem('state', JSON.stringify({ player }));
-      console.log(counter);
     }
   }
 
