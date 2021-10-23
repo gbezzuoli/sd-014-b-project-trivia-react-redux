@@ -21,7 +21,7 @@ class Header extends Component {
         />
         <br />
         <span data-testid="header-score">
-          { score }
+          {`Sua pontuação é ${score}`}
         </span>
       </div>
     );

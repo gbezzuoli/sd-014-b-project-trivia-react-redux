@@ -17,7 +17,7 @@ class Game extends Component {
       score: 0, // acertos depois da formula
       count: -1,
       disable: false,
-      currentTime: 35,
+      currentTime: 30,
       difficulty: '',
     };
     this.requestAPI = this.requestAPI.bind(this);
@@ -63,17 +63,19 @@ class Game extends Component {
     switch (difficulty) {
     case 'easy':
       scoreFinal += scoreEasy;
+      this.setState({ score: scoreFinal });
       return scoreFinal;
     case 'medium':
       scoreFinal += scoreMedium;
+      this.setState({ score: scoreFinal });
       return scoreFinal;
     case 'hard':
       scoreFinal += scoreHard;
+      this.setState({ score: scoreFinal });
       return scoreFinal;
     default:
       return this.state;
     }
-    // this.setState({ score: scoreFinal });
   }
 
   saveScore() {
@@ -104,8 +106,8 @@ class Game extends Component {
       this.setState({ count: count + 1 });
       this.setScoreState(this.scoreCalculator());
     }
-    this.addStyle();
     this.setState({ disable: true, currentTime: 0 });
+    this.addStyle();
   }
 
   async requestAPI() {
@@ -119,12 +121,12 @@ class Game extends Component {
   }
 
   mapQuestions(questions) {
-    const { disable, timer } = this.state;
+    const { disable, currentTime } = this.state;
     const mappedQuestions = questions.map((question, index1) => {
       const incorrectAnswers = question.incorrect_answers.map((alternative, index2) => (
         <button
           type="button"
-          disabled={ disable || timer === 0 }
+          disabled={ disable || currentTime === 0 }
           data-testid={ `wrong-answer-${index2}` }
           className="wrongButton"
           key={ index2 }
@@ -136,7 +138,7 @@ class Game extends Component {
       const correctAnswer = (
         <button
           type="button"
-          disabled={ disable || timer === 0 }
+          disabled={ disable || currentTime === 0 }
           data-testid="correct-answer"
           className="correctButton"
           key="4"
@@ -175,7 +177,8 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, currentTime, difficulty, score } = this.state;
+    // const { questions, currentTime, difficulty, score } = this.state;
+    const { questions, currentTime, difficulty } = this.state;
     return (
       <div>
         <Header />
@@ -185,7 +188,7 @@ class Game extends Component {
           : <Loading />}
         <span>{ `TIMER: ${currentTime}` }</span>
         <br />
-        <span>{ `Sua pontuação é ${score}`}</span>
+        {/* <span>{ `Sua pontuação é ${score}`}</span> */}
       </div>
     );
   }
