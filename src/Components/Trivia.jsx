@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 import requestTrivia from '../services/trivia';
 import { addResultsToState, addScore } from '../Redux/actions';
 import getQuestions from '../services/getQuestions';
 import Button from './Button';
 import Timer from './Timer';
-import { Redirect } from 'react-router';
 
 class Trivia extends Component {
   constructor() {
