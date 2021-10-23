@@ -177,7 +177,6 @@ class Game extends Component {
   }
 
   render() {
-    // const { questions, currentTime, difficulty, score } = this.state;
     const { questions, currentTime, difficulty } = this.state;
     return (
       <div>
@@ -188,7 +187,6 @@ class Game extends Component {
           : <Loading />}
         <span>{ `TIMER: ${currentTime}` }</span>
         <br />
-        {/* <span>{ `Sua pontuação é ${score}`}</span> */}
       </div>
     );
   }
