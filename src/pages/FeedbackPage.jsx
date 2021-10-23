@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import HeaderFeedback from '../components/HeaderFeedback';
+import Header from '../components/Header';
 
 class FeedbackPage extends Component {
   render() {
@@ -10,7 +10,7 @@ class FeedbackPage extends Component {
     const condi = assertions < MIN_ASSERTIONS;
     return (
       <section>
-        <HeaderFeedback />
+        <Header />
         <h1>Feedback Page</h1>
         <section>
           <p data-testid="feedback-text">

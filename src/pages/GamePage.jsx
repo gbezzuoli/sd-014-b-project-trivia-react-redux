@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-// import Question from '../components/Question';
+import { connect } from 'react-redux';
+import { submitScore } from '../redux/actions';
 import requestQuestions from '../services/requestQuestions';
 import Header from '../components/Header';
 
@@ -14,6 +15,7 @@ class GamePage extends Component {
     this.state = {
       result: [],
       questOne: [],
+      difficulty: '',
       wrongAnswersOne: [],
       rightAnswerOne: '',
       corr: '',
@@ -37,46 +39,36 @@ class GamePage extends Component {
   }
 
   onClickAnswer() {
-    const { result, i } = this.state;
+    const { i } = this.state;
     const { history } = this.props;
-    const MAX_ANSWERS = 4;
     console.log('O índice atual é: ', i);
-    // if (i === 0) {
-    //   i += 1;
-    // }
-    // Na o início do jogo, ao resposder a primeira pergunta,
-    // o indíce era somado + de 1 vez .
-    try {
-      if (i > MAX_ANSWERS) history.push('/feedback');
-      this.setState({
-        i: i + 1,
-        questOne: result[i].question,
-        wrongAnswersOne: result[i].incorrect_answers,
-        rightAnswerOne: result[i].correct_answer,
-        corr: '',
-        incor: '',
-        count: 30, // resetar o contador na próxima pergunta
-        isQuestionAnswered: false,
+    const MAX_QUESTIONS = 4;
 
-      });
-    } catch (error) {
-      console.log(error);
-      console.log('O indíce atual é: ', i);
+    if (i === MAX_QUESTIONS) {
+      history.push('/feedback');
+    } else {
+      try {
+        this.setState({
+          i: i + 1,
+        }, () => this.nextQuestion());
+      } catch (error) {
+        console.log(error);
+        console.log('O indíce atual é: ', i);
+      }
     }
   }
 
-  /** */
-  setBtnAnswerBorder() {
-    const { i } = this.state;
+  setBtnAnswerBorder({ target }) {
+    const { rightAnswerOne } = this.state;
     this.setState({
       incor: 'btn-answer',
       corr: 'correct-answer',
       isQuestionAnswered: true,
-      i: i === 0 ? i + 1 : i,
     });
-    /** this.setState({
-      i: i + 1, - Tava somando o estado + de 1 vez
-    }, () => this.nextQuestion()) - Tava triggando a próxima pergunta ao clicar na respota  */
+    clearInterval(this.countInterval);
+    if (target.innerText === rightAnswerOne) {
+      this.calculateScore();
+    }
   }
 
   async getQuestions() {
@@ -85,21 +77,55 @@ class GamePage extends Component {
     this.setState({
       result,
       questOne: result[i].question,
+      difficulty: result[i].difficulty,
       answers: [...result[i].incorrect_answers, result[i].correct_answer],
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
     }, () => this.startCounter());
-    this.randomAnswers();
   }
 
   nextQuestion() {
     const { i, result } = this.state;
-    this.setState({
-      questOne: result[i].question,
-      answers: [...result[i].incorrect_answers, result[i].correct_answer],
-      wrongAnswersOne: result[i].incorrect_answers,
-      rightAnswerOne: result[i].correct_answer,
-    });
+    try {
+      this.setState({
+        answers: [...result[i].incorrect_answers, result[i].correct_answer],
+        wrongAnswersOne: result[i].incorrect_answers,
+        rightAnswerOne: result[i].correct_answer,
+        difficulty: result[i].difficulty,
+        questOne: result[i].question,
+        isQuestionAnswered: false,
+        count: 30, // resetar o contador na próxima pergunta
+        corr: '',
+        incor: '',
+      }, () => this.startCounter());
+      console.log('O índice atual é: ', i);
+    } catch (error) {
+      console.log('O indíce atual é: ', i);
+      console.log(error);
+    }
+  }
+
+  calculateScore() {
+    const { count, difficulty } = this.state;
+    const { updateScore, score, assertions } = this.props;
+    let numDifficulty;
+    if (difficulty === 'hard') {
+      numDifficulty = (2 + 1);
+    } else if (difficulty === 'medium') {
+      numDifficulty = 2;
+    } else {
+      numDifficulty = 1;
+    }
+    const NUMBER = 10;
+    const newScore = score + NUMBER + (count * numDifficulty);
+    this.saveScoreInLocalStorage(newScore);
+    updateScore(newScore, (assertions + 1));
+  }
+
+  saveScoreInLocalStorage(score) {
+    const stateLocalStorage = JSON.parse(localStorage.getItem('state'));
+    stateLocalStorage.player.score = score;
+    localStorage.setItem('state', JSON.stringify(stateLocalStorage));
   }
 
   randomAnswers() {
@@ -178,9 +204,22 @@ class GamePage extends Component {
 }
 
 GamePage.propTypes = {
+  updateScore: PropTypes.func.isRequired,
+  score: PropTypes.number.isRequired,
+  assertions: PropTypes.number.isRequired,
   history: PropTypes.shape({
-    push: PropTypes.func,
+    push: PropTypes.func.isRequired,
   }).isRequired,
 };
 
-export default GamePage;
+const mapDispatchToProps = (dispatch) => ({
+  updateScore: (score, assertions) => dispatch(submitScore(score, assertions)),
+});
+
+const mapStateToProps = (state) => ({
+  gravatarEmail: state.playerReducer.gravatarEmail,
+  score: state.playerReducer.score,
+  assertions: state.playerReducer.assertions,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GamePage);
