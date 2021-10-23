@@ -1,8 +1,9 @@
-import { GAME_QUESTIONS } from '../actions/actions';
+import { GAME_QUESTIONS, GAME_COUNTER } from '../actions/actions';
 
 const initialState = {
+  counter: 30,
   questions: [],
-  isGameReady: true,
+  isGameReady: false,
 };
 
 export default function gameReducer(state = initialState, action) {
@@ -10,8 +11,13 @@ export default function gameReducer(state = initialState, action) {
   case GAME_QUESTIONS:
     return {
       ...state,
-      questions: action.payload.results,
-      isGameReady: false,
+      questions: action.payload,
+      isGameReady: true,
+    };
+  case GAME_COUNTER:
+    return {
+      ...state,
+      counter: action.payload,
     };
   default:
     return state;

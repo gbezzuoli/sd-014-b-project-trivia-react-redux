@@ -6,6 +6,7 @@ export const USER_LOGIN = 'USER_LOGIN';
 export const USER_AVATAR = 'USER_AVATAR';
 export const USER_TOKEN = 'USER_TOKEN';
 export const GAME_QUESTIONS = 'GAME_QUESTIONS';
+export const GAME_COUNTER = 'GAME_COUNTER';
 
 export const login = (value) => ({
   type: USER_LOGIN,
@@ -24,6 +25,11 @@ export const userToken = (value) => ({
 
 export const gameQuestions = (value) => ({
   type: GAME_QUESTIONS,
+  payload: value,
+});
+
+export const gameCounter = (value) => ({
+  type: GAME_COUNTER,
   payload: value,
 });
 

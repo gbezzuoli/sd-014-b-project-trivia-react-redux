@@ -23,7 +23,7 @@ export default function userReducer(state = initialState, action) {
   case USER_TOKEN:
     return ({
       ...state,
-      token: action.payload.token,
+      token: action.payload,
     });
   default:
     return state;
