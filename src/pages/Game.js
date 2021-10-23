@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { thunkQuestions } from '../actions';
 import AlternativeCard from '../components/AlternativeCard';
+import GoRankingButton from '../components/GoRankingButton';
 import ButtonNext from '../components/ButtonNext';
 import Header from '../components/Header';
+import PlayAgainButton from '../components/PlayAgainButton';
 import QuestionCard from '../components/QuestionCard';
 import Timer from '../components/Timer';
-import PlayAgainButton from '../components/PlayAgainButton';
-import GoRankingButton from '../components/GoRankingButton';
 
 class Game extends Component {
   constructor() {
