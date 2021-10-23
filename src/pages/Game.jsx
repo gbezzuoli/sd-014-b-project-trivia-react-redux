@@ -8,13 +8,6 @@ import { fetchAvatar, fetchQuestions } from '../redux/actions/actions';
 import GameCard from '../components/GameCard';
 
 class Game extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { counter: 30,
-    };
-    this.setCounter = this.setCounter.bind(this);
-  }
-
   componentDidMount() {
     const { email, token, getAvatar, getQuestions } = this.props;
     getAvatar(email);
@@ -22,21 +15,8 @@ class Game extends Component {
     localStorage.setItem('token', JSON.stringify(token));
   }
 
-  componentDidUpdate() {
-    const { counter } = this.state;
-    const ONE_SECOND = 1000;
-    return (
-      counter > 0 && setTimeout(() => this.setCounter(counter - 1), ONE_SECOND)
-    );
-  }
-
-  setCounter(value) {
-    this.setState({ counter: value });
-  }
-
   render() {
     const { name, avatar, questions, isGameReady, playerScore } = this.props;
-    const { counter } = this.state;
     return (
       <>
         <header>
@@ -47,7 +27,6 @@ class Game extends Component {
         <hr />
         <main>
           {!isGameReady && <GameCard question={ questions[0] } />}
-          <div>{`Tempo Restante: ${counter}`}</div>
           <button type="button" onClick={ this.setPlayer }>Entrar</button>
         </main>
       </>

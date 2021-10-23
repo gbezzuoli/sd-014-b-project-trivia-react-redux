@@ -10,23 +10,72 @@ class GameCard extends Component {
     this.state = {
       correctColor: '',
       wrongColor: '',
+      assertions: 0,
+      scorePlayer: 0,
+      timer: 30,
     };
     this.onClickColorCorrect = this.onClickColorCorrect.bind(this);
     this.onClickColorIncorrect = this.onClickColorIncorrect.bind(this);
+    this.calcScore = this.calcScore.bind(this);
+    this.setLocalStorage = this.setLocalStorage.bind(this);
   }
 
-  onClickColorCorrect(difficulty) {
+  componentDidMount() {
+    localStorage.removeItem('state');
+    this.setTimer();
+  }
+
+  async onClickColorCorrect(difficulty, timer) {
+    const { scorePlayer } = this.state;
     const { getScore } = this.props;
     this.setState({
       correctColor: 'correctColor',
       wrongColor: 'wrongColor',
     });
+    await this.calcScore(difficulty, timer);
+    this.setLocalStorage();
+    getScore(scorePlayer);
+  }
+
+  onClickColorIncorrect() {
+    this.setState({
+      correctColor: 'correctColor',
+      wrongColor: 'wrongColor',
+    });
+  }
+
+  setTimer() {
+    const { timer } = this.state;
+    const second = 1000;
+
+    if (timer > 0) {
+      setInterval(() => {
+        this.setState((prevState) => ({ timer: prevState.timer - 1 }));
+      }, second);
+    }
+  }
+
+  setLocalStorage() {
+    const { assertions, scorePlayer } = this.state;
+    const { email, name } = this.props;
+
+    const player = {
+      name,
+      assertions,
+      score: scorePlayer,
+      gravatarEmail: email,
+    };
+
+    localStorage.setItem('state', JSON.stringify(player));
+  }
+
+  calcScore(difficulty, timer) {
+    const { scorePlayer } = this.state;
     const dez = 10;
     let total = 0;
     const HARD = 3;
     const MEDIUM = 2;
-    const timer = 1;
-
+    console.log(timer);
     if (difficulty === 'hard') {
       total += dez + (timer * HARD);
     }
@@ -38,24 +87,18 @@ class GameCard extends Component {
     if (difficulty === 'easy') {
       total += dez + timer;
     }
-    getScore(total);
-  }
-
-  onClickColorIncorrect() {
-    this.setState({
-      correctColor: 'correctColor',
-      wrongColor: 'wrongColor',
-    });
-    console.log('ERRADO');
+    this.setState((prevState) => ({
+      scorePlayer: scorePlayer + total,
+      assertions: prevState.assertions + 1 }));
   }
 
   render() {
-    const { correctColor, wrongColor } = this.state;
+    const { correctColor, wrongColor, timer } = this.state;
     const { question } = this.props;
     const RANDOM = 5;
     const correct = (
       <button
-        onClick={ () => this.onClickColorCorrect(question.difficulty) }
+        onClick={ () => this.onClickColorCorrect(question.difficulty, timer) }
         data-testid="correct-answer"
         type="button"
         id="correct"
@@ -86,6 +129,7 @@ class GameCard extends Component {
         <p data-testid="question-category">{question.category}</p>
         <h1 data-testid="question-text">{question.question}</h1>
         <ul>{options}</ul>
+        <div>{`Tempo Restante: ${timer}`}</div>
       </div>
     );
   }
@@ -94,11 +138,16 @@ class GameCard extends Component {
 GameCard.propTypes = {
   question: PropTypes.objectOf(PropTypes.any).isRequired,
 };
-
+function mapStateToProps(state) {
+  return {
+    name: state.user.name,
+    email: state.user.email,
+  };
+}
 function mapDispatchToProps(dispatch) {
   return {
     getScore: (playerScore) => dispatch(score(playerScore)),
   };
 }
 
-export default connect(null, mapDispatchToProps)(GameCard);
+export default connect(mapStateToProps, mapDispatchToProps)(GameCard);
