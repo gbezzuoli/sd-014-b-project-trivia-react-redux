@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { requestTriviaApi } from '../../services/Api';
+import './Game.css';
 
 export default class Game extends Component {
   constructor() {
     super();
     this.state = {
+      correct: '',
+      wrong: '',
       questions: {
         results: [
           {
@@ -23,6 +26,7 @@ export default class Game extends Component {
     this.sortArray = this.sortArray.bind(this);
     this.printQuestions = this.printQuestions.bind(this);
     this.renderButton = this.renderButton.bind(this);
+    this.changeBorderColor = this.changeBorderColor.bind(this);
   }
 
   async componentDidMount() {
@@ -45,7 +49,10 @@ export default class Game extends Component {
       const arrayWithDataTest = array.map((anwser, index) => {
         const dataTest = index < WrongAnswers
           ? `wrong-answer-${index}` : 'correct-answer';
-        return (renderButton(dataTest, index, anwser));
+        const { wrong, correct } = this.state;
+        const classes = index < WrongAnswers
+          ? { wrong } : { correct };
+        return (renderButton(dataTest, index, anwser, classes));
       });
       return sortArray(arrayWithDataTest);
     }
@@ -59,13 +66,21 @@ export default class Game extends Component {
     return sortArray(arrayWithDataTest);
   }
 
-  renderButton(dataTest, index, anwser) {
+  changeBorderColor() {
+    this.setState({
+      correct: 'correctColor',
+      wrong: 'wrongColor',
+    });
+  }
+
+  renderButton(dataTest, index, anwser, classes) {
     return (
       <button
         type="button"
         data-testId={ dataTest }
         key={ index }
-        className={ dataTest }
+        className={ classes }
+        onClick={ this.changeBorderColor }
       >
         {anwser}
       </button>);
