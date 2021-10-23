@@ -11,10 +11,11 @@ const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case SUBMIT_PLAYER:
     return {
-      ...state,
-      name: action.player,
-      gravatarEmail: action.email,
-      token: action.token,
+      ...state, // precisa?
+      name: action.state.name,
+      assertions: action.state.assertion,
+      score: action.state.score,
+      gravatarEmail: action.state.gravatarEmail,
     };
   default:
     return state;
