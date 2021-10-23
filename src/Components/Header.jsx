@@ -7,13 +7,6 @@ import '../styles/Header.css';
 class Header extends Component {
   constructor(props) {
     super(props);
-    const { name, gravatarEmail, score } = this.props;
-    this.state = {
-      name,
-      gravatarEmail,
-      score,
-    };
-
     this.getProfilePic = this.getProfilePic.bind(this);
   }
 
@@ -23,7 +16,7 @@ class Header extends Component {
   }
 
   render() {
-    const { name, gravatarEmail, score } = this.state;
+    const { name, gravatarEmail, score } = this.props;
     return (
       <header className="game-header">
         <img
@@ -48,4 +41,4 @@ const mapStateToProps = ({ player: { name, gravatarEmail, score } }) => ({
   name, gravatarEmail, score,
 });
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, null)(Header);
