@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import '../css/buttonCss.css';
+import { showNext } from '../redux/actions';
 
 class CardGame extends React.Component {
   constructor(props) {
@@ -48,22 +49,21 @@ class CardGame extends React.Component {
   }
 
   handleAnswerClick() {
+    const { toogleNextButton } = this.props;
     const brothers = document.querySelectorAll('button');
     // getAttribute feito com base no stackoverflow
     brothers.forEach((brother) => {
       if (brother.getAttribute('data-testid') === 'correct-answer') {
         brother.classList.add('right-answer');
-        // this.setState({ hidden: false });
       } else if (brother.getAttribute('data-testid').includes('wrong-answer')) {
         brother.classList.add('wrong-answer');
-        // this.setState({ hidden: false });
       }
     });
-    // this.setState({ hidden: false });
+    toogleNextButton(true);
   }
 
   render() {
-    const { question: { category, question }, next, timer } = this.props;
+    const { question: { category, question }, next, timer, showNextBtn } = this.props;
     const randomAnswers = this.parseAnswerInObject();
     let count = 0;
     // const timer = Number(document.querySelector('#timer'));
@@ -96,7 +96,7 @@ class CardGame extends React.Component {
           );
         }) }
         <input
-          // style={ { display: hidden ? 'none' : 'inline-block' } }
+          style={ { display: showNextBtn ? 'inline-block' : 'none' } }
           type="button"
           value="Proxima"
           onClick={ () => { next(); } }
@@ -109,6 +109,11 @@ class CardGame extends React.Component {
 
 const mapStateToProps = ({ game }) => ({
   timer: game.timer,
+  showNextBtn: game.next,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  toogleNextButton: (boolean) => dispatch(showNext(boolean)),
 });
 
 CardGame.propTypes = {
@@ -120,6 +125,8 @@ CardGame.propTypes = {
   }).isRequired,
   next: PropTypes.func.isRequired,
   timer: PropTypes.bool.isRequired,
+  toogleNextButton: PropTypes.func.isRequired,
+  showNextBtn: PropTypes.bool.isRequired,
 };
 
-export default connect(mapStateToProps)(CardGame);
+export default connect(mapStateToProps, mapDispatchToProps)(CardGame);

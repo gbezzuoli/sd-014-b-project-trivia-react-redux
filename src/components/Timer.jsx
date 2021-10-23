@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { refreshTimer,
-  resetTimer as resetTimerAction } from '../redux/actions';
+  resetTimer as resetTimerAction,
+  showNext } from '../redux/actions';
 
 const ONE_SECOND = 1000;
 
@@ -39,10 +40,11 @@ class Timer extends React.Component {
 
   render() {
     /* Contador feito pelo Guilherme Gomes 14-b */
-    const { resetTimer, countdown, refreshCountdown } = this.props;
+    const { resetTimer, countdown, refreshCountdown, showNextBtn } = this.props;
     if (countdown === 0) {
       clearInterval(this.timer);
       refreshCountdown(0);
+      showNextBtn(true);
       resetTimer(true);
     }
     return (<span>{ countdown }</span>);
@@ -57,12 +59,18 @@ const mapStateToProps = ({ game }) => ({
 const mapDispatchToProps = (dispatch) => ({
   resetTimer: (timer) => dispatch(resetTimerAction(timer)),
   refreshCountdown: (timer) => dispatch(refreshTimer(timer)),
+  showNextBtn: (boolean) => dispatch(showNext(boolean)),
 });
+
+Timer.defaultProps = {
+  showNextBtn: undefined,
+};
 
 Timer.propTypes = {
   countdown: PropTypes.number.isRequired,
   refreshCountdown: PropTypes.func.isRequired,
   resetTimer: PropTypes.func.isRequired,
+  showNextBtn: PropTypes.func,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timer);

@@ -5,7 +5,8 @@ import CardGame from '../components/CardGame';
 import Header from '../components/Header';
 // import getQuestions from '../services/fetchQuestionsAPI';
 import { addCount, fetchQuestions, refreshTimer as refreshTimerAction,
-  resetTimer as resetTimerAction } from '../redux/actions';
+  resetTimer as resetTimerAction,
+  showNext } from '../redux/actions';
 import Timer from '../components/Timer';
 
 const ONE_SECOND = 1000;
@@ -36,8 +37,9 @@ class Game extends React.Component {
 
   handleClick() {
     const { history, count, increaseCount,
-      refreshTimer, resetTimer } = this.props;
+      refreshTimer, resetTimer, toogleNextButton } = this.props;
     resetTimer(false);
+    toogleNextButton(false);
     const FOUR = 4;
     const buttons = document.querySelectorAll('button');
     refreshTimer(RESET_COUNTDOWN);
@@ -66,7 +68,12 @@ class Game extends React.Component {
   }
 
   render() {
-    const { count, questions, countdown } = this.props;
+    const { count, questions, countdown, toogleNextButton, showNextBtn } = this.props;
+    if (countdown === 0 || showNextBtn === true) {
+      clearInterval(this.timer);
+      toogleNextButton(true);
+    }
+
     return (
       <div>
         <Header />
@@ -85,6 +92,7 @@ const mapStateToProps = ({ game }) => ({
   questions: game.questions,
   timer: game.timer,
   countdown: game.countdown,
+  showNextBtn: game.next,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -92,6 +100,7 @@ const mapDispatchToProps = (dispatch) => ({
   retrieveQuestions: (token) => dispatch(fetchQuestions(token)),
   refreshTimer: (time) => dispatch(refreshTimerAction(time)),
   resetTimer: (timer) => dispatch(resetTimerAction(timer)),
+  toogleNextButton: (boolean) => dispatch(showNext(boolean)),
 });
 
 Game.defaultProps = {
@@ -109,6 +118,8 @@ Game.propTypes = {
   retrieveQuestions: PropTypes.func.isRequired,
   refreshTimer: PropTypes.func.isRequired,
   resetTimer: PropTypes.func.isRequired,
+  toogleNextButton: PropTypes.func.isRequired,
+  showNextBtn: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

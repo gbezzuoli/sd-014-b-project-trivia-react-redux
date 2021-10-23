@@ -5,6 +5,7 @@ export const ADD_COUNT = 'ADD_COUNT';
 export const GET_QUESTIONS = 'GET_QUESTIONS';
 export const STOP_TIMER = 'STOP_TIMER';
 export const REFRESH_TIMER = 'REFRESH_TIMER';
+export const SHOW_NEXT = 'SHOW_NEXT';
 
 export const loginInfo = (payload) => ({
   type: LOGIN_INFO,
@@ -33,5 +34,10 @@ export const resetTimer = (payload) => ({
 
 export const refreshTimer = (payload) => ({
   type: REFRESH_TIMER,
+  payload,
+});
+
+export const showNext = (payload) => ({
+  type: SHOW_NEXT,
   payload,
 });
