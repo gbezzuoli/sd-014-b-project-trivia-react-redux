@@ -2,8 +2,8 @@ import { Route, Switch } from 'react-router';
 import React from 'react';
 import Login from '../pages/Login';
 import Game from '../pages/Game';
-import Feedback from '../pages/Feedback';
 import Ranking from '../pages/Ranking';
+import Feedback from '../pages/Feedback';
 import Config from '../pages/Config';
 
 class Content extends React.Component {
