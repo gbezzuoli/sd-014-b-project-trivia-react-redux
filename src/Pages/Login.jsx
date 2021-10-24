@@ -63,7 +63,7 @@ class Login extends Component {
     const disabled = name.length > 0 && gravatarEmail.length > 0;
     return (
       <main className="login-page">
-        <form action="">
+        <form>
           <Input
             type="text"
             className="input-player-name"

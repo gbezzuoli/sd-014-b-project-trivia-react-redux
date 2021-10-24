@@ -42,14 +42,16 @@ class Trivia extends Component {
   }
 
   goToNextQuestion() {
-    const { actualQuestion, results } = this.state;
-    if (actualQuestion < results.length - 1) {
-      this.setState((prevSt) => ({
-        actualQuestion: prevSt.actualQuestion + 1,
-        endQuestion: false,
-        clickCorrectAnswer: false,
-      }));
-    } else { this.setState({ endGame: true }); }
+    this.setState(({ results, actualQuestion }) => {
+      if (actualQuestion < results.length - 1) {
+        return {
+          actualQuestion: actualQuestion + 1,
+          endQuestion: false,
+          clickCorrectAnswer: false,
+        };
+      }
+      return { endGame: true };
+    });
   }
 
   handleAnswerClick() {
