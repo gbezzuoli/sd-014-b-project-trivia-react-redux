@@ -13,17 +13,11 @@ const BASE_SCORE = 10;
 class AlternativeCard extends Component {
   constructor() {
     super();
-    this.state = {
-      showAnswer: false,
-    };
+
     this.handleClick = this.handleClick.bind(this);
   }
 
   async handleClick({ target: { name } }) {
-    this.setState((state) => ({
-      showAnswer: !state.showAnswer,
-    }));
-
     const { timeIsOverDispatch } = this.props;
     await timeIsOverDispatch(true);
 
@@ -52,8 +46,7 @@ class AlternativeCard extends Component {
   }
 
   render() {
-    const { showAnswer } = this.state;
-    const { questions, controller, disabled } = this.props;
+    const { questions, controller, timeIsOver } = this.props;
     const array = questions[controller];
     let accum = 0;
     const answers = [array.correct_answer, ...array.incorrect_answers];
@@ -65,8 +58,8 @@ class AlternativeCard extends Component {
             accum += 1;
             return (
               <Alternative
-                disabled={ disabled }
-                className={ showAnswer ? 'incorrect' : '' }
+                disabled={ timeIsOver }
+                className={ timeIsOver ? 'incorrect' : '' }
                 name="incorrect"
                 key={ index }
                 testid={ `wrong-answer-${accum - 1}` }
@@ -77,8 +70,8 @@ class AlternativeCard extends Component {
           }
           return (
             <Alternative
-              disabled={ disabled }
-              className={ showAnswer ? 'correct' : '' }
+              disabled={ timeIsOver }
+              className={ timeIsOver ? 'correct' : '' }
               name="correct"
               key={ index }
               testid="correct-answer"
@@ -92,10 +85,11 @@ class AlternativeCard extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  questions: state.questionsReducer.questions,
-  disabled: state.questionsReducer.timeIsOver,
-  counter: state.questionsReducer.counter,
+const mapStateToProps = ({ questionsReducer: { questions,
+  counter, timeIsOver } }) => ({
+  questions,
+  counter,
+  timeIsOver,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -111,8 +105,8 @@ AlternativeCard.propTypes = {
     ),
   }),
   controller: PropTypes.number,
-  disabled: PropTypes.bool,
   timeIsOverDispatch: PropTypes.func.isRequired,
+  timeIsOver: PropTypes.bool.isRequired,
 }.isRequired;
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlternativeCard);

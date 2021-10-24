@@ -28,7 +28,9 @@ class PlayAgainButton extends Component {
 }
 
 PlayAgainButton.propTypes = {
-  history: PropTypes.objectOf(PropTypes.object).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default PlayAgainButton;

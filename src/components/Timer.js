@@ -13,23 +13,25 @@ class Timer extends Component {
 
   componentDidMount() {
     const ONE_SECOND = 1000;
-
     this.timerInterval = setInterval(() => {
       this.setState((prevState) => ({ counter: prevState.counter - 1 }));
     }, ONE_SECOND);
   }
 
   componentDidUpdate() {
-    const { timeIsOverDispatch, timeIsOver } = this.props;
     const { counter } = this.state;
+    const { timeIsOverDispatch } = this.props;
     const END_POINT = 0;
-    if (counter === END_POINT || timeIsOver) {
-      timeIsOverDispatch(true, counter);
+    if (counter === END_POINT) {
+      timeIsOverDispatch(true);
       clearInterval(this.timerInterval);
     }
   }
 
   componentWillUnmount() {
+    const { timeIsOverDispatch } = this.props;
+    const { counter } = this.state;
+    timeIsOverDispatch(true, counter);
     clearInterval(this.timerInterval);
   }
 
@@ -50,7 +52,6 @@ const mapDispatchToProps = (dispatch) => ({
 
 Timer.propTypes = {
   timeIsOverDispatch: PropTypes.func.isRequired,
-  timeIsOver: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timer);

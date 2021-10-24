@@ -15,7 +15,10 @@ class Header extends Component {
           src={ gravatarImage }
         />
         <h1 data-testid="header-player-name">{ name }</h1>
-        <p data-testid="header-score">{`Pontuação: ${score}`}</p>
+        <p>
+          Pontos:
+          <span data-testid="header-score">{score}</span>
+        </p>
       </header>
     );
   }

@@ -26,7 +26,9 @@ class GoRankingButton extends Component {
 }
 
 GoRankingButton.propTypes = {
-  history: PropTypes.objectOf(PropTypes.object).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default GoRankingButton;
