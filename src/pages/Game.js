@@ -33,7 +33,6 @@ class Game extends Component {
   handleClick() {
     const MIN_LENGTH = 4;
     const { controller } = this.state;
-    console.log(controller);
     const { timeIsOverDispatch, history } = this.props;
     this.setState({
       controller: controller + 1,
@@ -53,7 +52,7 @@ class Game extends Component {
     };
 
     const { controller } = this.state;
-    const { loading, timeIsOver, history } = this.props;
+    const { loading, timeIsOver, history, counter } = this.props;
     return (
       <>
         <Header />
@@ -65,7 +64,7 @@ class Game extends Component {
               { timeIsOver && <ButtonNext
                 handleClick={ this.handleClick }
               /> }
-              {timeIsOver ? 'timer: 0' : <Timer />}
+              {timeIsOver ? `timer: ${counter}` : <Timer />}
             </main>)}
         <PlayAgainButton history={ history } />
       </>
@@ -73,9 +72,10 @@ class Game extends Component {
   }
 }
 
-const mapStateToProps = ({ questionsReducer: { loading, timeIsOver } }) => ({
+const mapStateToProps = ({ questionsReducer: { loading, timeIsOver, counter } }) => ({
   loading,
   timeIsOver,
+  counter,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -91,6 +91,7 @@ Game.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
   timeIsOverDispatch: PropTypes.func.isRequired,
+  counter: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

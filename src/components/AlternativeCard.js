@@ -86,9 +86,8 @@ class AlternativeCard extends Component {
 }
 
 const mapStateToProps = ({ questionsReducer: { questions,
-  disabled, counter, timeIsOver } }) => ({
+  counter, timeIsOver } }) => ({
   questions,
-  disabled,
   counter,
   timeIsOver,
 });

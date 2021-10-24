@@ -9,7 +9,6 @@ class Timer extends Component {
     this.state = {
       counter: 30,
     };
-    this.resetSeconds = this.resetSeconds.bind(this);
   }
 
   componentDidMount() {
@@ -34,10 +33,6 @@ class Timer extends Component {
     const { counter } = this.state;
     timeIsOverDispatch(true, counter);
     clearInterval(this.timerInterval);
-  }
-
-  resetSeconds() {
-    this.setState({ counter: 0 });
   }
 
   render() {
