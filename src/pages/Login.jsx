@@ -17,6 +17,14 @@ class Login extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  componentDidMount() {
+    document.body.style.background = '#202020';
+  }
+
+  componentWillUnmount() {
+    document.body.style.background = '';
+  }
+
   handleChange({ target }) {
     const { name, value } = target;
     this.setState({
