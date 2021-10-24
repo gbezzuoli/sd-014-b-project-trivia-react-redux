@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import GoHomeButton from '../components/GoHomeButton';
-import PlayAgainButton from '../components/PlayAgainButton';
 
 class Ranking extends Component {
   render() {
     const { history } = this.props;
     return (
-      <>
-        <PlayAgainButton history={ history } />
+      <div>
         <GoHomeButton history={ history } />
-      </>
+      </div>
     );
   }
 }
 
 Ranking.propTypes = {
-  history: PropTypes.arrayOf(Object).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default Ranking;
