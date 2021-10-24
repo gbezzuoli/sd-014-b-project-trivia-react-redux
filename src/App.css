@@ -23,7 +23,7 @@ header {
 .box input {
   background: none;
   border: 0;
-  border-bottom: 2px solid #3498db;
+  border-bottom: 2px solid #3a54e9;
   color: white;
   display: block;
   margin: 20px auto;
@@ -41,8 +41,8 @@ header {
 
 .box button {
   background: none;
-  border: 2px solid gold;
-  border-radius: 17px;
+  border: 2px solid #3a59e9;
+  border-radius: 20px;
   color: white;
   cursor: pointer;
   display: block;
@@ -57,4 +57,5 @@ header {
 .box button:hover {
   background: gold;
   border-color: gold;
+  color: black;
 }
