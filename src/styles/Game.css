@@ -1,0 +1,25 @@
+.game {
+  align-items: center;
+  background-color: #282c34;
+  color: white;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+}
+
+.settings {
+  left: 0;
+  position: absolute;
+  top: 14px;
+}
+
+.game-container {
+  background-color: #282c34;
+  height: 50%;
+  width: 80%;
+}
+
+.name {
+  color: white;
+  display: block;
+}

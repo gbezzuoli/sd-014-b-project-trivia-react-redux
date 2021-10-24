@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 import { fetchApiQuestions } from '../action';
 import Questions from '../components/Questions';
+import '../styles/Game.css';
 
 class Game extends Component {
 /*   constructor(props) {
@@ -20,24 +21,27 @@ class Game extends Component {
     const { history, name, email } = this.props;
     console.log(`https://www.gravatar.com/avatar/${md5(email).toString()}`);
     return (
-      <>
+      <div className="game">
         <button
+          className="settings"
           type="button"
           data-testid="btn-settings"
           onClick={ () => history.push('/settings') }
         >
           Settings
         </button>
-        <header>
-          <span data-testid="header-player-name">{ name }</span>
-          <img
-            src={ `https://www.gravatar.com/avatar/${md5(email).toString()}` }
-            alt="avatar"
-            data-testid="header-profile-picture"
-          />
-        </header>
-        <Questions history={ history } />
-      </>
+        <div className="game-container">
+          <header>
+            <span className="name" data-testid="header-player-name">{ name }</span>
+            <img
+              src={ `https://www.gravatar.com/avatar/${md5(email).toString()}` }
+              alt="avatar"
+              data-testid="header-profile-picture"
+            />
+          </header>
+          <Questions history={ history } />
+        </div>
+      </div>
     );
   }
 }

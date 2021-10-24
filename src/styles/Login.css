@@ -1,0 +1,35 @@
+.login {
+  align-items: center;
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+}
+
+label {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+  max-width: 400px;
+  text-align: center;
+  width: 100%;
+}
+
+input {
+  font-size: 18px;
+  height: 28px;
+}
+
+input:focus {
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+  font-size: 18px;
+  height: 36px;
+  margin: 0 14px;
+  width: 100px;
+}

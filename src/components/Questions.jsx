@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import '../styles/Questions.css';
 
 class Questions extends React.Component {
   constructor(props) {
@@ -125,16 +126,17 @@ class Questions extends React.Component {
     const { timer, questionIndex } = this.state;
 
     const incorrect = questions[questionIndex].incorrect_answers.map((item, index) => (
-      <button
-        key={ item }
-        onClick={ this.handleClick }
-        type="button"
-        className="incorrect-answer"
-        data-testid={ `wrong-answer-${index}` }
-        disabled={ timer === 0 }
-      >
-        { item }
-      </button>
+      <div key={ item }>
+        <button
+          onClick={ this.handleClick }
+          type="button"
+          className="incorrect-answer"
+          data-testid={ `wrong-answer-${index}` }
+          disabled={ timer === 0 }
+        >
+          { item }
+        </button>
+      </div>
     ));
 
     const correct = (
@@ -169,23 +171,38 @@ class Questions extends React.Component {
       );
     }
     return (
-      <div>
-        <span data-testid="header-score">{ currentPonts.player.score }</span>
-        <h2 data-testid="question-category">{ questions[questionIndex].category }</h2>
-        <h2 data-testid="question-text">{ questions[questionIndex].question}</h2>
-        <div>{ timer }</div>
-        { questions[questionIndex].type === 'boolean' ? this.boolean() : this.multiple() }
-        { !buttonNext
-          && (
-            <button
-              type="button"
-              data-testid="btn-next"
-              disabled={ buttonNext }
-              onClick={ this.handleNext }
-            >
-              Próxima
-            </button>
-          )}
+      <div className="question">
+        <span className="time" data-testid="header-score">
+          <p>Score:</p>
+          { currentPonts.player.score }
+        </span>
+        <h2 className="quest" data-testid="question-category">
+          { questions[questionIndex].category }
+        </h2>
+        <h2 className="quest" data-testid="question-text">
+          { questions[questionIndex].question}
+        </h2>
+        <div className="time">
+          <p>Time left:</p>
+          { timer }
+        </div>
+        <div className="answer">
+          {
+            questions[questionIndex].type === 'boolean' ? this.boolean() : this.multiple()
+          }
+          { !buttonNext
+            && (
+              <button
+                className="next"
+                type="button"
+                data-testid="btn-next"
+                disabled={ buttonNext }
+                onClick={ this.handleNext }
+              >
+                Próxima
+              </button>
+            )}
+        </div>
       </div>
     );
   }

@@ -1,0 +1,10 @@
+.settings-container {
+  align-items: center;
+  background-color: #282c34;
+  color: white;
+  display: flex;
+  font-size: 60px;
+  height: 100vh;
+  justify-content: center;
+  width: 100vw;
+}

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import logo from '../trivia.png';
 import { user as userAction } from '../action';
+import '../styles/Login.css';
 
 class Login extends Component {
   constructor() {
@@ -41,10 +42,10 @@ class Login extends Component {
     const { name, email } = this.state;
     const { history } = this.props;
     return (
-      <>
+      <div className="login">
         { this.bonitinho() }
         <label htmlFor="name">
-          name
+          Name:
           <input
             type="text"
             id="name"
@@ -63,22 +64,24 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
         </label>
-        <button
-          type="button"
-          data-testid="btn-play"
-          disabled={ !(name && email) }
-          onClick={ this.handleClick }
-        >
-          Jogar
-        </button>
-        <button
-          type="button"
-          data-testid="btn-settings"
-          onClick={ () => history.push('/settings') }
-        >
-          Settings
-        </button>
-      </>
+        <div>
+          <button
+            type="button"
+            data-testid="btn-play"
+            disabled={ !(name && email) }
+            onClick={ this.handleClick }
+          >
+            Jogar
+          </button>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            onClick={ () => history.push('/settings') }
+          >
+            Settings
+          </button>
+        </div>
+      </div>
     );
   }
 }

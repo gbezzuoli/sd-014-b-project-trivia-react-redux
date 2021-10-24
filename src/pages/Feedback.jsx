@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import md5 from 'crypto-js/md5';
+import '../styles/Feedback.css';
 
 export default class Feedback extends Component {
   componentDidMount = () => {
@@ -39,8 +40,8 @@ export default class Feedback extends Component {
      ranking: { name: nome-da-pessoa, score: 10, picture: url-da-foto-no-gravatar }
     ] */
     return (
-      <div>
-        <header>
+      <div className="feedback-container">
+        <header className="header-container">
           <span data-testid="header-player-name">{ user.player.name }</span>
           <img
             src={ `https://www.gravatar.com/avatar/${md5(user.player.email).toString()}` }
@@ -49,7 +50,6 @@ export default class Feedback extends Component {
           />
           <span data-testid="header-score">{ user.player.score }</span>
         </header>
-        Feedback
         <div data-testid="feedback-text">
           { user.player.assertions < 2 + 1 ? 'Podia ser melhor...' : 'Mandou bem!' }
         </div>
@@ -57,20 +57,22 @@ export default class Feedback extends Component {
           <p data-testid="feedback-total-question">{ user.player.assertions }</p>
           <span data-testid="feedback-total-score">{ user.player.score }</span>
         </div>
-        <button
-          type="button"
-          data-testid="btn-play-again"
-          onClick={ () => history.push('/') }
-        >
-          Jogar novamente
-        </button>
-        <button
-          onClick={ () => history.push('/ranking') }
-          type="button"
-          data-testid="btn-ranking"
-        >
-          Ver ranking
-        </button>
+        <div className="btns">
+          <button
+            type="button"
+            data-testid="btn-play-again"
+            onClick={ () => history.push('/') }
+          >
+            Jogar novamente
+          </button>
+          <button
+            onClick={ () => history.push('/ranking') }
+            type="button"
+            data-testid="btn-ranking"
+          >
+            Ver ranking
+          </button>
+        </div>
       </div>
     );
   }
