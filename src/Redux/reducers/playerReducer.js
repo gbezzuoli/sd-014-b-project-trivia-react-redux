@@ -1,4 +1,9 @@
-import { ADD_PLAYER_EMAIL_AND_NAME, ADD_PLAYER_TOKEN, ADD_SCORE } from '../actions';
+import {
+  ADD_PLAYER_EMAIL_AND_NAME,
+  ADD_PLAYER_TOKEN,
+  ADD_SCORE,
+  RESET_TOTAL_SCORE,
+} from '../actions';
 
 const INITIAL_STATE = {
   name: '',
@@ -27,6 +32,8 @@ const playerReducer = (state = INITIAL_STATE, action) => {
       score: action.payload,
       assertions: state.assertions + 1,
     };
+  case RESET_TOTAL_SCORE:
+    return INITIAL_STATE;
   default:
     return state;
   }
