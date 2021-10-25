@@ -77,7 +77,6 @@ class Login extends React.Component {
         <Link to="/configuration" data-testid="btn-settings">
           <button
             type="button"
-            onClick=""
           >
             Configurações
           </button>

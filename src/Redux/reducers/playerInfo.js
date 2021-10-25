@@ -1,4 +1,4 @@
-import { SAVE_PLAYER_INFO } from '../actions';
+import { SAVE_PLAYER_INFO, SAVE_URL_GRAVATAR } from '../actions';
 
 const INITIAL_STATE = {
   player: {
@@ -15,6 +15,11 @@ function playerInfo(state = INITIAL_STATE, action) {
     return {
       ...state,
       player: { ...state.player, ...action.player },
+    };
+  case SAVE_URL_GRAVATAR:
+    return {
+      ...state,
+      gravatarUrl: action.gravatarUrl,
     };
   default:
     return state;

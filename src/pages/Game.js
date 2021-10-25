@@ -56,7 +56,6 @@ class Game extends Component {
       this.setState((prevState) => ({
         count: prevState.count - 1,
       }));
-      console.log('abaate');
     }, second);
   }
 

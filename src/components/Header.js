@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
+import { saveUrlGravatarAction } from '../Redux/actions';
 
 class Header extends Component {
   constructor(props) {
@@ -15,8 +16,9 @@ class Header extends Component {
   }
 
   requestGravatar() {
-    const { player: { gravatarEmail } } = this.props;
+    const { player: { gravatarEmail }, saveUrlGravatar } = this.props;
     const hash = md5(gravatarEmail).toString();
+    saveUrlGravatar(`https://www.gravatar.com/avatar/${hash}`);
     return `https://www.gravatar.com/avatar/${hash}`;
   }
 
@@ -40,6 +42,7 @@ Header.propTypes = {
   player: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
   scores: PropTypes.number.isRequired,
+  saveUrlGravatar: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -47,4 +50,8 @@ const mapStateToProps = (state) => ({
   score: state.playerInfo.player.score,
 });
 
-export default connect(mapStateToProps, null)(Header);
+const mapDispatchToProps = (dispatch) => ({
+  saveUrlGravatar: (gravatarUrl) => dispatch(saveUrlGravatarAction(gravatarUrl)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
