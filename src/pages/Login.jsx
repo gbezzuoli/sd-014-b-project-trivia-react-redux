@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { fetchTokenAction } from '../redux/actions/TokenAction';
+import { fetchQuestionsAction } from '../redux/actions/questionsAction';
 import { getUser } from '../redux/actions/userAction';
 
 class Login extends React.Component {
@@ -16,6 +16,12 @@ class Login extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleClickSettings = this.handleClickSettings.bind(this);
+  }
+
+  componentDidMount() {
+    const { fetchAPI } = this.props;
+    fetchAPI();
   }
 
   handleChange(event) {
@@ -25,11 +31,18 @@ class Login extends React.Component {
     });
   }
 
-  handleClick() {
+  async handleClick() {
     const { userName, userEmail } = this.state;
-    const { fetchAPI, setUserInfo } = this.props;
-    fetchAPI();
+    const { fetchAPI, setUserInfo, fetchAPIQuestions, history } = this.props;
+    await fetchAPI();
     setUserInfo(userName, userEmail);
+    await fetchAPIQuestions();
+    history.push('/Game');
+  }
+
+  handleClickSettings() {
+    const { history } = this.props;
+    history.push('/settings');
   }
 
   render() {
@@ -55,21 +68,23 @@ class Login extends React.Component {
               onChange={ this.handleChange }
             />
           </label>
-          <Link to="/game">
-            <button
-              data-testid="btn-play"
-              type="submit"
-              name="button"
-              disabled={ userName.length <= 0 || userEmail.length <= 0 }
-              onClick={ this.handleClick }
-            >
-              Jogar
-            </button>
-          </Link>
+          <button
+            data-testid="btn-play"
+            type="button"
+            name="button"
+            disabled={ userName.length <= 0 || userEmail.length <= 0 }
+            onClick={ this.handleClick }
+          >
+            Jogar
+          </button>
         </form>
-        <Link to="/settings">
-          <button data-testid="btn-settings" type="button">Configurações</button>
-        </Link>
+        <button
+          data-testid="btn-settings"
+          type="button"
+          onClick={ this.handleClickSettings }
+        >
+          Configurações
+        </button>
       </div>
     );
   }
@@ -77,6 +92,7 @@ class Login extends React.Component {
 const mapDispatchToProps = (dispatch) => ({
   fetchAPI: () => dispatch(fetchTokenAction()),
   setUserInfo: (userName, userEmail) => dispatch(getUser(userName, userEmail)),
+  fetchAPIQuestions: () => dispatch(fetchQuestionsAction()),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
@@ -84,4 +100,6 @@ export default connect(null, mapDispatchToProps)(Login);
 Login.propTypes = {
   fetchAPI: PropTypes.func.isRequired,
   setUserInfo: PropTypes.func.isRequired,
+  fetchAPIQuestions: PropTypes.func.isRequired,
+  history: PropTypes.shape().isRequired,
 };
