@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from '../Component/Header';
 import Timer from '../Component/Timer';
+import { addScore } from '../redux/actions';
 
 class Trivia extends Component {
   constructor() {
@@ -10,6 +11,7 @@ class Trivia extends Component {
     this.state = {
       questionIndex: 0,
       timer: 30,
+      score: 0,
     };
     this.handleColorClick = this.handleColorClick.bind(this);
     this.startTimer = this.startTimer.bind(this);
@@ -32,6 +34,8 @@ class Trivia extends Component {
 
   // consultado o pr do grupo 9
   handleColorClick() {
+    const { sendScore } = this.props;
+    const { score } = this.state;
     const getAllButtons = document.querySelectorAll('button');
     getAllButtons.forEach((btn) => {
       if (btn.value === 'wrong-ans') {
@@ -41,14 +45,15 @@ class Trivia extends Component {
         btn.style.border = '3px solid rgb(6, 240, 15)';
       }
     });
+    sendScore(score);
   }
 
   render() {
     const { receviQuestions } = this.props;
-    const { questionIndex, timer } = this.state;
+    const { questionIndex, timer, score } = this.state;
     return (
       <div>
-        <Header />
+        <Header score={ score } />
         <Timer count={ timer } />
         <p data-testid="question-category">{receviQuestions[questionIndex].category}</p>
         <p data-testid="question-text">{receviQuestions[questionIndex].question}</p>
@@ -87,10 +92,15 @@ Trivia.propTypes = {
     correct_answer: PropTypes.string,
     incorrect_answers: PropTypes.arrayOf(PropTypes.string),
   })).isRequired,
+  sendScore: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   receviQuestions: state.trivia.questions,
 });
 
-export default connect(mapStateToProps)(Trivia);
+const mapDispatchToProps = (dispatch) => ({
+  sendScore: (score) => dispatch(addScore(score)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Trivia);
