@@ -1,3 +1,6 @@
+// Referência para implementação da Contagem Regressiva: Zhiyue Yi
+// src: https://dev.to/zhiyueyi/how-to-create-a-simple-react-countdown-timer-4mc3
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -13,17 +16,13 @@ class Game extends Component {
   }
 
   render() {
-    const { name, avatar, questions, isGameReady } = this.props;
-
+    const { questions, isGameReady } = this.props;
     return (
       <>
-        <header>
-          <img data-testid="header-profile-picture" src={ avatar } alt="" />
-          <span data-testid="header-player-name">{name}</span>
-          <span data-testid="header-score">{`Pontos: ${0}`}</span>
-        </header>
         <hr />
-        <main>{!isGameReady && <GameCard question={ questions[0] } />}</main>
+        <main>
+          {!isGameReady && <GameCard question={ questions[0] } />}
+        </main>
       </>
     );
   }
@@ -32,10 +31,10 @@ class Game extends Component {
 const mapStateToProps = (state) => ({
   name: state.user.name,
   email: state.user.email,
-  avatar: state.user.avatar,
   token: state.user.token,
   questions: state.game.questions,
   isGameReady: state.game.isGameReady,
+  playerScore: state.user.score,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -44,9 +43,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 Game.propTypes = {
-  name: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
   questions: PropTypes.arrayOf(PropTypes.any).isRequired,
   isGameReady: PropTypes.bool.isRequired,
