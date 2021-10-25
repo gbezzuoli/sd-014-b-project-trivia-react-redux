@@ -18,7 +18,7 @@ class Game extends Component {
       alternativesArray: [],
       assertions: 0,
       score: 0,
-      count: 0,
+      count: 1,
       disable: false,
       currentTime: 30,
       difficulty: '',
@@ -127,13 +127,14 @@ class Game extends Component {
 
   async requestAPI() {
     const { token } = this.props;
+    const { count } = this.state;
     const questionData = await fetchQuestions(token);
     this.setState({
-      questions: questionData.results[0],
-      correctAnswer: questionData.results[0].correct_answer,
-      wrongAnswers: questionData.results[0].incorrect_answers,
-      difficulty: questionData.results[0].difficulty,
-      category: questionData.results[0].category,
+      questions: questionData.results[count],
+      correctAnswer: questionData.results[count].correct_answer,
+      wrongAnswers: questionData.results[count].incorrect_answers,
+      difficulty: questionData.results[count].difficulty,
+      category: questionData.results[count].category,
     });
     this.shuffleQuestions();
   }
@@ -183,9 +184,11 @@ class Game extends Component {
   handleNextQuestion(count) {
     const maxNumberOfQuestions = 5;
     if (count <= maxNumberOfQuestions) {
-      console.log('Próxima');
+      this.setState({ count: count + 1 });
+      // função que reatualiza a página
     } else {
-      console.log('Fim de jogo');
+      // levar pra feedback
+      console.log('feedback');
     }
   }
 
@@ -194,7 +197,7 @@ class Game extends Component {
     return (
       <div>
         <button
-          type="button"
+          type="submit"
           data-testid="btn-next"
           onClick={ this.handleNextQuestion(count) }
         >
