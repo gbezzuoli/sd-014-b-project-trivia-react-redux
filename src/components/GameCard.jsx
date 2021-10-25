@@ -14,16 +14,32 @@ class GameCard extends Component {
     super();
 
     this.state = {
+      intervalId: 0,
+      timer: 30,
       questions: [],
       loading: true,
+      // player: {
+      //   name: '',
+      //   assertions: 0,
+      //   score: 0,
+      //   gravatarEmail: '',
+      // },
     };
 
     this.getQuestionsFromApi = this.getQuestionsFromApi.bind(this);
     this.renderAnswers = this.renderAnswers.bind(this);
+    this.renderTimer = this.renderTimer.bind(this);
+    this.decrementTimer = this.decrementTimer.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
   }
 
   componentDidMount() {
     this.getQuestionsFromApi();
+    this.renderTimer();
+  }
+
+  componentDidUpdate() {
+    this.stopTimer();
   }
 
   async getQuestionsFromApi() {
@@ -41,20 +57,44 @@ class GameCard extends Component {
     // dispatchQuestions(questions);
   }
 
+  stopTimer() {
+    const { timer, intervalId } = this.state;
+    if (!timer) {
+      clearInterval(intervalId);
+    }
+  }
+
+  decrementTimer() {
+    this.setState((prevTimer) => ({
+      timer: prevTimer.timer - 1,
+    }));
+  }
+
+  renderTimer() {
+    const SECOND = 1000;
+    const intervalId = setInterval(this.decrementTimer, SECOND);
+    this.setState({ intervalId });
+  }
+
   renderAnswers() {
-    const { questions } = this.state;
+    const { questions, timer } = this.state;
     const { index } = this.props;
     const correctAnswer = questions[index].correct_answer;
     const incorrectAnswer = questions[index].incorrect_answers;
     if (index < LAST_QUESTION) {
       return (
         <div>
-          <button type="button" data-testid="correct-answer">
+          <button type="button" data-testid="correct-answer" disabled={ !timer }>
             {parse(correctAnswer)}
           </button>
           {
             incorrectAnswer.map((answer, key) => (
-              <button type="button" key={ key } data-testid={ `wrong-answer-${key}` }>
+              <button
+                disabled={ !timer }
+                type="button"
+                key={ key }
+                data-testid={ `wrong-answer-${key}` }
+              >
                 {parse(answer)}
               </button>
             ))
@@ -67,7 +107,6 @@ class GameCard extends Component {
   renderQuestion() {
     const { index } = this.props;
     const { questions } = this.state;
-    console.log(index);
     if (index < LAST_QUESTION) {
       return (
         <div>
@@ -84,7 +123,7 @@ class GameCard extends Component {
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, timer } = this.state;
 
     if (loading) {
       return <Loading />;
@@ -93,6 +132,9 @@ class GameCard extends Component {
       <div>
         {this.renderQuestion()}
         {this.renderAnswers()}
+        <div>
+          {`Tempo: ${timer}`}
+        </div>
       </div>
     );
   }
