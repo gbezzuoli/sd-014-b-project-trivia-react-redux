@@ -5,29 +5,13 @@ import { getRequestTriviaGame } from '../redux/actions';
 import Loading from './Loading';
 
 class QuestionsTrivia extends Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true,
-    };
-    this.changeLoading = this.changeLoading.bind(this);
-  }
-
   componentDidMount() {
     const { getQuestions } = this.props;
     getQuestions();
-    this.changeLoading();
-  }
-
-  changeLoading() {
-    this.setState({
-      loading: false,
-    });
   }
 
   render() {
-    const { questionsObj } = this.props;
-    const { loading } = this.state;
+    const { questionsObj, loading } = this.props;
 
     if (loading) {
       return <Loading />;
@@ -52,7 +36,6 @@ class QuestionsTrivia extends Component {
             { answer }
           </button>
         )) }
-        <button type="button" onClick={ this.qualquer }>OMG</button>
       </div>
     );
   }
@@ -60,9 +43,10 @@ class QuestionsTrivia extends Component {
 QuestionsTrivia.propTypes = {
   questionsObj: PropTypes.arrayOf(PropTypes.any).isRequired,
   getQuestions: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 const mapStateToProps = (state) => ({
-  questionsObj: state.questionsReducer.questions.payload,
+  questionsObj: state.questionsReducer.questions,
   loading: state.questionsReducer.loading,
 });
 

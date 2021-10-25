@@ -1,7 +1,7 @@
 import { GET_TOKEN, REQUEST_API, SUCCESS_API } from '../actions/index';
 
 const INITIAL_STATE = {
-  token: '',
+  token: localStorage.getItem('token') ? localStorage.getItem('token') : '',
 };
 
 export default (state = INITIAL_STATE, action) => {
