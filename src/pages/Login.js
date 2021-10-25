@@ -46,7 +46,6 @@ class Login extends React.Component {
         gravatarEmail: email,
       },
     };
-
     localStorage.setItem('token', JSON.stringify(token));
     localStorage.setItem('state', JSON.stringify(player));
 
