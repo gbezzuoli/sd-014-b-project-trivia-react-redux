@@ -103,7 +103,6 @@ class Questions extends Component {
   }
 
   render() {
-    console.log('Question:', this.handleNextQuestion);
     const {
       state: {
         lestQuestion,
