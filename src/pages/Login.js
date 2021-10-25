@@ -44,6 +44,15 @@ class Login extends Component {
     const { getNameAndEmail } = this.props;
     const { nameInput, emailInput } = this.state;
     getNameAndEmail(nameInput, emailInput);
+    const playerInfo = {
+      player: {
+        name: nameInput,
+        assetions: 0,
+        score: 0,
+        gravatarEmail: emailInput,
+      },
+    };
+    localStorage.setItem('state', JSON.stringify(playerInfo));
   }
 
   renderForm() {
