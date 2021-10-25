@@ -1,10 +1,11 @@
-import { USER_LOGIN, USER_TOKEN, USER_AVATAR } from '../actions/actions';
+import { USER_LOGIN, USER_TOKEN, USER_AVATAR, GAME_SCORE } from '../actions/actions';
 
 const initialState = {
   name: '',
   email: '',
   avatar: '',
   token: '',
+  score: 0,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -24,6 +25,11 @@ export default function userReducer(state = initialState, action) {
     return ({
       ...state,
       token: action.payload.token,
+    });
+  case GAME_SCORE:
+    return ({
+      ...state,
+      score: action.payload,
     });
   default:
     return state;
