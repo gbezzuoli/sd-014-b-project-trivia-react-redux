@@ -12,7 +12,6 @@ class CardGame extends React.Component {
     this.shuffleArray = this.shuffleArray.bind(this);
     this.parseAnswerInObject = this.parseAnswerInObject.bind(this);
     this.generateAnswersButtons = this.generateAnswersButtons.bind(this);
-
   }
 
   // shouldComponentUpdate(nextProps) {

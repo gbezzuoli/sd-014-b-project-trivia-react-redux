@@ -15,9 +15,9 @@ const RESET_COUNTDOWN = 30;
 class Game extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      start: false,
-    };
+    // this.state = {
+    //   start: false,
+    // };
     this.retriveQuestions = this.retriveQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
     // this.tiktak = this.tiktak.bind(this);
