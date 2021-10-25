@@ -66,6 +66,7 @@ class Game extends Component {
 
   nextButtonClick() {
     this.setState((state) => ({ index: state.index + 1, next: false, timer: 30 }));
+    this.timer();
   }
 
   timer() {
