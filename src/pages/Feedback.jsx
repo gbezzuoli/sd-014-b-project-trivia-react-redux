@@ -17,11 +17,9 @@ class Feedback extends Component {
           Pontos:
           <span data-testid="header-score">{score}</span>
         </header>
-        {assertions <= three ? (
-          <p data-testid="feedback-text">Podia ser melhor...</p>
-        ) : (
-          <p data-testid="feedback-text">Mandou Bem!</p>
-        )}
+        <div data-testid="feedback-text">
+          {assertions >= three ? 'Mandou bem!' : 'Podia ser melhor...' }
+        </div>
       </div>
     );
   }
