@@ -5,7 +5,6 @@ import { thunkQuestions, timeIsOver as timeIsOverAction } from '../actions';
 import AlternativeCard from '../components/AlternativeCard';
 import ButtonNext from '../components/ButtonNext';
 import Header from '../components/Header';
-import PlayAgainButton from '../components/PlayAgainButton';
 import QuestionCard from '../components/QuestionCard';
 import Timer from '../components/Timer';
 
@@ -38,6 +37,17 @@ class Game extends Component {
       controller: controller + 1,
     });
     if (controller === MIN_LENGTH) {
+      const ranking = JSON.parse(localStorage.getItem('ranking'));
+      const { player } = JSON.parse(localStorage.getItem('state'));
+      if (!ranking) {
+        console.log('entrou');
+        localStorage.setItem('ranking', JSON.stringify({
+          players: [player],
+        }));
+      } else {
+        const players = [...ranking.players, player];
+        localStorage.setItem('ranking', JSON.stringify({ players }));
+      }
       history.push('/feedback');
     }
     timeIsOverDispatch(false);
@@ -52,7 +62,7 @@ class Game extends Component {
     };
 
     const { controller } = this.state;
-    const { loading, timeIsOver, history, counter } = this.props;
+    const { loading, timeIsOver, counter } = this.props;
     return (
       <>
         <Header />
@@ -66,7 +76,6 @@ class Game extends Component {
               /> }
               {timeIsOver ? `timer: ${counter}` : <Timer />}
             </main>)}
-        <PlayAgainButton history={ history } />
       </>
     );
   }
