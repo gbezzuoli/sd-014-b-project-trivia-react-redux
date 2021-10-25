@@ -123,3 +123,5 @@ Jogo.propTypes = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Jogo);
+
+// fd
