@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Input from '../Components/Input';
 import Button from '../Components/Button';
 import requestToken from '../services/token';
-import { addPlayerEmailAndName, addPlayerToken } from '../Redux/actions';
+import { addPlayerEmailAndName, addPlayerToken, resetTotalScore } from '../Redux/actions';
 
 class Login extends Component {
   constructor() {
@@ -19,6 +19,11 @@ class Login extends Component {
       gravatarEmail: '',
       redirect: false,
     };
+  }
+
+  componentDidMount() {
+    const { dispatchResetTotalScore } = this.props;
+    dispatchResetTotalScore();
   }
 
   handleChange({ target: { name, value } }) {
@@ -107,6 +112,7 @@ Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  dispatchResetTotalScore: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => (
@@ -115,6 +121,7 @@ const mapDispatchToProps = (dispatch) => (
     dispatchPlayerNameAndEmail: (emailAndName) => dispatch(
       addPlayerEmailAndName(emailAndName),
     ),
+    dispatchResetTotalScore: () => dispatch(resetTotalScore()),
   }
 );
 
