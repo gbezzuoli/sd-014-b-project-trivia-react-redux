@@ -63,6 +63,7 @@ class Game extends Component {
 
   handleLocalStorage(result, target) {
     const { name, email, score } = this.props;
+
     if (!localStorage.getItem('state')) {
       const player = {
         name,
