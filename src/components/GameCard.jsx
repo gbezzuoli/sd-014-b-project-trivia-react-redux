@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import parse from 'html-react-parser'; // soluciona caracteres estranhos na resposta da API
 import { Redirect } from 'react-router';
 import { getId } from '../services/triviaAPI';
+import './styles/game.css';
 // import FeedbackText from './FeedbackText';
 import Loading from './Loading';
 
@@ -16,10 +17,12 @@ class GameCard extends Component {
     this.state = {
       questions: [],
       loading: true,
+      btnShow: false,
     };
 
     this.getQuestionsFromApi = this.getQuestionsFromApi.bind(this);
     this.renderAnswers = this.renderAnswers.bind(this);
+    this.checkedQuestions = this.checkedQuestions.bind(this);
   }
 
   componentDidMount() {
@@ -35,10 +38,24 @@ class GameCard extends Component {
       questions: json.results,
       loading: false,
     });
+  }
 
-    // const { questions } = this.state;
-    // const { dispatchQuestions } = this.props;
-    // dispatchQuestions(questions);
+  checkedQuestions({ target }) {
+    const { questions } = this.state;
+    const { index } = this.props;
+    const btnAnswers = target.dataset.testid;
+    const btns = document.querySelectorAll('button');
+    console.log(btnAnswers);
+    if (btnAnswers === 'correct-answer') {
+      target.classList.add('correct');
+    }
+    console.log(btns);
+    btns.forEach((btn) => {
+      if (btn.dataset.testid !== 'correct-answer') {
+        return btn.classList.add('wrong');
+      }
+      return btn.classList.add('correct');
+    });
   }
 
   renderAnswers() {
@@ -46,17 +63,34 @@ class GameCard extends Component {
     const { index } = this.props;
     const correctAnswer = questions[index].correct_answer;
     const incorrectAnswer = questions[index].incorrect_answers;
+    const btnCorrect = (
+      <button
+        type="button"
+        data-testid="correct-answer"
+        onClick={ this.checkedQuestions }
+      >
+        {parse(correctAnswer)}
+      </button>
+    );
+    const btnIncorret = (
+      incorrectAnswer.map((answer, key) => (
+        <button
+          type="button"
+          key={ key }
+          data-testid={ `wrong-answer-${key}` }
+          onClick={ this.checkedQuestions }
+        >
+          {parse(answer)}
+        </button>
+      ))
+    );
+    const totalQuestions = [...btnIncorret, btnCorrect];
     if (index < LAST_QUESTION) {
       return (
         <div>
-          <button type="button" data-testid="correct-answer">
-            {parse(correctAnswer)}
-          </button>
           {
-            incorrectAnswer.map((answer, key) => (
-              <button type="button" key={ key } data-testid={ `wrong-answer-${key}` }>
-                {parse(answer)}
-              </button>
+            totalQuestions.sort().map((element, key) => (
+              <p key={ key }>{ element }</p>
             ))
           }
         </div>
@@ -67,7 +101,6 @@ class GameCard extends Component {
   renderQuestion() {
     const { index } = this.props;
     const { questions } = this.state;
-    console.log(index);
     if (index < LAST_QUESTION) {
       return (
         <div>
