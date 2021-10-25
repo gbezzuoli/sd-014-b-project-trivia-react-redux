@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 class QuestionCard extends Component {
   render() {
     const { questions, controller } = this.props;
+    console.log(controller);
     const { category, question } = questions[controller];
     return (
       <section>
