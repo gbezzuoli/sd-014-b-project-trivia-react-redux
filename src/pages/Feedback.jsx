@@ -17,20 +17,21 @@ class Feedback extends Component {
   feedbackMessages() {
     const { assertions, score } = this.props;
     const NUMBER = 3;
+    const scoreElement = (
+      <>
+        <h2 data-testid="feedback-total-score">
+          { score }
+        </h2>
+        <h3 data-testid="feedback-total-question">
+          { assertions }
+        </h3>
+      </>
+    );
     if (assertions < NUMBER && assertions > 0) {
       return (
         <>
           <h1 data-testid="feedback-text">Podia ser melhor...</h1>
-          <h2 data-testid="feedback-total-score">
-            Placar final:
-            {' '}
-            { score }
-          </h2>
-          <h3 data-testid="feedback-total-question">
-            Você acertou:
-            {' '}
-            { assertions }
-          </h3>
+          { scoreElement }
         </>
       );
     }
@@ -38,22 +39,16 @@ class Feedback extends Component {
       return (
         <>
           <h1 data-testid="feedback-text">Mandou bem!</h1>
-          <h2 data-testid="feedback-total-score">
-            Placar final:
-            {' '}
-            { score }
-          </h2>
-          <h3 data-testid="feedback-total-question">
-            Você acertou:
-            {' '}
-            { assertions }
-          </h3>
+          { scoreElement }
         </>
       );
     }
     if (assertions === 0) {
       return (
-        <h1 data-testid="feedback-total-question">Não acertou nenhuma pergunta</h1>
+        <>
+          <h1 data-testid="feedback-text">Não acertou nenhuma pergunta</h1>
+          { scoreElement }
+        </>
       );
     }
   }

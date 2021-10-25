@@ -149,6 +149,7 @@ class Trivia extends Component {
               type="button"
               disabled={ timer === 0 || questionAnswered }
               value="wrong-ans"
+              // className={ questionAnswered ? 'wrongAnswer' : '' }
             >
               {question}
             </button>
@@ -160,6 +161,7 @@ class Trivia extends Component {
           type="button"
           disabled={ timer === 0 || questionAnswered }
           value="correct-ans"
+          // className={ questionAnswered ? 'correctAnswer' : '' }
         >
           { receviQuestions[questionIndex].correct_answer }
         </button>
