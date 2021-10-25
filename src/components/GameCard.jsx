@@ -93,6 +93,7 @@ class GameCard extends Component {
         type="button"
         data-testid="correct-answer"
         onClick={ this.checkedQuestions }
+        disabled={ !timer }
       >
         {parse(correctAnswer)}
       </button>
@@ -104,6 +105,7 @@ class GameCard extends Component {
           key={ key }
           data-testid={ `wrong-answer-${key}` }
           onClick={ this.checkedQuestions }
+          disabled={ !timer }
         >
           {parse(answer)}
         </button>
@@ -113,19 +115,6 @@ class GameCard extends Component {
     if (index < LAST_QUESTION) {
       return (
         <div>
-          <button type="button" data-testid="correct-answer" disabled={ !timer }>
-            {parse(correctAnswer)}
-          </button>
-          {
-            incorrectAnswer.map((answer, key) => (
-              <button
-                disabled={ !timer }
-                type="button"
-                key={ key }
-                data-testid={ `wrong-answer-${key}` }
-              >
-                {parse(answer)}
-              </button>
           {
             totalQuestions.sort().map((element, key) => (
               <p key={ key }>{ element }</p>
@@ -143,10 +132,10 @@ class GameCard extends Component {
       return (
         <div>
           <h1 data-testid="question-text">
-            {`Question: ${parse(questions[index].question)}`}
+            {parse(questions[index].question)}
           </h1>
           <h2 data-testid="question-category">
-            {`Category:${parse(questions[index].category)}`}
+            {parse(questions[index].category)}
           </h2>
         </div>
       );
