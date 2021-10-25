@@ -17,13 +17,9 @@ class Game extends Component {
 
   render() {
     const { questions, isGameReady } = this.props;
+    console.log(questions);
     return (
-      <>
-        <hr />
-        <main>
-          {!isGameReady && <GameCard question={ questions[0] } />}
-        </main>
-      </>
+      <main>{!isGameReady && <GameCard question={ questions } />}</main>
     );
   }
 }

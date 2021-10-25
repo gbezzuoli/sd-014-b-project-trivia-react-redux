@@ -13,12 +13,17 @@ class GameCard extends Component {
       assertions: 0,
       scorePlayer: 0,
       timer: 30,
+      nextAsk: false,
+      changeAsk: 0,
     };
     this.onClickColorCorrect = this.onClickColorCorrect.bind(this);
     this.onClickColorIncorrect = this.onClickColorIncorrect.bind(this);
     this.calcScore = this.calcScore.bind(this);
     this.setLocalStorage = this.setLocalStorage.bind(this);
     this.cancelTime = this.cancelTime.bind(this);
+    this.showBtnNext = this.showBtnNext.bind(this);
+    this.showNextAsk = this.showNextAsk.bind(this);
+    this.buttonNext = this.buttonNext.bind(this);
   }
 
   componentDidMount() {
@@ -33,6 +38,7 @@ class GameCard extends Component {
     });
     await this.calcScore(difficulty, timer);
     this.setLocalStorage();
+    this.showBtnNext();
   }
 
   onClickColorIncorrect() {
@@ -40,6 +46,7 @@ class GameCard extends Component {
       correctColor: 'correctColor',
       wrongColor: 'wrongColor',
     });
+    this.showBtnNext();
   }
 
   setTimer() {
@@ -91,23 +98,57 @@ class GameCard extends Component {
     getScore(scorePlayer);
   }
 
+  showBtnNext() {
+    this.setState({
+      nextAsk: true,
+    });
+  }
+
+  showNextAsk() {
+    this.setState((state) => ({
+      changeAsk: state.changeAsk + 1,
+      nextAsk: false,
+    }));
+  }
+
+  header(avatar, name, scorePlayer) {
+    return (
+      <header>
+        <img data-testid="header-profile-picture" src={ avatar } alt="" />
+        <span data-testid="header-player-name">{name}</span>
+        <span data-testid="header-score">{`Pontos: ${scorePlayer}`}</span>
+      </header>);
+  }
+
+  buttonNext() {
+    return (
+      <button
+        type="button"
+        data-testid="btn-next"
+        onClick={ this.showNextAsk }
+      >
+        Próxima
+      </button>);
+  }
+
   render() {
-    const { correctColor, wrongColor, timer, scorePlayer } = this.state;
+    const { correctColor, wrongColor, timer, scorePlayer, nextAsk,
+      changeAsk } = this.state;
     const { question, name, avatar } = this.props;
     const RANDOM = 5;
     const correct = (
       <button
-        onClick={ () => this.onClickColorCorrect(question.difficulty) }
+        onClick={ () => this.onClickColorCorrect(question[changeAsk].difficulty) }
         disabled={ timer === 0 }
         data-testid="correct-answer"
         type="button"
         id="correct"
         className={ correctColor }
       >
-        {question.correct_answer}
+        {question[changeAsk].correct_answer}
       </button>
     );
-    const incorrects = question.incorrect_answers.map((element, index) => (
+    const incorrects = question[changeAsk].incorrect_answers.map((element, index) => (
       <button
         onClick={ this.onClickColorIncorrect }
         data-testid={ `wrong-answer-${index}` }
@@ -120,24 +161,19 @@ class GameCard extends Component {
         {element}
       </button>
     ));
-    // fazer o sort com essa callback não é a melhor coisa do mundo
     const answers = [correct, ...incorrects].sort(() => Math.random() - RANDOM);
     console.log(answers);
     const options = answers.map((answer) => <li key={ answer }>{answer}</li>);
-
     return (
       <div>
-        <header>
-          <img data-testid="header-profile-picture" src={ avatar } alt="" />
-          <span data-testid="header-player-name">{name}</span>
-          <span data-testid="header-score">{`Pontos: ${scorePlayer}`}</span>
-        </header>
+        {this.header(avatar, name, scorePlayer)}
         <div>
-          <p data-testid="question-category">{question.category}</p>
-          <h1 data-testid="question-text">{question.question}</h1>
+          <p data-testid="question-category">{question[changeAsk].category}</p>
+          <h1 data-testid="question-text">{question[changeAsk].question}</h1>
           <ul>{options}</ul>
           <div>{`Tempo Restante: ${timer}`}</div>
         </div>
+        {nextAsk && this.buttonNext()}
       </div>
     );
   }
