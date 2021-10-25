@@ -60,6 +60,7 @@ class Ranking extends Component {
 
     return (
       <div>
+        <h1 data-testid="ranking-title">Ranking</h1>
         { createRankingElements(handleLocalStorage()) }
         <button type="button" onClick={ handleClick } data-testid="btn-go-home">
           Início

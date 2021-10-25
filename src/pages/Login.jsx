@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { userLogin, fetchToken } from '../redux/actions';
 import './Login.css';
 import logo from '../trivia.png';
-import Loading from '../components/Loading';
 
 class Login extends Component {
   constructor(props) {
@@ -23,20 +22,24 @@ class Login extends Component {
     this.renderButtons = this.renderButtons.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.formElement = this.formElement.bind(this);
+    this.savePlayerAndToken = this.savePlayerAndToken.bind(this);
   }
 
   handleChange({ target: { name, value } }) {
     this.setState({ [name]: value });
   }
 
-  savePlayer() {
+  savePlayerAndToken() {
+    const { code } = this.props;
+    localStorage.setItem('token', JSON.stringify(code));
     localStorage.setItem('state', JSON.stringify({ player: { ...this.state } }));
   }
 
   handleClick() {
-    const { dispatchLogin, history } = this.props;
+    const { dispatchLogin, history, startFetching } = this.props;
+    startFetching();
     dispatchLogin({ ...this.state });
-    this.savePlayer();
+    this.savePlayerAndToken();
     history.push('/game');
   }
 
@@ -84,7 +87,6 @@ class Login extends Component {
 
   renderButtons() {
     const { gravatarEmail, name } = this.state;
-    const { startFetching } = this.props;
     const isValid = this.handleValidation(gravatarEmail, name);
 
     return (
@@ -92,7 +94,7 @@ class Login extends Component {
         <button
           type="button"
           data-testid="btn-play"
-          onClick={ startFetching }
+          onClick={ this.handleClick }
           disabled={ !isValid }
           className="settings"
         >
@@ -113,21 +115,9 @@ class Login extends Component {
   }
 
   render() {
-    const {
-      props: { redirect, code, isFetching },
-      formElement, handleClick,
-    } = this;
-
-    let output = formElement();
-
-    if (isFetching) {
-      output = <Loading />;
-    } else if (redirect) {
-      localStorage.setItem('token', code);
-      handleClick();
-    }
-
-    return output;
+    return (
+      this.formElement()
+    );
   }
 }
 
@@ -147,9 +137,7 @@ Login.propTypes = {
     push: PropTypes.func,
   }),
   dispatchLogin: PropTypes.func,
-  redirect: PropTypes.bool,
   code: PropTypes.string,
-  isFetching: PropTypes.bool,
   startFetching: PropTypes.func,
 }.isRequired;
 
