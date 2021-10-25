@@ -45,6 +45,7 @@ class GamePage extends Component {
     const MAX_QUESTIONS = 4;
 
     if (i === MAX_QUESTIONS) {
+      this.saveInRanking();
       history.push('/feedback');
     } else {
       try {
@@ -82,6 +83,19 @@ class GamePage extends Component {
       wrongAnswersOne: result[i].incorrect_answers,
       rightAnswerOne: result[i].correct_answer,
     }, () => this.startCounter());
+  }
+
+  saveInRanking() {
+    const { name, score, gravatarEmail } = this.props;
+    const userRank = {
+      name,
+      score,
+      picture: `https://www.gravatar.com/avatar/${gravatarEmail}`,
+    };
+    const rankings = JSON.parse(localStorage.getItem('ranking'));
+    rankings.push(userRank);
+    rankings.sort((a, b) => b.score - a.score);
+    localStorage.setItem('ranking', JSON.stringify(rankings));
   }
 
   nextQuestion() {
@@ -206,6 +220,8 @@ class GamePage extends Component {
 
 GamePage.propTypes = {
   updateScore: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  gravatarEmail: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
   assertions: PropTypes.number.isRequired,
   history: PropTypes.shape({
@@ -218,6 +234,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
+  name: state.playerReducer.name,
   gravatarEmail: state.playerReducer.gravatarEmail,
   score: state.playerReducer.score,
   assertions: state.playerReducer.assertions,

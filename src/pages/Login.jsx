@@ -37,6 +37,10 @@ class Login extends Component {
       },
     };
     localStorage.setItem('state', JSON.stringify(state));
+    if (!localStorage.getItem('ranking')) {
+      console.log('A chave não existe no localStorage');
+      localStorage.setItem('ranking', JSON.stringify([]));
+    }
     submitHash(nameInput, gravatarEmail);
     history.push('/paginadojogo');
   }
