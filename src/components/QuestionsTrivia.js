@@ -4,13 +4,34 @@ import PropTypes from 'prop-types';
 import { getRequestTriviaGame } from '../redux/actions';
 
 class QuestionsTrivia extends Component {
-  async componentDidMount() {
+  constructor() {
+    super();
+    this.state = {
+      loading: true,
+    };
+    this.changeLoading = this.changeLoading.bind(this);
+  }
+
+  componentDidMount() {
     const { getQuestions } = this.props;
-    await getQuestions();
+    getQuestions();
+    this.changeLoading();
+  }
+
+  changeLoading() {
+    this.setState({
+      loading: false,
+    });
   }
 
   render() {
     const { questionsObj } = this.props;
+    const { loading } = this.state;
+
+    if (loading) {
+      return <div>loading</div>;
+    }
+    console.log(questionsObj);
     return (
       <div>
         <p data-testid="question-category">{questionsObj[0].category}</p>
@@ -30,17 +51,19 @@ class QuestionsTrivia extends Component {
             { answer }
           </button>
         )) }
+        <button type="button" onClick={ this.qualquer }>OMG</button>
       </div>
     );
   }
 }
 QuestionsTrivia.propTypes = {
-  questionsObj: PropTypes.objectOf(PropTypes.any).isRequired,
+  questionsObj: PropTypes.arrayOf(PropTypes.any).isRequired,
   getQuestions: PropTypes.func.isRequired,
 };
 const mapStateToProps = (state) => ({
   questionsObj: state.questions.payload,
 });
+
 const mapDispatchToProps = (dispatch) => ({
   getQuestions: () => dispatch(getRequestTriviaGame()),
 });

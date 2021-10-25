@@ -63,6 +63,7 @@ export const getRequestTriviaGame = () => async (dispatch) => {
     dispatch(getQuestionsApi(questions));
     return dispatch(loadingGame());
   } catch (error) {
+    console.log(error);
     dispatch(failedApi(error));
   }
 };
