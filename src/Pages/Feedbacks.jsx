@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import getProfilePic from '../services/getProfilePic';
 import Header from '../Components/Header';
 
 class Feedbacks extends Component {
   render() {
-    // const { name, gravatarEmail, score } = this.props;
+    const { assertions } = this.props;
+    const THREE = 3;
     return (
       <section>
         <Header />
         <h2 data-testid="feedback-text">Feedbacks</h2>
+        { assertions < THREE
+          ? <p data-testid="feedback-text">Podia ser melhor...</p>
+          : <p data-testid="feedback-text">Mandou bem!</p> }
         <Link to="/">
           <button type="button" data-testid="btn-play-again">Play Again</button>
         </Link>
@@ -23,16 +26,12 @@ class Feedbacks extends Component {
   }
 }
 
-// Feedbacks.propTypes = {
-//   gravatarEmail: PropTypes.string.isRequired,
-//   name: PropTypes.string.isRequired,
-//   score: PropTypes.number.isRequired,
-// };
+Feedbacks.propTypes = {
+  assertions: PropTypes.number.isRequired,
+};
 
 const mapStateToProps = (state) => ({
-  name: state.player.name,
-  gravatarEmail: state.player.gravatarEmail,
-  score: state.player.score,
+  assertions: state.player.assertions,
 });
 
 export default connect(mapStateToProps)(Feedbacks);
