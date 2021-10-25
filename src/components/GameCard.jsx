@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import parse from 'html-react-parser'; // soluciona caracteres estranhos na resposta da API
 import { Redirect } from 'react-router';
 import { getId } from '../services/triviaAPI';
-import './styles/game.css';
 // import FeedbackText from './FeedbackText';
 import Loading from './Loading';
+import './game.css';
 
 const LAST_QUESTION = 5;
 
@@ -38,13 +38,8 @@ class GameCard extends Component {
     });
   }
 
-  checkedQuestions({ target }) {
-    const btnAnswers = target.dataset.testid;
+  checkedQuestions() {
     const btns = document.querySelectorAll('button');
-    if (btnAnswers === 'correct-answer') {
-      target.classList.add('correct');
-    }
-    console.log(btns);
     btns.forEach((btn) => {
       if (btn.dataset.testid !== 'correct-answer') {
         return btn.classList.add('wrong');
