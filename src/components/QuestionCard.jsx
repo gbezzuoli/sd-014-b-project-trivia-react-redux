@@ -115,7 +115,10 @@ class QuestionCard extends React.Component {
 
     clearInterval(intervalID);
     this.getIDFromSetInterval();
-    this.setState({ countdown: 30 });
+    this.setState({
+      countdown: 30,
+      isDisabled: false,
+    });
   }
 
   buttonRedirect() {
