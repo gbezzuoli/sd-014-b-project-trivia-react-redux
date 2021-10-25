@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Header from '../Component/Header';
 import Timer from '../Component/Timer';
 import { updateScore } from '../redux/actions';
+import '../App.css';
 
 class Trivia extends Component {
   constructor() {
@@ -11,10 +12,12 @@ class Trivia extends Component {
     this.state = {
       questionIndex: 0,
       timer: 30,
+      questionAnswered: false,
     };
     this.handleAnswerClick = this.handleAnswerClick.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.getQuestionScore = this.getQuestionScore.bind(this);
+    this.handleClickNext = this.handleClickNext.bind(this);
   }
 
   componentDidMount() {
@@ -31,6 +34,10 @@ class Trivia extends Component {
     this.startTimer();
   }
 
+  /*   componentDidUpdate() {
+    this.resetState();
+  } */
+
   getQuestionScore() {
     const { timer, questionIndex } = this.state;
     const { receviQuestions } = this.props;
@@ -42,8 +49,26 @@ class Trivia extends Component {
       medium: 2,
       hard: 3,
     };
-
     return baseScore + timer * difficultyMultiplier[difficulty];
+  }
+
+  handleClickNext() {
+    const MAX_QUESTIONS = 4;
+    const { history } = this.props;
+    const { questionIndex } = this.state;
+    if (questionIndex === MAX_QUESTIONS) {
+      history.push('/feedback');
+    } else {
+      this.setState((prevState) => ({
+        questionIndex: prevState.questionIndex + 1,
+        timer: 30,
+        questionAnswered: false,
+      }));
+    }
+    /* const getAllButtons = document.querySelectorAll('button');
+    getAllButtons.forEach((btn) => {
+      btn.style.border = '1px solid rgb(0, 0, 0)';
+    }); */
   }
 
   startTimer() {
@@ -64,9 +89,11 @@ class Trivia extends Component {
 
     getAllButtons.forEach((btn) => {
       if (btn.value === 'wrong-ans') {
+        /* btn.classList.add('wrongAnswer'); */
         btn.style.border = '3px solid rgb(255, 0, 0)';
       }
       if (btn.value === 'correct-ans') {
+        /* btn.classList.add('correctAnswer'); */
         btn.style.border = '3px solid rgb(6, 240, 15)';
       }
     });
@@ -81,11 +108,25 @@ class Trivia extends Component {
       localStorage.setItem('state', JSON.stringify(newState));
       dispatchUpdateScore(newScore);
     }
+
+    this.setState({
+      questionAnswered: true,
+    });
   }
 
   render() {
+    const { questionIndex, timer, questionAnswered } = this.state;
     const { receviQuestions } = this.props;
-    const { questionIndex, timer } = this.state;
+    const nextButton = (
+      <button
+        type="button"
+        data-testid="btn-next"
+        onClick={ this.handleClickNext }
+      >
+        próxima
+      </button>
+    );
+
     return (
       <div>
         <Header />
@@ -98,7 +139,7 @@ class Trivia extends Component {
               data-testid={ `wrong-answer-${index}` }
               onClick={ (event) => this.handleAnswerClick(event) }
               type="button"
-              disabled={ timer === 0 }
+              disabled={ timer === 0 || questionAnswered }
               value="wrong-ans"
             >
               {question}
@@ -109,11 +150,12 @@ class Trivia extends Component {
           data-testid="correct-answer"
           onClick={ (event) => this.handleAnswerClick(event) }
           type="button"
-          disabled={ timer === 0 }
+          disabled={ timer === 0 || questionAnswered }
           value="correct-ans"
         >
           { receviQuestions[questionIndex].correct_answer }
         </button>
+        { questionAnswered ? nextButton : null }
       </div>
     );
   }
@@ -130,6 +172,7 @@ Trivia.propTypes = {
   })).isRequired,
   userEmail: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapStateToProps = (state) => ({
