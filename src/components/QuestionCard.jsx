@@ -20,7 +20,7 @@ class QuestionCard extends React.Component {
       correctAnswerC: 'answer', // State referente a Classe das respostas
       wrongAnswerC: 'answer', // State referente a Classe das respostas
       showbutton: false,
-      countdown: 7,
+      countdown: 30,
       isDisabled: false,
     };
 
@@ -84,19 +84,22 @@ class QuestionCard extends React.Component {
       {
         answer,
         value: false,
+        difficulty: apiResult[questionIndex].difficulty,
       }
     ));
 
     const correctAnswer = {
       answer: apiResult[questionIndex].correct_answer,
       value: true,
+      difficulty: apiResult[questionIndex].difficulty,
     };
     const answerList = [...incorrectAnswersList, correctAnswer];
+    console.log(answerList);
 
     // https://flaviocopes.com/how-to-shuffle-array-javascript/
     const number = 0.5;
     answerList.sort(() => Math.random() - number);
-    this.setState({ answerListState: answerList });
+    this.setState({ answerListState: answerList, difficulty: answerList[0].difficulty });
     return answerList;
   }
 
@@ -147,12 +150,34 @@ class QuestionCard extends React.Component {
   }
 
   submitAnswer(boolean) {
-    const { stateToLocalStorage } = this.state;
+    const { stateToLocalStorage, countdown, difficulty } = this.state;
+    const BASE_SCORE = 10;
+    const HARD = 3;
+    const MEDIUM = 2;
+    const EASY = 1;
+    let numberOfDifficulty = 0;
+
+    switch (difficulty) {
+    case 'hard':
+      numberOfDifficulty = HARD;
+      break;
+    case 'medium':
+      numberOfDifficulty = MEDIUM;
+      break;
+    case 'easy':
+      numberOfDifficulty = EASY;
+      break;
+    default:
+      numberOfDifficulty = 0;
+      break;
+    }
+
     if (boolean) {
       this.setState({
         stateToLocalStorage: {
           player: {
-            score: stateToLocalStorage.player.score + 1,
+            score: stateToLocalStorage.player.score
+            + BASE_SCORE + (countdown * numberOfDifficulty),
           },
         },
       });
