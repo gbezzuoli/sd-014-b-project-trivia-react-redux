@@ -1,4 +1,4 @@
-import { SUBMIT_SCORE, SUBMIT_USER } from '../actions';
+import { SUBMIT_SCORE, SUBMIT_USER, RESET_USER_SCORE } from '../actions';
 
 const INITIAL_STATE = {
   name: '',
@@ -20,6 +20,10 @@ const playerReducer = (state = INITIAL_STATE, action) => {
       ...state,
       score: action.score,
       assertions: action.assertions,
+    };
+  case RESET_USER_SCORE:
+    return {
+      ...INITIAL_STATE,
     };
   default:
     return state;
