@@ -20,7 +20,10 @@ class Game extends React.Component {
   }
 
   componentDidMount() {
+    const { player: statePlayer, game } = this.props;
     this.retriveQuestions();
+    const player = JSON.stringify({ player: statePlayer });
+    localStorage.setItem('state', JSON.stringify(game));
   }
 
   async retriveQuestions() {
@@ -31,17 +34,18 @@ class Game extends React.Component {
 
   handleClick() {
     const { history, count, increaseCount,
-      refreshTimer, resetTimer, toogleNextButton, player } = this.props;
+      refreshTimer, resetTimer, toogleNextButton, player: statePlayer, game } = this.props;
+    const player = JSON.stringify({ player: statePlayer });
     resetTimer(false);
     toogleNextButton(false);
     const FOUR = 4;
     const buttons = document.querySelectorAll('button');
     refreshTimer(RESET_COUNTDOWN);
     buttons.forEach((button) => { button.className = ''; });
+    localStorage.setItem('state', game);
     if (count < FOUR) {
       increaseCount(count + 1);
     } else {
-      localStorage.setItem('state', JSON.stringify(player));
       history.push('/result');
     }
   }
@@ -73,6 +77,7 @@ const mapStateToProps = ({ game }) => ({
   countdown: game.countdown,
   showNextBtn: game.next,
   player: game.player,
+  game,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,5 +1,6 @@
-import { ADD_COUNT, GET_QUESTIONS, STOP_TIMER,
-  REFRESH_TIMER, SHOW_NEXT, INCREASE_SCORE } from '../actions';
+import { ADD_COUNT, GET_QUESTIONS, STOP_TIMER, ANSWERED,
+  REFRESH_TIMER, SHOW_NEXT, INCREASE_SCORE, SAVE_PLAYER_INFO } from '../actions';
+import user from './userReducer';
 
 const INITIAL_STATE = {
   count: 0,
@@ -7,6 +8,7 @@ const INITIAL_STATE = {
   timer: false,
   countdown: 30,
   next: false,
+  answered: false,
   score: 0,
   player: {
     name: '',
@@ -46,12 +48,27 @@ const game = (state = INITIAL_STATE, { type, payload }) => {
   case INCREASE_SCORE:
     return {
       ...state,
+      score: payload.score,
       player: {
         ...state.player,
         score: payload.score,
         assertions: payload.assertions,
       },
     };
+  case SAVE_PLAYER_INFO:
+    return {
+      ...state,
+      player: {
+        ...state.player,
+        name: payload.name,
+        gravatarEmail: payload.email,
+      },
+    };
+  case ANSWERED:
+    return {
+      ...state,
+      answered: payload
+    }
   default:
     return state;
   }
