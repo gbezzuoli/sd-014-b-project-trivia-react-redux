@@ -25,14 +25,14 @@ class Home extends Component {
     const { history, setLogin, getToken } = this.props;
     const { name, email } = this.state;
     setLogin({ name, email });
-    const objeto = {
+    const object = {
       player:
       { name,
         assertions: 0,
         score: 0,
         gravatarEmail: email },
     };
-    localStorage.setItem('state', JSON.stringify(objeto));
+    localStorage.setItem('state', JSON.stringify(object));
     getToken();
     history.push('/game');
   }

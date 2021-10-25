@@ -44,9 +44,9 @@ class GameCard extends Component {
 
   setTimer() {
     const second = 1000;
-    const relogio = setInterval(() => {
+    const stopWatch = setInterval(() => {
       this.setState((prevState) => ({ timer: prevState.timer - 1 }));
-      this.cancelTime(relogio);
+      this.cancelTime(stopWatch);
     }, second);
   }
 
@@ -54,7 +54,7 @@ class GameCard extends Component {
     const { assertions, scorePlayer } = this.state;
     const { email, name } = this.props;
 
-    const objeto = {
+    const object = {
       player:
       { name,
         assertions,
@@ -62,12 +62,15 @@ class GameCard extends Component {
         gravatarEmail: email },
     };
 
-    localStorage.setItem('state', JSON.stringify(objeto));
+    localStorage.setItem('state', JSON.stringify(object));
   }
 
-  cancelTime(relogio) {
+  cancelTime(stopWatch) {
     const { timer } = this.state;
-    if (timer === 0) clearTimeout(relogio);
+    if (timer === 0) {
+      clearTimeout(stopWatch);
+      this.onClickColorCorrect();
+    }
   }
 
   calcScore(difficulty, timer) {
@@ -95,6 +98,7 @@ class GameCard extends Component {
     const correct = (
       <button
         onClick={ () => this.onClickColorCorrect(question.difficulty) }
+        disabled={ timer === 0 }
         data-testid="correct-answer"
         type="button"
         id="correct"
@@ -107,6 +111,7 @@ class GameCard extends Component {
       <button
         onClick={ this.onClickColorIncorrect }
         data-testid={ `wrong-answer-${index}` }
+        disabled={ timer === 0 }
         type="button"
         id="answer"
         key={ element }
