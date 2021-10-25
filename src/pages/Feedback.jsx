@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header/Header';
+import getProfile from '../services/gravatar';
 
 class Feedback extends React.Component {
   constructor(props) {
@@ -51,6 +53,27 @@ class Feedback extends React.Component {
             {' '}
             pontos
           </h3>
+        </div>
+        <div>
+          <Link
+            to={ {
+              pathname: '/ranking',
+              userInfos: {
+                name: player.name,
+                score: player.score,
+                gravatarImage: getProfile(player.gravatarEmail),
+              },
+            } }
+          >
+            <button type="button" data-testid="btn-ranking">
+              Ver Ranking
+            </button>
+          </Link>
+          <Link to="/">
+            <button type="button" data-testid="btn-play-again">
+              Jogar novamente
+            </button>
+          </Link>
         </div>
       </>
     );
