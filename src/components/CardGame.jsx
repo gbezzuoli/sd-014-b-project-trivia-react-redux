@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import '../css/buttonCss.css';
-import { answeredQuestion, increaseScore, increaseScore as increaseScoreAction,
+import { answeredQuestion, increaseScore as increaseScoreAction,
   resetTimer, showNext } from '../redux/actions';
 
 const THREE = 3;
@@ -11,6 +11,10 @@ const QUESTION_BASE_POINT = 10;
 class CardGame extends React.Component {
   constructor(props) {
     super(props);
+
+    // this.state = {
+    //   timer: false,
+    // }
 
     this.handleAnswerClick = this.handleAnswerClick.bind(this);
     // this.shuffleArray = this.shuffleArray.bind(this);
@@ -54,6 +58,7 @@ class CardGame extends React.Component {
   handleRightClick() {
     const { increaseScore, name, email,
       countdown, playerScore, playerAssertions } = this.props;
+
     const score = Number(playerScore
         + (QUESTION_BASE_POINT
           + (Number(countdown) * Number(this.defineQuestionDifficulty()))));
@@ -64,13 +69,17 @@ class CardGame extends React.Component {
       email,
     });
   }
+
+  // toogleNextButton() {
+  //   this.setState(({ timer }) => ({ timer: !timer }));
+  // }
+
   saveLocalStorePlayerData() {
-    const { player: statePlayer, game } = this.props;
-    const player = JSON.stringify(statePlayer);
+    const { game } = this.props;
     localStorage.setItem('state', JSON.stringify(game));
   }
 
-  handleAnswerClick() {
+  async handleAnswerClick() {
     const { toogleNextButton, answered } = this.props;
     const brothers = document.querySelectorAll('button');
 
@@ -85,12 +94,12 @@ class CardGame extends React.Component {
       }
     });
     toogleNextButton(true);
-    answered(true);
-    this.saveLocalStorePlayerData()
+    await answered(true);
+    // await this.saveLocalStorePlayerData()
   }
 
   generateAnswersButtons() {
-    const { timer, name, email } = this.props;
+    const { name, email, timer } = this.props;
     const randomAnswers = this.parseAnswerInObject();
     let count = 0;
     return (randomAnswers.map((answerButton, index) => {
@@ -102,7 +111,7 @@ class CardGame extends React.Component {
             onClick={ async () => {
               await this.handleAnswerClick();
               await this.handleRightClick();
-              // await this.saveLocalStorePlayerData();
+              await this.saveLocalStorePlayerData();
             } }
             disabled={ timer }
           >
@@ -118,7 +127,7 @@ class CardGame extends React.Component {
           onClick={ async () => {
             await this.handleAnswerClick();
             await increaseScore({ name, email });
-            // await this.saveLocalStorePlayerData();
+            await this.saveLocalStorePlayerData();
           } }
         >
           {answerButton.answer}
@@ -194,8 +203,10 @@ CardGame.propTypes = {
   countdown: PropTypes.number.isRequired,
   playerScore: PropTypes.number.isRequired,
   playerAssertions: PropTypes.number.isRequired,
-  player: PropTypes.objectOf(PropTypes.any).isRequired,
-
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  answered: PropTypes.bool.isRequired,
+  game: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardGame);

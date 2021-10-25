@@ -1,6 +1,5 @@
-import { ADD_COUNT, GET_QUESTIONS, STOP_TIMER, ANSWERED,
+import { ADD_COUNT, GET_QUESTIONS, STOP_TIMER,
   REFRESH_TIMER, SHOW_NEXT, INCREASE_SCORE, SAVE_PLAYER_INFO } from '../actions';
-import user from './userReducer';
 
 const INITIAL_STATE = {
   count: 0,
@@ -20,6 +19,11 @@ const INITIAL_STATE = {
 
 const game = (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
+  case STOP_TIMER:
+    return {
+      ...state,
+      timer: payload,
+    };
   case ADD_COUNT:
     return {
       ...state,
@@ -29,11 +33,6 @@ const game = (state = INITIAL_STATE, { type, payload }) => {
     return {
       ...state,
       questions: payload,
-    };
-  case STOP_TIMER:
-    return {
-      ...state,
-      timer: payload,
     };
   case REFRESH_TIMER:
     return {
@@ -64,11 +63,6 @@ const game = (state = INITIAL_STATE, { type, payload }) => {
         gravatarEmail: payload.email,
       },
     };
-  case ANSWERED:
-    return {
-      ...state,
-      answered: payload
-    }
   default:
     return state;
   }

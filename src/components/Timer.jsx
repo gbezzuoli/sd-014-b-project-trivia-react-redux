@@ -40,8 +40,8 @@ class Timer extends React.Component {
 
   render() {
     /* Contador feito pelo Guilherme Gomes 14-b */
-    const { resetTimer, countdown, showNextBtn, answered } = this.props;
-    if (countdown === 0 || answered) {
+    const { resetTimer, countdown, showNextBtn } = this.props;
+    if (countdown === 0) {
       clearInterval(this.timer);
       showNextBtn(true);
       resetTimer(true);
