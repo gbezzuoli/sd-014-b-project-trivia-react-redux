@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
+import ButtonNext from '../components/ButtonNext';
 import fetchQuestions from '../services/FetchQuestions';
 import { setScoreAction } from '../redux/actions';
 
@@ -177,15 +178,18 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, currentTime, difficulty } = this.state;
+    const { questions, currentTime, difficulty, disable } = this.state;
     return (
       <div>
         <Header />
         <h1>TRIVIA</h1>
-        {`Dificuldade: ${difficulty}`}
-        {questions ? this.mapQuestions(questions)
-          : <Loading />}
+        {`Question difficulty: ${difficulty}`}
+        {questions ? this.mapQuestions(questions) : <Loading />}
+        <br />
         <span>{ `TIMER: ${currentTime}` }</span>
+        <br />
+        <br />
+        {disable ? <ButtonNext /> : ''}
         <br />
       </div>
     );
