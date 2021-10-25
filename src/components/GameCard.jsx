@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../css/game.css';
 import { connect } from 'react-redux';
 import { score } from '../redux/actions/actions';
 
 class GameCard extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       correctColor: '',
       wrongColor: '',
@@ -62,11 +63,7 @@ class GameCard extends Component {
     const { email, name } = this.props;
 
     const object = {
-      player:
-      { name,
-        assertions,
-        score: scorePlayer,
-        gravatarEmail: email },
+      player: { name, assertions, score: scorePlayer, gravatarEmail: email },
     };
 
     localStorage.setItem('state', JSON.stringify(object));
@@ -89,12 +86,13 @@ class GameCard extends Component {
     const MEDIUM = 2;
     const EASY = 1;
     console.log(timer);
-    if (difficulty === 'hard') total = dez + (timer * HARD);
-    if (difficulty === 'medium') total = dez + (timer * MEDIUM);
-    if (difficulty === 'easy') total = dez + (timer * EASY);
+    if (difficulty === 'hard') total = dez + timer * HARD;
+    if (difficulty === 'medium') total = dez + timer * MEDIUM;
+    if (difficulty === 'easy') total = dez + timer * EASY;
     this.setState((prevState) => ({
       scorePlayer: scorePlayer + total,
-      assertions: prevState.assertions + 1 }));
+      assertions: prevState.assertions + 1,
+    }));
     getScore(scorePlayer);
   }
 
@@ -105,6 +103,12 @@ class GameCard extends Component {
   }
 
   showNextAsk() {
+    const FOUR = 4;
+    const { history } = this.props;
+    const { changeAsk } = this.state;
+    if (changeAsk === FOUR) {
+      return history.push('/feedback');
+    }
     this.setState((state) => ({
       changeAsk: state.changeAsk + 1,
       nextAsk: false,
@@ -117,23 +121,21 @@ class GameCard extends Component {
         <img data-testid="header-profile-picture" src={ avatar } alt="" />
         <span data-testid="header-player-name">{name}</span>
         <span data-testid="header-score">{`Pontos: ${scorePlayer}`}</span>
-      </header>);
+      </header>
+    );
   }
 
   buttonNext() {
     return (
-      <button
-        type="button"
-        data-testid="btn-next"
-        onClick={ this.showNextAsk }
-      >
+      <button type="button" data-testid="btn-next" onClick={ this.showNextAsk }>
         Próxima
-      </button>);
+      </button>
+    );
   }
 
   render() {
-    const { correctColor, wrongColor, timer, scorePlayer, nextAsk,
-      changeAsk } = this.state;
+    const { correctColor, wrongColor, timer, scorePlayer,
+      nextAsk, changeAsk } = this.state;
     const { question, name, avatar } = this.props;
     const RANDOM = 5;
     const correct = (
@@ -148,19 +150,21 @@ class GameCard extends Component {
         {question[changeAsk].correct_answer}
       </button>
     );
-    const incorrects = question[changeAsk].incorrect_answers.map((element, index) => (
-      <button
-        onClick={ this.onClickColorIncorrect }
-        data-testid={ `wrong-answer-${index}` }
-        disabled={ timer === 0 }
-        type="button"
-        id="answer"
-        key={ element }
-        className={ wrongColor }
-      >
-        {element}
-      </button>
-    ));
+    const incorrects = question[changeAsk].incorrect_answers.map(
+      (element, index) => (
+        <button
+          onClick={ this.onClickColorIncorrect }
+          data-testid={ `wrong-answer-${index}` }
+          disabled={ timer === 0 }
+          type="button"
+          id="answer"
+          key={ element }
+          className={ wrongColor }
+        >
+          {element}
+        </button>
+      ),
+    );
     const answers = [correct, ...incorrects].sort(() => Math.random() - RANDOM);
     console.log(answers);
     const options = answers.map((answer) => <li key={ answer }>{answer}</li>);
@@ -185,6 +189,7 @@ GameCard.propTypes = {
   getScore: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   question: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 function mapStateToProps(state) {
@@ -200,4 +205,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(GameCard);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(GameCard),
+);
