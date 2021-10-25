@@ -11,6 +11,8 @@ class CardGame extends React.Component {
     this.handleAnswerClick = this.handleAnswerClick.bind(this);
     this.shuffleArray = this.shuffleArray.bind(this);
     this.parseAnswerInObject = this.parseAnswerInObject.bind(this);
+    this.generateAnswersButtons = this.generateAnswersButtons.bind(this);
+
   }
 
   // shouldComponentUpdate(nextProps) {
@@ -53,7 +55,9 @@ class CardGame extends React.Component {
     const brothers = document.querySelectorAll('button');
     // getAttribute feito com base no stackoverflow
     brothers.forEach((brother) => {
-      if (brother.getAttribute('data-testid') === 'correct-answer') {
+      if (brother === brothers[brothers.length - 1]) {
+        brother.className = '';
+      } else if (brother.getAttribute('data-testid') === 'correct-answer') {
         brother.classList.add('right-answer');
       } else if (brother.getAttribute('data-testid').includes('wrong-answer')) {
         brother.classList.add('wrong-answer');
@@ -62,45 +66,54 @@ class CardGame extends React.Component {
     toogleNextButton(true);
   }
 
-  render() {
-    const { question: { category, question }, next, timer, showNextBtn } = this.props;
+  generateAnswersButtons() {
+    const { timer } = this.props;
     const randomAnswers = this.parseAnswerInObject();
+
     let count = 0;
+    return (randomAnswers.map((answerButton, index) => {
+      if (answerButton.correct) {
+        return (
+          <button
+            type="button"
+            data-testid="correct-answer"
+            onClick={ this.handleAnswerClick }
+            disabled={ timer }
+          >
+            { answerButton.answer }
+          </button>);
+      }
+      count += 1;
+      return (
+        <button
+          key={ index }
+          type="button"
+          data-testid={ `wrong-answer-${count - 1}` }
+          onClick={ this.handleAnswerClick }
+        >
+          {answerButton.answer}
+        </button>
+      );
+    }));
+  }
+
+  render() {
+    const { question: { category, question }, next, showNextBtn } = this.props;
+    // const randomAnswers = this.parseAnswerInObject();
     // const timer = Number(document.querySelector('#timer'));
     return (
       <div>
         <h2 data-testid="question-category">{ category }</h2>
         <h3 data-testid="question-text">{ question }</h3>
-        {randomAnswers.map((answerButton, index) => {
-          if (answerButton.correct) {
-            return (
-              <button
-                type="button"
-                data-testid="correct-answer"
-                onClick={ this.handleAnswerClick }
-                disabled={ timer }
-              >
-                { answerButton.answer }
-              </button>);
-          }
-          count += 1;
-          return (
-            <button
-              key={ index }
-              type="button"
-              data-testid={ `wrong-answer-${count - 1}` }
-              onClick={ this.handleAnswerClick }
-            >
-              {answerButton.answer}
-            </button>
-          );
-        }) }
-        <input
+        {this.generateAnswersButtons()}
+        <button
           style={ { display: showNextBtn ? 'inline-block' : 'none' } }
           type="button"
-          value="Proxima"
+          // value="Proxima"
           onClick={ () => { next(); } }
-        />
+        >
+          Proxima
+        </button>
         <div />
       </div>
     );

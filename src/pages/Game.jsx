@@ -9,7 +9,7 @@ import { addCount, fetchQuestions, refreshTimer as refreshTimerAction,
   showNext } from '../redux/actions';
 import Timer from '../components/Timer';
 
-const ONE_SECOND = 1000;
+// const ONE_SECOND = 1000;
 const RESET_COUNTDOWN = 30;
 
 class Game extends React.Component {
@@ -20,13 +20,13 @@ class Game extends React.Component {
     };
     this.retriveQuestions = this.retriveQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.tiktak = this.tiktak.bind(this);
-    this.countdown = this.countdown.bind(this);
+    // this.tiktak = this.tiktak.bind(this);
+    // this.countdown = this.countdown.bind(this);
   }
 
   componentDidMount() {
     this.retriveQuestions();
-    this.tiktak();
+    // this.tiktak();
   }
 
   async retriveQuestions() {
@@ -51,21 +51,21 @@ class Game extends React.Component {
     }
   }
 
-  countdown() {
-    const { countdown, refreshTimer } = this.props;
-    refreshTimer(countdown - 1);
-  }
+  // countdown() {
+  //   const { countdown, refreshTimer } = this.props;
+  //   refreshTimer(countdown - 1);
+  // }
 
-  tiktak() {
-    const { start } = this.state;
-    if (!start) {
-      this.timer = setInterval(this.countdown, ONE_SECOND);
-      this.setState({ start: true });
-    } else {
-      clearInterval(this.timer);
-      this.setState({ start: false });
-    }
-  }
+  // tiktak() {
+  //   const { start } = this.state;
+  //   if (!start) {
+  //     this.timer = setInterval(this.countdown, ONE_SECOND);
+  //     this.setState({ start: true });
+  //   } else {
+  //     clearInterval(this.timer);
+  //     this.setState({ start: false });
+  //   }
+  // }
 
   render() {
     const { count, questions, countdown, toogleNextButton, showNextBtn } = this.props;
@@ -77,7 +77,7 @@ class Game extends React.Component {
     return (
       <div>
         <Header />
-        <Timer time={ countdown } />
+        <Timer />
         TRIVIA
         { questions.length === 0
           ? <span>Loading ...</span>
