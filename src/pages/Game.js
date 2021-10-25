@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import TriviaQuestion from '../components/TriviaQuestion';
 import WrongAnswer from '../components/WrongAnswer';
 import CorrectAnswer from '../components/CorrectAnswer';
 import GameHeader from '../components/GameHeader';
-import { fecthTrivia } from '../redux/actions';
+import { fetchTrivia } from '../redux/actions';
 import {
   addScoreAction,
   resetAssertionsAction,
@@ -41,7 +40,7 @@ class Game extends Component {
   }
 
   async fetchQuestionsState() {
-    const dataQuestions = await fecthTrivia();
+    const dataQuestions = await fetchTrivia();
     const { results } = dataQuestions;
     this.setState({
       questions: results,
@@ -63,7 +62,8 @@ class Game extends Component {
 
   addScore(difficulty) {
     const { timer } = this.state;
-    const { addScoreToBoard, assertions } = this.props;
+    const { addScoreToBoard,
+      assertions, playerEmail, playerName, scoreboard } = this.props;
     const TEN = 10;
     const THREE = 3;
     let points;
@@ -81,7 +81,15 @@ class Game extends Component {
       console.log('Ocorreu um erro');
       break;
     }
-    addScoreToBoard({ points, assertions });
+    addScoreToBoard({ points });
+    localStorage.setItem('player', JSON.stringify(
+      {
+        name: playerName,
+        assertions: assertions + 1,
+        score: scoreboard + points,
+        gravatarEmail: playerEmail,
+      },
+    ));
   }
 
   redirectAndSendFeedback() {
@@ -118,6 +126,7 @@ class Game extends Component {
     return (
       <button
         type="button"
+        data-testid="btn-next"
         onClick={ () => this.redirectAndSendFeedback() }
       >
         Finalizar
@@ -162,15 +171,15 @@ class Game extends Component {
   renderQuestionsRandomAnswers() {
     const { questions, index, next, timer } = this.state;
     const MAGIC_NUMBER = 0.5;
-    // const incorrectAnswers = questions[index].incorrect_answers
-    //   .map((wrong, i) => (
-    //     <WrongAnswer
-    //       incorrect={ wrong }
-    //       key={ i }
-    //       disabled={ !!next }
-    //       borderColor={ !next ? 'answer' : 'incorrectAnswer' }
-    //       clickAnswer={ this.answerClickHandler }
-    //     />));
+    const incorrectAnswers = questions[index].incorrect_answers
+      .map((wrong, i) => (
+        <WrongAnswer
+          incorrect={ wrong }
+          key={ i }
+          disabled={ !!next }
+          borderColor={ !next ? 'answer' : 'incorrectAnswer' }
+          clickAnswer={ this.answerClickHandler }
+        />));
     const correctAnswers = (
       <CorrectAnswer
         correct={ questions[index].correct_answer }
@@ -180,7 +189,7 @@ class Game extends Component {
         borderColor={ !next ? 'answer' : 'correctAnswer' }
         clickAnswer={ this.answerClickHandler }
       />);
-    const allAnswers = [correctAnswers]
+    const allAnswers = [...incorrectAnswers, correctAnswers]
       .sort(() => Math.random() - MAGIC_NUMBER);
     return (
       <div>
@@ -191,7 +200,7 @@ class Game extends Component {
 
   render() {
     const { loading, questions, index, next, timer, redirect } = this.state;
-    // const { scoreboard } = this.props;
+    console.log('Renderizou');
     const FOUR = 4;
     if (loading) return <h1>Loading</h1>;
     if (redirect) return <Redirect to="/feedback" />;
