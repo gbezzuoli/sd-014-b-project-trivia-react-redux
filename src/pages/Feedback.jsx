@@ -20,13 +20,9 @@ class Feedback extends Component {
     const scoreElement = (
       <>
         <h2 data-testid="feedback-total-score">
-          Placar final:
-          {' '}
           { score }
         </h2>
         <h3 data-testid="feedback-total-question">
-          Você acertou:
-          {' '}
           { assertions }
         </h3>
       </>
@@ -50,7 +46,7 @@ class Feedback extends Component {
     if (assertions === 0) {
       return (
         <>
-          <h1 data-testid="feedback-total-question">Não acertou nenhuma pergunta</h1>
+          <h1 data-testid="feedback-text">Não acertou nenhuma pergunta</h1>
           { scoreElement }
         </>
       );
