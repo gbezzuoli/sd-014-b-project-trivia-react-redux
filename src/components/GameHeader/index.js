@@ -18,6 +18,8 @@ class GameHeader extends Component {
     this.fetchGravatar();
   }
 
+  //
+
   fetchGravatar() {
     const { playerEmail } = this.props;
     const cryptoEmail = MD5(playerEmail).toString();
@@ -26,7 +28,7 @@ class GameHeader extends Component {
   }
 
   render() {
-    const { playerName } = this.props;
+    const { playerName, score } = this.props;
     const { picture } = this.state;
     return (
       <header>
@@ -36,22 +38,22 @@ class GameHeader extends Component {
           alt="User Profile"
         />
         <h3 data-testid="header-player-name">{playerName}</h3>
-        <h3 data-testid="header-score">{ 0 }</h3>
+        <h3 data-testid="header-score">{ score }</h3>
       </header>
     );
   }
 }
 
 GameHeader.propTypes = {
+  playerEmail: PropTypes.string.isRequired, // profilePicture: PropTypes.string.isRequired,
   playerName: PropTypes.string.isRequired,
-  playerEmail: PropTypes.string.isRequired,
-  // profilePicture: PropTypes.string.isRequired,
-  // score: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   playerName: state.player.name,
   playerEmail: state.player.email,
+  score: state.game.score,
 });
 
 export default connect(mapStateToProps, null)(GameHeader);

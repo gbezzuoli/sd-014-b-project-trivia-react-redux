@@ -1,16 +1,15 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import GameHeader from '../components/GameHeader';
+import { resetAssertionsAction } from '../redux/actions/gameActions';
 
 class Feedback extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      // estados,
-      assertions: 3, // Para teste
-      totalScore: 50, // Para teste
       redirectRanking: false,
       redirectLogin: false,
     };
@@ -19,42 +18,46 @@ class Feedback extends React.Component {
   }
 
   feedbackMessage() {
-    // const { estado de acertos } = this.props;
-    const { assertions } = this.state; // Só pra estruturar a função. Estado será retirado do redux.
+    const { totalAssertions } = this.props;
     const WELL_DONE_SCORE = 3;
-    if (assertions < WELL_DONE_SCORE) {
+    if (totalAssertions < WELL_DONE_SCORE) {
       return 'Podia ser melhor...';
     }
     return 'Mandou bem!';
   }
 
   render() {
-    const { totalScore, assertions, redirectRanking, redirectLogin } = this.state;
-    let NOME_DA_ROTA_DO_JOGO; // Alterar assim que definir a nome.
-    if (redirectRanking) return <Redirect to="/" />; // Alterar rota para '/ranking' depois
-    if (redirectLogin) return <Redirect to={ NOME_DA_ROTA_DO_JOGO } />;
+    const { redirectRanking, redirectLogin } = this.state;
+    const { totalScore, totalAssertions, resetScoreboard } = this.props;
+    if (redirectRanking) return <Redirect to="/ranking" />;
+    if (redirectLogin) return <Redirect to="/" />;
     return (
       <main>
         <GameHeader />
         <h2 data-testid="feedback-text">{ this.feedbackMessage() }</h2>
         <h3 data-testid="feedback-total-question">
-          { `Você acertou ${assertions} questões!` }
+          { `Você acertou ${totalAssertions} questões!` }
         </h3>
-        {/* assertions e totalScore serão substituídos pelas props do estado global */}
         <h3 data-testid="feedback-total-score">
           { `Um total de ${totalScore} pontos` }
         </h3>
         <button
           type="button"
           data-testid="ranking-btn"
-          onClick={ () => this.setState({ redirectRanking: true }) }
+          onClick={ () => {
+            resetScoreboard();
+            this.setState({ redirectRanking: true });
+          } }
         >
           Ver Ranking
         </button>
         <button
           type="button"
           data-testid="btn-play-again"
-          onClick={ () => this.setState({ redirectLogin: true }) }
+          onClick={ () => {
+            resetScoreboard();
+            this.setState({ redirectLogin: true });
+          } }
         >
           Jogar novamente
         </button>
@@ -63,11 +66,19 @@ class Feedback extends React.Component {
   }
 }
 
-const mapStateToProps = () => ({ // Incluir state no parâmetro
-  // estado global da pontuação total: state.REDUCER_DOS_PONTOS.PONTOS_TOTAIS,
-  // estado global do número de acertos: state.REDUCER_DOS_ACERTOS.ACERTOS_TOTAIS,
+Feedback.propTypes = {
+  resetScoreboard: PropTypes.func.isRequired,
+  totalAssertions: PropTypes.number.isRequired,
+  totalScore: PropTypes.number.isRequired,
+};
+
+const mapStateToProps = (state) => ({ // Incluir state no parâmetro
+  totalScore: state.feedback.score,
+  totalAssertions: state.feedback.assertions,
 });
 
-// const mapDispatchToProps
+const mapDispatchToProps = (dispatch) => ({
+  resetScoreboard: () => dispatch(resetAssertionsAction()),
+});
 
-export default connect(mapStateToProps, null)(Feedback);
+export default connect(mapStateToProps, mapDispatchToProps)(Feedback);

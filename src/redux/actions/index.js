@@ -1,7 +1,13 @@
 export const PLAYER_INFO = 'PLAYER_INFO';
+export const GET_QUESTIONS = 'GET_QUESTIONS';
 
 export const sendPlayerInfo = (payload) => ({
   type: PLAYER_INFO,
+  payload,
+});
+
+export const getQuestionsAction = (payload) => ({
+  type: GET_QUESTIONS,
   payload,
 });
 
@@ -13,10 +19,9 @@ export const fetchAPI = () => fetch('https://opentdb.com/api_token.php?command=r
   .then((data) => data.json())
   .then((response) => saveToLocalStorage(response));
 
-export async function fecthTrivia() {
+export async function fetchTrivia() {
   const token = localStorage.getItem('token');
   const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
   const result = await response.json();
-  console.log(result);
   return result;
 }
