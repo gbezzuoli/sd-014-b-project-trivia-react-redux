@@ -10,11 +10,19 @@ class Login extends React.Component {
     super();
     this.state = {
       name: '',
-      email: '',
+      gravatarEmail: '',
       score: 0,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentDidMount() {
+    document.body.style.background = '#202020';
+  }
+
+  componentWillUnmount() {
+    document.body.style.background = '';
   }
 
   handleChange({ target }) {
@@ -39,9 +47,10 @@ class Login extends React.Component {
   }
 
   render() {
-    const { name, email } = this.state;
+    const { name, gravatarEmail } = this.state;
     return (
-      <div>
+      <div className="box">
+        <h1>Login</h1>
         <input
           onChange={ this.handleChange }
           name="name"
@@ -52,8 +61,8 @@ class Login extends React.Component {
         />
         <input
           onChange={ this.handleChange }
-          name="email"
-          value={ email }
+          name="gravatarEmail"
+          value={ gravatarEmail }
           data-testid="input-gravatar-email"
           type="email"
           placeholder="Email"
@@ -61,7 +70,7 @@ class Login extends React.Component {
         <button
           type="button"
           data-testid="btn-play"
-          disabled={ !this.validate(name, email) }
+          disabled={ !this.validate(name, gravatarEmail) }
           onClick={ this.handleClick }
         >
           Jogar
