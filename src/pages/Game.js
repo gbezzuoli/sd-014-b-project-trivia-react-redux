@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MyTimer from '../components/MyTimer';
-import QuestionCard from '../components/QuestionCard';
+import QuestCard from '../components/QuestCard';
 import fetchQuestions from '../services/FetchQuestions';
 import { setScoreAction } from '../redux/actions';
 
@@ -29,7 +29,7 @@ class Game extends Component {
     this.addStyle = this.addStyle.bind(this);
     this.scoreCalculator = this.scoreCalculator.bind(this);
     this.shuffleQuestions = this.shuffleQuestions.bind(this);
-    this.renderButton = this.renderButton.bind(this);
+    this.renderNextButton = this.renderNextButton.bind(this);
     this.handleNextQuestion = this.handleNextQuestion.bind(this);
   }
 
@@ -180,19 +180,23 @@ class Game extends Component {
     btnCorrect.setAttribute('style', 'border: 3px solid rgb(6, 240, 15)');
   }
 
-  handleNextQuestion() {
-    // Mandar pra um contador global quantas perguntas já foram
-    // Atualizar esse estado global com + 1
-    // Chamar a API de novo e recomeçar
+  handleNextQuestion(count) {
+    const maxNumberOfQuestions = 5;
+    if (count <= maxNumberOfQuestions) {
+      console.log('Próxima');
+    } else {
+      console.log('Fim de jogo');
+    }
   }
 
-  renderButton() {
+  renderNextButton() {
+    const { count } = this.state;
     return (
       <div>
         <button
           type="button"
           data-testid="btn-next"
-          onClick={ this.handleNextQuestion() }
+          onClick={ this.handleNextQuestion(count) }
         >
           Próxima
         </button>
@@ -205,20 +209,12 @@ class Game extends Component {
     return (
       <div>
         <Header />
-        <h1>TRIVIA</h1>
-        <br />
-        {`Question difficulty: ${difficulty}`}
-        <br />
         {questions
-          ? <QuestionCard question={ questions.question } category={ category } />
+          ? <QuestCard quest={ questions.question } cat={ category } dif={ difficulty } />
           : <Loading /> }
         {questions ? this.mapQuestions() : <Loading />}
-        <br />
-        <br />
         <span><MyTimer time={ currentTime } /></span>
-        <br />
-        {disable ? this.renderButton() : ''}
-        <br />
+        {disable ? this.renderNextButton() : ''}
       </div>
     );
   }
