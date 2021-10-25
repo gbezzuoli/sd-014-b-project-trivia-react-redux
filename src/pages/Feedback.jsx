@@ -36,6 +36,22 @@ class Feedback extends React.Component {
               ? 'Podia ser melhor...' : 'Mandou bem!' }
           </h3>
         </div>
+        <div>
+          <h3>
+            Você acertou
+            {' '}
+            <span data-testid="feedback-total-question">{player.assertions}</span>
+            {' '}
+            questões!
+          </h3>
+          <h3>
+            Um total de
+            {' '}
+            <span data-testid="feedback-total-score">{player.score}</span>
+            {' '}
+            pontos
+          </h3>
+        </div>
       </>
     );
   }
