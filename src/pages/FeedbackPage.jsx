@@ -4,6 +4,16 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 
 class FeedbackPage extends Component {
+  constructor() {
+    super();
+    this.playAgain = this.playAgain.bind(this);
+  }
+
+  playAgain() {
+    const { history } = this.props;
+    history.push('/');
+  }
+
   render() {
     const { assertions, score } = this.props;
     const MIN_ASSERTIONS = 3;
@@ -19,6 +29,11 @@ class FeedbackPage extends Component {
             {condi ? 'Podia ser melhor...' : 'Mandou bem!'}
           </p>
         </section>
+        <section>
+          <button onClick={ this.playAgain } data-testid="btn-play-again" type="button">
+            Jogar novamente
+          </button>
+        </section>
       </section>
     );
   }
@@ -26,6 +41,9 @@ class FeedbackPage extends Component {
 
 FeedbackPage.propTypes = {
   assertions: PropTypes.number.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   score: PropTypes.number.isRequired,
 };
 
