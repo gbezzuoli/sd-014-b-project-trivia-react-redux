@@ -20,9 +20,9 @@ class Ranking extends Component {
 
     let output = [];
 
-    if ('ranking' in localStorage) {
-      output = userObject;
-      localStorage.setItem('ranking', JSON.stringify([output]));
+    if (localStorage.getItem('ranking') === null) {
+      output = [userObject];
+      localStorage.setItem('ranking', JSON.stringify(output));
     } else {
       const savedRanking = JSON.parse(localStorage.getItem('ranking'));
       const increasedRanking = [...savedRanking, userObject];
@@ -55,7 +55,7 @@ class Ranking extends Component {
     } = this;
 
     if (redirect) {
-      return <Redirect to="/login" />;
+      return <Redirect to="/" />;
     }
 
     return (
