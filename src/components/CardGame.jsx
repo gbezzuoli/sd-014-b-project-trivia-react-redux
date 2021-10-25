@@ -1,33 +1,27 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import '../css/buttonCss.css';
+import { showNext } from '../redux/actions';
 
 class CardGame extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      incorrect: props.question.incorrect_answers,
-      correct: props.question.correct_answer,
-      answers: [],
-      answerObjects: [],
-    };
-
-    this.setAnswer = this.setAnswer.bind(this);
-    this.shuffleArray = this.shuffleArray.bind(this);
+    this.handleAnswerClick = this.handleAnswerClick.bind(this);
+    // this.shuffleArray = this.shuffleArray.bind(this);
+    this.parseAnswerInObject = this.parseAnswerInObject.bind(this);
+    this.generateAnswersButtons = this.generateAnswersButtons.bind(this);
   }
 
-  componentDidMount() {
-    this.setAnswer();
-  }
+  // shouldComponentUpdate(nextProps) {
+  //   const { question, timer } = this.props;
+  //   return question.question !== nextProps.question.question;
+  // }
 
-  async setAnswer() {
-    const { incorrect, correct } = this.state;
-    await this.setState({
-      answers: [correct, ...incorrect],
-    });
-
-    const { answers } = this.state;
-
+  parseAnswerInObject() {
+    const { question } = this.props;
+    const answers = [question.correct_answer, ...question.incorrect_answers];
     const answersObjects = answers.map((answer, index) => {
       if (index === 0) {
         return {
@@ -40,58 +34,99 @@ class CardGame extends React.Component {
         correct: false,
       };
     });
-    this.setState({
-      answerObjects: [...answersObjects],
-    });
+    // const randomAnswers = this.shuffleArray(answersObjects);
+    return answersObjects;
   }
 
-  shuffleArray(array) {
-    const arr = array;
-    for (let index = arr.length - 1; index > 0; index -= 1) {
-      const nextIndex = Math.floor(Math.random() * (index + 1));
-      const temp = arr[index];
-      arr[index] = arr[nextIndex];
-      arr[nextIndex] = temp;
-    }
-    return arr;
+  // shuffleArray(array) {
+  //   const arr = array;
+  //   for (let index = arr.length - 1; index > 0; index -= 1) {
+  //     const nextIndex = Math.floor(Math.random() * (index + 1));
+  //     const temp = arr[index];
+  //     arr[index] = arr[nextIndex];
+  //     arr[nextIndex] = temp;
+  //   }
+  //   return arr;
+  // }
+
+  handleAnswerClick() {
+    const { toogleNextButton } = this.props;
+    const brothers = document.querySelectorAll('button');
+    // getAttribute feito com base no stackoverflow
+    brothers.forEach((brother) => {
+      if (brother === brothers[brothers.length - 1]) {
+        brother.className = '';
+      } else if (brother.getAttribute('data-testid') === 'correct-answer') {
+        brother.classList.add('right-answer');
+      } else if (brother.getAttribute('data-testid').includes('wrong-answer')) {
+        brother.classList.add('wrong-answer');
+      }
+    });
+    toogleNextButton(true);
+  }
+
+  generateAnswersButtons() {
+    const { timer } = this.props;
+    const randomAnswers = this.parseAnswerInObject();
+    let count = 0;
+    return (randomAnswers.map((answerButton, index) => {
+      if (answerButton.correct) {
+        return (
+          <button
+            type="button"
+            data-testid="correct-answer"
+            onClick={ this.handleAnswerClick }
+            disabled={ timer }
+          >
+            { answerButton.answer }
+          </button>);
+      }
+      count += 1;
+      return (
+        <button
+          key={ index }
+          type="button"
+          data-testid={ `wrong-answer-${count - 1}` }
+          onClick={ this.handleAnswerClick }
+        >
+          {answerButton.answer}
+        </button>
+      );
+    }));
   }
 
   render() {
-    const { question: { category, question } } = this.props;
-    const { answerObjects } = this.state;
-    const randomAnswers = this.shuffleArray(answerObjects);
-    let count = 0;
-
+    const { question: { category, question }, next, showNextBtn } = this.props;
+    // const randomAnswers = this.parseAnswerInObject();
+    // const timer = Number(document.querySelector('#timer'));
     return (
       <div>
         <h2 data-testid="question-category">{ category }</h2>
         <h3 data-testid="question-text">{ question }</h3>
-        { randomAnswers.map((answerButton, index) => {
-          if (answerButton.correct) {
-            return (
-              <button
-                type="button"
-                data-testid="correct-answer"
-              >
-                { answerButton.answer }
-              </button>);
-          }
-          count += 1;
-          return (
-            <button
-              key={ index }
-              type="button"
-              data-testid={ `wrong-answer-${count - 1}` }
-            >
-              {answerButton.answer}
-            </button>
-          );
-        }) }
+        {this.generateAnswersButtons()}
+        <button
+          style={ { display: showNextBtn ? 'inline-block' : 'none' } }
+          type="button"
+          data-testid="btn-next"
+          // value="Proxima"
+          onClick={ () => { next(); } }
+        >
+          Proxima
+        </button>
         <div />
       </div>
     );
   }
 }
+
+const mapStateToProps = ({ game }) => ({
+  timer: game.timer,
+  showNextBtn: game.next,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  toogleNextButton: (boolean) => dispatch(showNext(boolean)),
+});
 
 CardGame.propTypes = {
   question: PropTypes.shape({
@@ -100,6 +135,10 @@ CardGame.propTypes = {
     correct_answer: PropTypes.string,
     incorrect_answers: PropTypes.arrayOf(PropTypes.any),
   }).isRequired,
+  next: PropTypes.func.isRequired,
+  timer: PropTypes.bool.isRequired,
+  toogleNextButton: PropTypes.func.isRequired,
+  showNextBtn: PropTypes.bool.isRequired,
 };
 
-export default CardGame;
+export default connect(mapStateToProps, mapDispatchToProps)(CardGame);
