@@ -103,9 +103,10 @@ class GameCard extends Component {
   }
 
   showNextAsk() {
+    const FOUR = 4;
     const { history } = this.props;
     const { changeAsk } = this.state;
-    if (changeAsk === 4) {
+    if (changeAsk === FOUR) {
       return history.push('/feedback');
     }
     this.setState((state) => ({
@@ -133,7 +134,8 @@ class GameCard extends Component {
   }
 
   render() {
-    const { correctColor, wrongColor, timer, scorePlayer, nextAsk, changeAsk } = this.state;
+    const { correctColor, wrongColor, timer, scorePlayer,
+      nextAsk, changeAsk } = this.state;
     const { question, name, avatar } = this.props;
     const RANDOM = 5;
     const correct = (
@@ -187,6 +189,7 @@ GameCard.propTypes = {
   getScore: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   question: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 function mapStateToProps(state) {
