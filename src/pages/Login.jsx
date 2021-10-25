@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { fetchTokenAction } from '../redux/actions/TokenAction';
+import { fetchQuestionsAction } from '../redux/actions/questionsAction';
 import { getUser } from '../redux/actions/userAction';
 
 class Login extends React.Component {
@@ -16,6 +17,11 @@ class Login extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentDidMount() {
+    const { fetchAPIQuestions } = this.props;
+    fetchAPIQuestions();
   }
 
   handleChange(event) {
@@ -77,6 +83,7 @@ class Login extends React.Component {
 const mapDispatchToProps = (dispatch) => ({
   fetchAPI: () => dispatch(fetchTokenAction()),
   setUserInfo: (userName, userEmail) => dispatch(getUser(userName, userEmail)),
+  fetchAPIQuestions: () => dispatch(fetchQuestionsAction()),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
@@ -84,4 +91,5 @@ export default connect(null, mapDispatchToProps)(Login);
 Login.propTypes = {
   fetchAPI: PropTypes.func.isRequired,
   setUserInfo: PropTypes.func.isRequired,
+  fetchAPIQuestions: PropTypes.func.isRequired,
 };

@@ -11,8 +11,6 @@ class Game extends React.Component {
 
     this.state = {
       src: '',
-      arrayGame: [],
-      loading: true,
       counter: 0,
     };
 
@@ -22,12 +20,6 @@ class Game extends React.Component {
 
   componentDidMount() {
     this.srcGenerator();
-    const tokenKey = localStorage.getItem('token');
-    fetch(`https://opentdb.com/api.php?amount=5&token=${tokenKey}`)
-      .then((r) => r.json())
-      .then(({ results }) => {
-        this.setState({ arrayGame: [...results], loading: false });
-      });
   }
 
   srcGenerator() {
@@ -53,20 +45,19 @@ class Game extends React.Component {
   }
 
   render() {
-    const { src, loading, counter, arrayGame } = this.state;
-    const { userName, userEmail } = this.props;
-    if (loading) return <h1>Carregando...</h1>;
+    const { src, counter } = this.state;
+    const { userName, userEmail, questions } = this.props;
     return (
       <section>
         <Header userName={ userName } userEmail={ userEmail } src={ src } />
-        <h1 data-testid="question-category">{ arrayGame[counter].category }</h1>
-        <p data-testid="question-text">{ arrayGame[counter].question }</p>
+        <h1 data-testid="question-category">{ questions[counter].category }</h1>
+        <p data-testid="question-text">{ questions[counter].question }</p>
         <GameQuestions
           key="correct"
-          questions={ arrayGame[counter].correct_answer }
+          questions={ questions[counter].correct_answer }
           idQuestions={ 5 }
         />
-        { arrayGame[counter].incorrect_answers
+        { questions[counter].incorrect_answers
           .map((element, index) => (<GameQuestions
             key={ index }
             questions={ element }
@@ -81,6 +72,7 @@ class Game extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
+  questions: state.questionsReducer.questions,
   userName: state.userReducer.name,
   userEmail: state.userReducer.email,
 });
@@ -88,6 +80,7 @@ const mapStateToProps = (state) => ({
 Game.propTypes = {
   userName: PropTypes.string.isRequired,
   userEmail: PropTypes.string.isRequired,
+  questions: PropTypes.arrayOf().isRequired,
 };
 
 export default connect(mapStateToProps)(Game);
