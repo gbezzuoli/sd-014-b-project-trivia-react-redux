@@ -13,10 +13,24 @@ class Trivia extends Component {
     };
     this.handleColorClick = this.handleColorClick.bind(this);
     this.startTimer = this.startTimer.bind(this);
+    this.getScore = this.getScore.bind(this);
   }
 
   componentDidMount() {
     this.startTimer();
+  }
+
+  getScore() {
+    const { timer } = this.state;
+    const { receviQuestions: { difficulty } } = this.props;
+    const baseScore = 10;
+    const difficultyMultiplier = {
+      easy: 1,
+      medium: 2,
+      hard: 3,
+    };
+
+    return baseScore + timer * difficultyMultiplier[difficulty];
   }
 
   startTimer() {
@@ -39,6 +53,7 @@ class Trivia extends Component {
       }
       if (btn.value === 'correct-ans') {
         btn.style.border = '3px solid rgb(6, 240, 15)';
+        console.log(this.getScore());
       }
     });
   }
