@@ -24,6 +24,20 @@ class Jogo extends React.Component {
     }
   }
 
+  changeColor(event) {
+    if (event.target.className !== 'wrong-answer') {
+      event.target.style.border = '3px solid rgb(6, 240, 15)';
+      document.querySelectorAll('.wrong-answer').forEach((answer) => {
+        answer.style.border = '3px solid rgb(255, 0, 0)';
+      });
+    }
+    if (event.target.className === 'wrong-answer') {
+      event.target.style.border = '3px solid rgb(255, 0, 0)';
+      document.querySelector('.correct-answer')
+        .style.border = '3px solid rgb(6, 240, 15)';
+    }
+  }
+
   render() {
     const { questionsObj, isFetching } = this.props;
     const { results } = questionsObj;
@@ -37,13 +51,17 @@ class Jogo extends React.Component {
         <h2 data-testid="question-category">{results[0].category}</h2>
         <h2 data-testid="question-text">{results[0].question}</h2>
         <button
+          onClick={ this.changeColor }
           data-testid="correct-answer"
           type="button"
+          className="correct-answer"
         >
           {results[0].correct_answer}
         </button>
         { results[0].incorrect_answers.map((answer, index) => (
           <button
+            onClick={ this.changeColor }
+            className="wrong-answer"
             data-testid="wrong-answer"
             type="button"
             key={ index }
