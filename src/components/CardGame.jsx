@@ -99,7 +99,7 @@ class CardGame extends React.Component {
   }
 
   generateAnswersButtons() {
-    const { name, email, timer } = this.props;
+    const { name, email, timer, increaseScore } = this.props;
     const randomAnswers = this.parseAnswerInObject();
     let count = 0;
     return (randomAnswers.map((answerButton, index) => {
