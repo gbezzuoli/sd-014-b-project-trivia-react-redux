@@ -17,12 +17,16 @@ const user = (state = INITIAL_STATE, action) => {
   case NAME:
     return {
       ...state,
-      name: action.payload,
+      player: {
+        ...state.player, name: action.payload,
+      },
     };
   case EMAIL:
     return {
       ...state,
-      gravatarEmail: action.payload,
+      player: {
+        ...state.player, gravatarEmail: action.payload,
+      },
     };
   default:
     return state;

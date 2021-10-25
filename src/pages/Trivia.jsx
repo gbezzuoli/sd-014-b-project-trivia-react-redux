@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 
@@ -26,14 +27,20 @@ class Trivia extends Component {
     this.fetchTrivia();
     const magicNumber = 1000;
     setInterval(() => this.setCronometer(), magicNumber);
-    const value = 0;
-    localStorage.setItem('pontos', value);
+    const { name, email, score, assertions } = this.props;
+    localStorage.setItem('state', JSON.stringify({
+      player: {
+        name,
+        score,
+        gravatarEmail: email,
+        assertions,
+      } }));
   }
 
   onBtnNextQuestion() {
-    const { ...player } = this.props;
-    const locatStorageData = localStorage.getItem('player');
-    console.log('aqui redux state', player.name, player.score);
+    const { name, email, score } = this.props;
+    const locatStorageData = localStorage.getItem('state');
+    console.log('aqui redux state', name, email, score);
     console.log('aqui Local storage', JSON.parse(locatStorageData));
     // proxima pergunta
   }
@@ -58,26 +65,26 @@ class Trivia extends Component {
   }
 
   handleClick(event) {
-    const { ...player } = this.props;
+    const { player } = this.props;
     const { questions: { results }, timer } = this.state;
     this.setState({
       change: true,
       disabled: true,
     });
-    const getItemPontos = localStorage.getItem(player.score);
+    const getItemPontos = JSON.parse(localStorage.getItem('state')).player.score;
     if (event.target.id === 'right') {
       if (results[0].difficulty === 'easy') {
-        const value = parseInt(getItemPontos, 10) + DEZ + (timer * 1);
-        player.score = value;
+        player.score = parseInt(getItemPontos, 10) + DEZ + (timer * 1);
+        player.assertions += 1;
       } if (results[0].difficulty === 'medium') {
-        const value = parseInt(getItemPontos, 10) + DEZ + (timer * 2);
-        player.score = value;
+        player.score = parseInt(getItemPontos, 10) + DEZ + (timer * 2);
+        player.assertions += 1;
       } if (results[0].difficulty === 'hard') {
-        const value = parseInt(getItemPontos, 10) + DEZ + (timer * TRES);
-        player.score = value;
+        player.score = parseInt(getItemPontos, 10) + DEZ + (timer * TRES);
+        player.assertions += 1;
       }
     }
-    localStorage.setItem('player', JSON.stringify(player));
+    localStorage.setItem('state', JSON.stringify(player));
   }
 
   // npm run cy:open  // npm run cy
@@ -143,7 +150,7 @@ class Trivia extends Component {
 
   render() {
     const { loading, timer, disabled } = this.state;
-    const getItemPoints = localStorage.getItem('pontos');
+    const getItemPoints = JSON.parse(localStorage.getItem('state')).score;
     return (
       <section>
         {loading ? <Loading /> : this.content()}
@@ -155,10 +162,17 @@ class Trivia extends Component {
   }
 }
 
+Trivia.propTypes = {
+  player: PropTypes.objectOf().isRequired,
+};
+
 // trazendo state do currency ao abrir página
 const mapStateToProps = (state) => ({
-  name: state.user.name,
-  email: state.user.gravatarEmail,
+  name: state.user.player.name,
+  email: state.user.player.gravatarEmail,
+  assertions: state.user.player.assertions,
+  score: state.user.player.score,
+  player: state.user.player,
 });
 
 export default connect(mapStateToProps)(Trivia);
