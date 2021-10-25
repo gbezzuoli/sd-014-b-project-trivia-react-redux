@@ -11,7 +11,7 @@ class Header extends Component {
       <header>
         <img data-testid="header-profile-picture" src={ `https://www.gravatar.com/avatar/${hash}` } alt="" />
         <h2 data-testid="header-player-name">{ login }</h2>
-        {/* <h2 data-testid="header-score">{ score }</h2> */}
+        <h2 data-testid="header-score">{ score }</h2>
       </header>
     );
   }
@@ -19,7 +19,7 @@ class Header extends Component {
 
 Header.propTypes = {
   login: PropTypes.string.isRequired,
-  /* score: PropTypes.number.isRequired, */
+  score: PropTypes.number.isRequired,
   email: PropTypes.string.isRequired,
 };
 const mapStateToProps = (state) => ({
