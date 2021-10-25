@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 import PropTypes from 'prop-types';
 import Button from './Button';
 import './Questions.css';
@@ -78,11 +79,18 @@ class Questions extends Component {
   }
 
   handleNextQuestion() {
-    this.setState(({ currentQuestion }) => ({ currentQuestion: currentQuestion + 1,
-      shouldBorderColorChange: false,
-      seconds: 30 }),
-    () => this.getAnswersAndSort());
-    this.timerFunction();
+    const MAX_INDEX = 4;
+    const { currentQuestion } = this.state;
+    if (currentQuestion < MAX_INDEX) {
+      this.setState((prev) => ({
+        currentQuestion: prev.currentQuestion + 1,
+        shouldBorderColorChange: false,
+        seconds: 30 }),
+      () => this.getAnswersAndSort());
+      this.timerFunction();
+    } else {
+      this.setState({ lestQuestion: true });
+    }
   }
 
   timerFunction() {
@@ -97,11 +105,20 @@ class Questions extends Component {
   render() {
     console.log('Question:', this.handleNextQuestion);
     const {
-      state: { shouldBorderColorChange, sortedAnswers, currentQuestion, seconds },
+      state: {
+        lestQuestion,
+        shouldBorderColorChange,
+        sortedAnswers,
+        currentQuestion,
+        seconds,
+      },
       props: { questions },
       handleAnswersButton,
     } = this;
     const finalSeconds = 10;
+    if (lestQuestion) {
+      return <Redirect to="/feedback" />;
+    }
 
     return (
       <section className="container">
