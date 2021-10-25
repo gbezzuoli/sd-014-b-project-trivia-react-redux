@@ -26,7 +26,7 @@ class GameHeader extends Component {
   }
 
   render() {
-    const { playerName } = this.props;
+    const { playerName, score } = this.props;
     const { picture } = this.state;
     return (
       <header>
@@ -36,17 +36,16 @@ class GameHeader extends Component {
           alt="User Profile"
         />
         <h3 data-testid="header-player-name">{playerName}</h3>
-        <h3 data-testid="header-score">{ 0 }</h3>
+        <h3 data-testid="header-score">{ score }</h3>
       </header>
     );
   }
 }
 
 GameHeader.propTypes = {
+  playerEmail: PropTypes.string.isRequired, // profilePicture: PropTypes.string.isRequired,
   playerName: PropTypes.string.isRequired,
-  playerEmail: PropTypes.string.isRequired,
-  // profilePicture: PropTypes.string.isRequired,
-  // score: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
