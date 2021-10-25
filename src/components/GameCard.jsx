@@ -10,9 +10,8 @@ import Loading from './Loading';
 const LAST_QUESTION = 5;
 
 class GameCard extends Component {
-  constructor() {
-    super();
-
+  constructor(props) {
+    super(props);
     this.state = {
       intervalId: 0,
       timer: 30,
