@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getRequestTriviaGame } from '../redux/actions';
+import Loading from './Loading';
 
 class QuestionsTrivia extends Component {
   constructor() {
@@ -29,9 +30,9 @@ class QuestionsTrivia extends Component {
     const { loading } = this.state;
 
     if (loading) {
-      return <div>loading</div>;
+      return <Loading />;
     }
-    console.log(questionsObj);
+    console.log(questionsObj || 'teste');
     return (
       <div>
         <p data-testid="question-category">{questionsObj[0].category}</p>
@@ -61,7 +62,8 @@ QuestionsTrivia.propTypes = {
   getQuestions: PropTypes.func.isRequired,
 };
 const mapStateToProps = (state) => ({
-  questionsObj: state.questions.payload,
+  questionsObj: state.questionsReducer.questions.payload,
+  loading: state.questionsReducer.loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -45,9 +45,8 @@ export const getQuestionsApi = (payload) => ({
   type: GET_QUESTIONS_API,
   payload,
 });
-export const loadingGame = (payload) => ({
+export const loadingGame = () => ({
   type: LOADING_GAME,
-  payload,
 });
 export const failedApi = (payload) => ({
   type: FAILED_API,
