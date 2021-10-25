@@ -90,7 +90,7 @@ class GameCard extends Component {
 
   render() {
     const { correctColor, wrongColor, timer, scorePlayer } = this.state;
-    const { question,name, avatar } = this.props;
+    const { question, name, avatar } = this.props;
     const RANDOM = 5;
     const correct = (
       <button
@@ -139,8 +139,13 @@ class GameCard extends Component {
 }
 
 GameCard.propTypes = {
+  avatar: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  getScore: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   question: PropTypes.objectOf(PropTypes.any).isRequired,
 };
+
 function mapStateToProps(state) {
   return {
     name: state.user.name,

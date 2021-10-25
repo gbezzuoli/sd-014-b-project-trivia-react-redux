@@ -43,9 +43,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 Game.propTypes = {
-  name: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
   questions: PropTypes.arrayOf(PropTypes.any).isRequired,
   isGameReady: PropTypes.bool.isRequired,
