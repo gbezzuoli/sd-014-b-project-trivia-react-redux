@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { fetchAPI } from '../../actions';
+import Cronometer from './Cronometer';
 
 class Game extends Component {
   constructor() {
@@ -11,9 +12,12 @@ class Game extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.generateButton = this.generateButton.bind(this);
     this.changeColor = this.changeColor.bind(this);
+    this.startTimer = this.startTimer.bind(this);
+    this.stopGame = this.stopGame.bind(this);
     this.state = {
       tag: 0,
       skip: false,
+      gameOver: false,
     };
   }
 
@@ -32,6 +36,21 @@ class Game extends Component {
       tag: tag + 1,
       skip: false,
     });
+  }
+
+  startTimer() {
+    const interval = 1000;
+    this.valueInterval = setInterval(() => {
+      const { seconds } = this.state;
+      if (seconds > 0) {
+        this.setState((prevState) => ({
+          seconds: prevState.seconds - 1,
+        }));
+      }
+      if (seconds === 0) {
+        clearInterval(this.valueInterval);
+      }
+    }, interval);
   }
 
   handleClick() {
@@ -61,8 +80,14 @@ class Game extends Component {
       </button>);
   }
 
+  stopGame() {
+    this.setState({
+      gameOver: true,
+    });
+  }
+
   render() {
-    const { tag, skip } = this.state;
+    const { tag, skip, gameOver } = this.state;
     const {
       loading,
       questions,
@@ -71,6 +96,7 @@ class Game extends Component {
     if (loading === false) {
       return (
         <div>
+          <Cronometer gameOver={ this.stopGame } />
           <h3 data-testid="question-category">{ questions[tag].category }</h3>
           <h3 data-testid="question-text">{ questions[tag].question }</h3>
           { [questions[tag].correct_answer, ...questions[tag].incorrect_answers]
@@ -84,6 +110,7 @@ class Game extends Component {
                   ? 'correct-answer'
                   : `wrong-answer-${index}` }
                 onClick={ () => this.handleClick() }
+                disabled={ gameOver }
               >
                 { e }
               </button>)) }
