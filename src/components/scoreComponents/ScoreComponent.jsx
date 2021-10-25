@@ -7,7 +7,7 @@ class ScoreComponent extends React.Component {
     const { score } = this.props;
     return (
       <section>
-        <p>
+        <p data-testid="header-score">
           Sua pontuçao foi de:
           { ' ' }
           {

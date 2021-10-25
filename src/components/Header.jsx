@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 import getGavatarAPI from '../services/gravatarAPI';
 import { disableButton, saveScore, timerToDefault } from '../redux/actions';
+import ScoreComponent from './scoreComponents/ScoreComponent';
 
 class Header extends Component {
   constructor() {
@@ -76,7 +77,7 @@ class Header extends Component {
           alt="Foto de perfil do usuário"
         />
         <p data-testid="header-player-name">{`Jogador: ${name}`}</p>
-        <p data-testid="header-score">Score: 0</p>
+        <ScoreComponent />
       </header>
     );
   }
