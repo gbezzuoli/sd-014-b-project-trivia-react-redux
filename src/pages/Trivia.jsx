@@ -102,11 +102,19 @@ class Trivia extends Component {
     if (value === 'correct-ans') {
       const prevLocalStorageState = JSON.parse(localStorage.getItem('state'));
       const newScore = prevLocalStorageState.player.score + this.getQuestionScore();
+      const newAssertions = prevLocalStorageState.player.assertions + 1;
       const newState = {
-        player: { ...prevLocalStorageState.player, score: newScore },
+        player: {
+          ...prevLocalStorageState.player,
+          score: newScore,
+          assertions: newAssertions,
+        },
       };
       localStorage.setItem('state', JSON.stringify(newState));
-      dispatchUpdateScore(newScore);
+      dispatchUpdateScore({
+        score: newScore,
+        assertions: newAssertions,
+      });
     }
 
     this.setState({

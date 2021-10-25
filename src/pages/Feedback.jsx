@@ -20,7 +20,7 @@ class Feedback extends Component {
     if (assertions <= NUMBER && assertions > 0) {
       return (
         <>
-          <h1>Podia ser melhor...</h1>
+          <h1 data-testid="feedback-text">Podia ser melhor...</h1>
           <h2 data-testid="feedback-total-score">
             Placar final:
             {' '}
@@ -37,7 +37,7 @@ class Feedback extends Component {
     if (assertions >= NUMBER) {
       return (
         <>
-          <h1>Mandou bem!</h1>
+          <h1 data-testid="feedback-text">Mandou bem!</h1>
           <h2 data-testid="feedback-total-score">
             Placar final:
             {' '}
@@ -84,8 +84,8 @@ Feedback.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  assertions: state.assertions,
-  score: state.score,
+  assertions: state.player.assertions,
+  score: state.player.score,
 });
 
 export default connect(mapStateToProps)(Feedback);
