@@ -2,7 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import '../css/buttonCss.css';
-import { showNext } from '../redux/actions';
+import { increaseScore, refreshTimer, resetTimer, showNext } from '../redux/actions';
+
+const QUESTION_WEIGHT = [1, 2, 3];
+const QUESTION_BASE_POINT = 10;
 
 class CardGame extends React.Component {
   constructor(props) {
@@ -12,6 +15,8 @@ class CardGame extends React.Component {
     // this.shuffleArray = this.shuffleArray.bind(this);
     this.parseAnswerInObject = this.parseAnswerInObject.bind(this);
     this.generateAnswersButtons = this.generateAnswersButtons.bind(this);
+    this.defineQuestionDifficulty = this.defineQuestionDifficulty.bind(this);
+
   }
 
   // shouldComponentUpdate(nextProps) {
@@ -50,14 +55,25 @@ class CardGame extends React.Component {
   // }
 
   handleAnswerClick() {
-    const { toogleNextButton } = this.props;
+    const { toogleNextButton, increaseScore,
+      countdown, playerScore, playerAssertions, player } = this.props;
     const brothers = document.querySelectorAll('button');
+    
     // getAttribute feito com base no stackoverflow
     brothers.forEach((brother) => {
       if (brother === brothers[brothers.length - 1]) {
         brother.className = '';
       } else if (brother.getAttribute('data-testid') === 'correct-answer') {
         brother.classList.add('right-answer');
+        const score = Number(playerScore
+        + (QUESTION_BASE_POINT
+          + (Number(countdown) * Number(this.defineQuestionDifficulty()))));
+        increaseScore({
+          score,
+          assertions: playerAssertions + 1,
+        });
+        localStorage.setItem('state', player);
+
       } else if (brother.getAttribute('data-testid').includes('wrong-answer')) {
         brother.classList.add('wrong-answer');
       }
@@ -95,6 +111,17 @@ class CardGame extends React.Component {
     }));
   }
 
+  defineQuestionDifficulty() {
+    const { question: { difficulty } } = this.props;
+    if (difficulty === 'easy') {
+      return QUESTION_WEIGHT[0];
+    } if (difficulty === 'medium') {
+      return QUESTION_WEIGHT[1];
+    } if (difficulty === 'hard') {
+      return QUESTION_WEIGHT[2];
+    }
+  }
+
   render() {
     const { question: { category, question }, next, showNextBtn } = this.props;
     // const randomAnswers = this.parseAnswerInObject();
@@ -108,7 +135,6 @@ class CardGame extends React.Component {
           style={ { display: showNextBtn ? 'inline-block' : 'none' } }
           type="button"
           data-testid="btn-next"
-          // value="Proxima"
           onClick={ () => { next(); } }
         >
           Proxima
@@ -119,13 +145,19 @@ class CardGame extends React.Component {
   }
 }
 
-const mapStateToProps = ({ game }) => ({
+const mapStateToProps = ({ game, game: { player } }) => ({
   timer: game.timer,
   showNextBtn: game.next,
+  playerScore: player.score,
+  playerAssertions: player.assertions,
+  countdown: game.countdown,
+  player,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   toogleNextButton: (boolean) => dispatch(showNext(boolean)),
+  stopTimer: (boolean) => dispatch(resetTimer(boolean)),
+  increaseScore: (number) => dispatch(increaseScore(number)),
 });
 
 CardGame.propTypes = {

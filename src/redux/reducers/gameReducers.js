@@ -1,5 +1,5 @@
 import { ADD_COUNT, GET_QUESTIONS, STOP_TIMER,
-  REFRESH_TIMER, SHOW_NEXT } from '../actions';
+  REFRESH_TIMER, SHOW_NEXT, INCREASE_SCORE } from '../actions';
 
 const INITIAL_STATE = {
   count: 0,
@@ -7,6 +7,13 @@ const INITIAL_STATE = {
   timer: false,
   countdown: 30,
   next: false,
+  score: 0,
+  player: {
+    name: '',
+    assertions: 0,
+    score: 0,
+    gravatarEmail: '',
+  },
 };
 
 const game = (state = INITIAL_STATE, { type, payload }) => {
@@ -25,7 +32,6 @@ const game = (state = INITIAL_STATE, { type, payload }) => {
     return {
       ...state,
       timer: payload,
-      countdown: 30,
     };
   case REFRESH_TIMER:
     return {
@@ -36,6 +42,15 @@ const game = (state = INITIAL_STATE, { type, payload }) => {
     return {
       ...state,
       next: payload,
+    };
+  case INCREASE_SCORE:
+    return {
+      ...state,
+      player: {
+        ...state.player,
+        score: payload.score,
+        assertions: payload.assertions,
+      },
     };
   default:
     return state;

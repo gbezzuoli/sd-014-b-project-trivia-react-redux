@@ -31,7 +31,7 @@ class Game extends React.Component {
 
   handleClick() {
     const { history, count, increaseCount,
-      refreshTimer, resetTimer, toogleNextButton } = this.props;
+      refreshTimer, resetTimer, toogleNextButton, player } = this.props;
     resetTimer(false);
     toogleNextButton(false);
     const FOUR = 4;
@@ -41,6 +41,7 @@ class Game extends React.Component {
     if (count < FOUR) {
       increaseCount(count + 1);
     } else {
+      localStorage.setItem('state', player);
       history.push('/result');
     }
   }
@@ -71,6 +72,7 @@ const mapStateToProps = ({ game }) => ({
   timer: game.timer,
   countdown: game.countdown,
   showNextBtn: game.next,
+  player: game.player,
 });
 
 const mapDispatchToProps = (dispatch) => ({
