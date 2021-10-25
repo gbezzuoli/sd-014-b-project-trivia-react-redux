@@ -42,20 +42,19 @@ header {
 .box button {
   background: none;
   border: 2px solid #3a59e9;
-  border-radius: 20px;
+  border-radius: 8px;
   color: white;
   cursor: pointer;
   display: block;
+  font-weight: 600;
   margin: 20px auto;
   outline: none;
-  padding: 10px 40px;
+  padding: 9px 40px;
   text-align: center;
   text-decoration: none;
   transition: 0.25s;
 }
 
 .box button:hover {
-  background: gold;
-  border-color: gold;
-  color: black;
+  background: #3a54e938;
 }
