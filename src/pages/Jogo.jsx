@@ -41,7 +41,6 @@ class Jogo extends React.Component {
     }
   }
 
-
   timer() {
     const { time } = this.state;
     const magicNumber = 1000;
@@ -52,6 +51,8 @@ class Jogo extends React.Component {
         }))), magicNumber);
     } else {
       clearInterval(this.timeCount);
+    }
+  }
 
   changeColor(event) {
     if (event.target.className !== 'wrong-answer') {
@@ -64,7 +65,6 @@ class Jogo extends React.Component {
       event.target.style.border = '3px solid rgb(255, 0, 0)';
       document.querySelector('.correct-answer')
         .style.border = '3px solid rgb(6, 240, 15)';
-
     }
   }
 
