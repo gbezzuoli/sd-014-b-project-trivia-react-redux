@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import QuestionInfo from './QuestionInfo';
 
@@ -7,6 +8,14 @@ class QuestionCard extends React.Component {
     super();
     this.state = {
       questionIndex: 0,
+      stateToLocalStorage: {
+        player: {
+          name: '',
+          assertions: 0,
+          score: 0,
+          gravatarEmail: '',
+        },
+      },
       answerListState: [],
       correctAnswerC: 'answer', // State referente a Classe das respostas
       wrongAnswerC: 'answer', // State referente a Classe das respostas
@@ -62,14 +71,58 @@ class QuestionCard extends React.Component {
   }
 
   nextQuestion() {
-    const { questionIndex } = this.state;
+    const { questionIndex, stateToLocalStorage } = this.state;
     this.setState({
       questionIndex: questionIndex + 1,
       wrongAnswerC: 'answer',
       correctAnswerC: 'answer',
       showbutton: false,
-
     }, () => this.listAnswersMultiple());
+    localStorage.setItem('state', JSON.stringify(stateToLocalStorage));
+  }
+
+  buttonRedirect() {
+    const { questionIndex, showbutton } = this.state;
+    const LAST_QUESTION = 4;
+    return (
+      (questionIndex === LAST_QUESTION)
+        ? (
+          <Link to="/feedback">
+            <button
+              type="button"
+              data-testid="btn-next"
+              className="button-next"
+              style={ { visibility: showbutton ? 'visible' : 'hidden' } }
+              onClick={ () => this.nextQuestion() }
+            >
+              Próximo
+            </button>
+          </Link>)
+        : (
+          <button
+            type="button"
+            className="button-next"
+            style={ { visibility: showbutton ? 'visible' : 'hidden' } }
+            onClick={ this.nextQuestion }
+            data-testid="btn-next"
+          >
+            Próximo
+          </button>
+        )
+    );
+  }
+
+  submitAnswer(boolean) {
+    const { stateToLocalStorage } = this.state;
+    if (boolean) {
+      this.setState({
+        stateToLocalStorage: {
+          player: {
+            score: stateToLocalStorage.player.score + 1,
+          },
+        },
+      });
+    }
   }
 
   render() {
@@ -79,7 +132,6 @@ class QuestionCard extends React.Component {
       answerListState,
       correctAnswerC,
       wrongAnswerC,
-      showbutton,
     } = this.state;
     return (
       <section className="question-card">
@@ -90,7 +142,7 @@ class QuestionCard extends React.Component {
               <button
                 type="button"
                 key={ index }
-                onClick={ this.setColorAndScore }
+                onClick={ () => { this.submitAnswer(true); this.setColorAndScore(); } }
                 data-testid="correct-answer"
                 className={ correctAnswerC }
                 name={ index }
@@ -101,7 +153,7 @@ class QuestionCard extends React.Component {
               <button
                 type="button"
                 key={ index }
-                onClick={ this.setColorAndScore }
+                onClick={ () => { this.submitAnswer(false); this.setColorAndScore(); } }
                 data-testid={ `wrong-answer-${index}` }
                 className={ wrongAnswerC }
                 name={ index }
@@ -109,15 +161,7 @@ class QuestionCard extends React.Component {
                 { question.answer }
               </button>)
         ))}
-        <button
-          type="button"
-          onClick={ this.nextQuestion }
-          className="button-next"
-          style={ { visibility: showbutton ? 'visible' : 'hidden' } }
-          data-testid="btn-next"
-        >
-          Próximo
-        </button>
+        { this.buttonRedirect() }
       </section>
     );
   }
