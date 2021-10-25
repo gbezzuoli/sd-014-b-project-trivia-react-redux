@@ -17,7 +17,7 @@ class Feedback extends Component {
   feedbackMessages() {
     const { assertions, score } = this.props;
     const NUMBER = 3;
-    if (assertions <= NUMBER && assertions > 0) {
+    if (assertions < NUMBER && assertions > 0) {
       return (
         <>
           <h1 data-testid="feedback-text">Podia ser melhor...</h1>
