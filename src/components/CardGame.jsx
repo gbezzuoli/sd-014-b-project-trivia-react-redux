@@ -111,7 +111,7 @@ class CardGame extends React.Component {
   }
 
   generateAnswersButtons() {
-    const { name, email, timer, increaseScore } = this.props;
+    const { timer } = this.props;
     const randomAnswers = this.parseAnswerInObject();
     let count = 0;
     return (randomAnswers.length === 0
