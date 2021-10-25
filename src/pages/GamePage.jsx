@@ -118,12 +118,13 @@ class GamePage extends Component {
     }
     const NUMBER = 10;
     const newScore = score + NUMBER + (count * numDifficulty);
-    this.saveScoreInLocalStorage(newScore);
+    this.saveScoreInLocalStorage(newScore, (assertions + 1));
     updateScore(newScore, (assertions + 1));
   }
 
-  saveScoreInLocalStorage(score) {
+  saveScoreInLocalStorage(score, assertions) {
     const stateLocalStorage = JSON.parse(localStorage.getItem('state'));
+    stateLocalStorage.player.assertions = assertions;
     stateLocalStorage.player.score = score;
     localStorage.setItem('state', JSON.stringify(stateLocalStorage));
   }
