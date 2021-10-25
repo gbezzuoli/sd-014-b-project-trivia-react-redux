@@ -20,15 +20,34 @@ class QuestionCard extends React.Component {
       correctAnswerC: 'answer', // State referente a Classe das respostas
       wrongAnswerC: 'answer', // State referente a Classe das respostas
       showbutton: false,
+      countdown: 7,
+      isDisabled: false,
     };
 
     this.nextQuestion = this.nextQuestion.bind(this);
     this.setColorAndScore = this.setColorAndScore.bind(this);
+    this.countdown = this.countdown.bind(this);
+    this.getIDFromSetInterval = this.getIDFromSetInterval.bind(this);
   }
 
   componentDidMount() {
     const { questionIndex } = this.state;
     this.listAnswersMultiple(questionIndex);
+    this.getIDFromSetInterval();
+  }
+
+  componentWillUnmount() {
+    const { intervalID } = this.state;
+    clearInterval(intervalID);
+  }
+
+  getIDFromSetInterval() {
+    const ONE_SECOND = 1000;
+    const intervalID = setInterval(this.countdown, ONE_SECOND);
+
+    this.setState({
+      intervalID,
+    });
   }
 
   setColorAndScore() {
@@ -40,10 +59,21 @@ class QuestionCard extends React.Component {
       } else {
         this.setState({ wrongAnswerC: 'answer wrong-answer' });
       }
-      // if (index === parseInt(target.name, 10) && answer.value === true) {
-      //   target.className = 'answer correct-answer';
-      // }
     });
+  }
+
+  // Timer requisito 08
+  countdown() {
+    const { countdown, intervalID } = this.state;
+
+    if (countdown === 0) {
+      clearInterval(intervalID);
+      this.setState({ isDisabled: true });
+    } else {
+      this.setState({
+        countdown: countdown - 1,
+      });
+    }
   }
 
   listAnswersMultiple() {
@@ -71,7 +101,7 @@ class QuestionCard extends React.Component {
   }
 
   nextQuestion() {
-    const { questionIndex, stateToLocalStorage } = this.state;
+    const { questionIndex, stateToLocalStorage, intervalID } = this.state;
     this.setState({
       questionIndex: questionIndex + 1,
       wrongAnswerC: 'answer',
@@ -79,6 +109,10 @@ class QuestionCard extends React.Component {
       showbutton: false,
     }, () => this.listAnswersMultiple());
     localStorage.setItem('state', JSON.stringify(stateToLocalStorage));
+
+    clearInterval(intervalID);
+    this.getIDFromSetInterval();
+    this.setState({ countdown: 30 });
   }
 
   buttonRedirect() {
@@ -132,6 +166,8 @@ class QuestionCard extends React.Component {
       answerListState,
       correctAnswerC,
       wrongAnswerC,
+      countdown,
+      isDisabled,
     } = this.state;
     return (
       <section className="question-card">
@@ -146,6 +182,7 @@ class QuestionCard extends React.Component {
                 data-testid="correct-answer"
                 className={ correctAnswerC }
                 name={ index }
+                disabled={ isDisabled }
               >
                 { question.answer }
               </button>)
@@ -157,11 +194,13 @@ class QuestionCard extends React.Component {
                 data-testid={ `wrong-answer-${index}` }
                 className={ wrongAnswerC }
                 name={ index }
+                disabled={ isDisabled }
               >
                 { question.answer }
               </button>)
         ))}
         { this.buttonRedirect() }
+        <span>{ countdown }</span>
       </section>
     );
   }
