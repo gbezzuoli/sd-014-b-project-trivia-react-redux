@@ -9,7 +9,7 @@ class CardGame extends React.Component {
     super(props);
 
     this.handleAnswerClick = this.handleAnswerClick.bind(this);
-    this.shuffleArray = this.shuffleArray.bind(this);
+    // this.shuffleArray = this.shuffleArray.bind(this);
     this.parseAnswerInObject = this.parseAnswerInObject.bind(this);
     this.generateAnswersButtons = this.generateAnswersButtons.bind(this);
   }
@@ -34,20 +34,20 @@ class CardGame extends React.Component {
         correct: false,
       };
     });
-    const randomAnswers = this.shuffleArray(answersObjects);
-    return randomAnswers;
+    // const randomAnswers = this.shuffleArray(answersObjects);
+    return answersObjects;
   }
 
-  shuffleArray(array) {
-    const arr = array;
-    for (let index = arr.length - 1; index > 0; index -= 1) {
-      const nextIndex = Math.floor(Math.random() * (index + 1));
-      const temp = arr[index];
-      arr[index] = arr[nextIndex];
-      arr[nextIndex] = temp;
-    }
-    return arr;
-  }
+  // shuffleArray(array) {
+  //   const arr = array;
+  //   for (let index = arr.length - 1; index > 0; index -= 1) {
+  //     const nextIndex = Math.floor(Math.random() * (index + 1));
+  //     const temp = arr[index];
+  //     arr[index] = arr[nextIndex];
+  //     arr[nextIndex] = temp;
+  //   }
+  //   return arr;
+  // }
 
   handleAnswerClick() {
     const { toogleNextButton } = this.props;
@@ -68,7 +68,6 @@ class CardGame extends React.Component {
   generateAnswersButtons() {
     const { timer } = this.props;
     const randomAnswers = this.parseAnswerInObject();
-
     let count = 0;
     return (randomAnswers.map((answerButton, index) => {
       if (answerButton.correct) {
@@ -108,6 +107,7 @@ class CardGame extends React.Component {
         <button
           style={ { display: showNextBtn ? 'inline-block' : 'none' } }
           type="button"
+          data-testid="btn-next"
           // value="Proxima"
           onClick={ () => { next(); } }
         >

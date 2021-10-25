@@ -15,18 +15,12 @@ const RESET_COUNTDOWN = 30;
 class Game extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   start: false,
-    // };
     this.retriveQuestions = this.retriveQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    // this.tiktak = this.tiktak.bind(this);
-    // this.countdown = this.countdown.bind(this);
   }
 
   componentDidMount() {
     this.retriveQuestions();
-    // this.tiktak();
   }
 
   async retriveQuestions() {
@@ -50,22 +44,6 @@ class Game extends React.Component {
       history.push('/result');
     }
   }
-
-  // countdown() {
-  //   const { countdown, refreshTimer } = this.props;
-  //   refreshTimer(countdown - 1);
-  // }
-
-  // tiktak() {
-  //   const { start } = this.state;
-  //   if (!start) {
-  //     this.timer = setInterval(this.countdown, ONE_SECOND);
-  //     this.setState({ start: true });
-  //   } else {
-  //     clearInterval(this.timer);
-  //     this.setState({ start: false });
-  //   }
-  // }
 
   render() {
     const { count, questions, countdown, toogleNextButton, showNextBtn } = this.props;
