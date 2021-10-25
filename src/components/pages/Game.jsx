@@ -6,8 +6,7 @@ export default class Game extends Component {
   constructor() {
     super();
     this.state = {
-      correct: '',
-      wrong: '',
+      disable: false,
       questions: {
         results: [
           {
@@ -41,45 +40,47 @@ export default class Game extends Component {
     return array.sort(() => Math.random() - fiftyPercent);
   }
 
-  printQuestions(correctAnswer, incorrectAnswers, type) {
+  printQuestions(correctAnswer, incorrectAnswers, type, disable) {
     const { renderButton, sortArray } = this;
     if (type === 'multiple') {
       const array = [...incorrectAnswers, correctAnswer];
       const WrongAnswers = 3;
+
       const arrayWithDataTest = array.map((anwser, index) => {
         const dataTest = index < WrongAnswers
           ? `wrong-answer-${index}` : 'correct-answer';
-        const { wrong, correct } = this.state;
-        const classes = index < WrongAnswers
-          ? { wrong } : { correct };
-        return (renderButton(dataTest, index, anwser, classes));
+        return (renderButton(dataTest, index, anwser, disable));
       });
+
       return sortArray(arrayWithDataTest);
     }
+
     const array = [incorrectAnswers, correctAnswer];
     const arrayWithDataTest = array.map((anwser, index) => {
       if (index === 0) {
-        return (renderButton(`wrong-answer-${index}`, index, anwser));
+        return (renderButton(`wrong-answer-${index}`, index, anwser, disable));
       }
-      return (renderButton('correct-answer', index, anwser));
+      return (renderButton('correct-answer', index, anwser, disable));
     });
     return sortArray(arrayWithDataTest);
   }
 
   changeBorderColor() {
     this.setState({
-      correct: 'correctColor',
-      wrong: 'wrongColor',
+      disable: true,
     });
   }
 
-  renderButton(dataTest, index, anwser, classes) {
+  renderButton(dataTest, index, anwser, disable) {
+    const sliceNumber1 = 0;
+    const sliceNumbe2 = 5;
     return (
       <button
         type="button"
-        data-testId={ dataTest }
+        data-testid={ dataTest }
         key={ index }
-        className={ classes }
+        className={ dataTest.slice(sliceNumber1, sliceNumbe2) }
+        disabled={ disable }
         onClick={ this.changeBorderColor }
       >
         {anwser}
@@ -87,7 +88,7 @@ export default class Game extends Component {
   }
 
   render() {
-    const { questions: { results }, index } = this.state;
+    const { questions: { results }, index, disable } = this.state;
     console.log(results);
     const {
       category,
@@ -97,12 +98,12 @@ export default class Game extends Component {
       incorrect_answers: incorrectAnswers } = results[index];
     return (
       <main>
-        <div>
+        <div id="buttonId">
           <h6 data-testid="question-category">{category}</h6>
           <p data-testid="question-text">{question}</p>
         </div>
         <div>
-          {this.printQuestions(correctAnswer, incorrectAnswers, type)}
+          {this.printQuestions(correctAnswer, incorrectAnswers, type, disable)}
         </div>
       </main>
     );
