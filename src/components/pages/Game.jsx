@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { requestTriviaApi } from '../../services/Api';
 import './Game.css';
+import Timer from '../Timer';
 
 export default class Game extends Component {
   constructor() {
@@ -29,8 +30,10 @@ export default class Game extends Component {
   }
 
   async componentDidMount() {
+    const timeOut = 30000;
     const questions = await requestTriviaApi();
     this.setQuestionState(questions);
+    setTimeout(() => this.setState({ disable: true }), timeOut);
   }
 
   setQuestionState(questions) { return this.setState({ questions }); }
@@ -89,7 +92,6 @@ export default class Game extends Component {
 
   render() {
     const { questions: { results }, index, disable } = this.state;
-    console.log(results);
     const {
       category,
       type,
@@ -98,6 +100,7 @@ export default class Game extends Component {
       incorrect_answers: incorrectAnswers } = results[index];
     return (
       <main>
+        <Timer />
         <div id="buttonId">
           <h6 data-testid="question-category">{category}</h6>
           <p data-testid="question-text">{question}</p>
