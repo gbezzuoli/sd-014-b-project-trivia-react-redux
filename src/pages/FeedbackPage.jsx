@@ -7,11 +7,17 @@ class FeedbackPage extends Component {
   constructor() {
     super();
     this.playAgain = this.playAgain.bind(this);
+    this.rankingRequest = this.rankingRequest.bind(this);
   }
 
   playAgain() {
     const { history } = this.props;
     history.push('/');
+  }
+
+  rankingRequest() {
+    const { history } = this.props;
+    history.push('/ranking');
   }
 
   render() {
@@ -32,6 +38,9 @@ class FeedbackPage extends Component {
         <section>
           <button onClick={ this.playAgain } data-testid="btn-play-again" type="button">
             Jogar novamente
+          </button>
+          <button onClick={ this.rankingRequest } data-testid="btn-ranking" type="button">
+            Ver Ranking
           </button>
         </section>
       </section>
