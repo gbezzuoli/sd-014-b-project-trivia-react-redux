@@ -6,7 +6,7 @@ import '../style.css/header.css';
 
 class Header extends Component {
   render() {
-    const { name, email } = this.props;
+    const { name, email, score } = this.props;
 
     return (
       <header className="header-container">
@@ -16,7 +16,7 @@ class Header extends Component {
           alt={ name }
         />
         <span data-testid="header-player-name">{ name }</span>
-        <div data-testid="header-score">0</div>
+        <div data-testid="header-score">{ score }</div>
       </header>
     );
   }
@@ -31,6 +31,7 @@ const mapStateToProps = (state) => ({
   name: state.login.name,
   token: state.login.token,
   email: state.login.email,
+  score: state.game.score,
 });
 
 export default connect(mapStateToProps)(Header);

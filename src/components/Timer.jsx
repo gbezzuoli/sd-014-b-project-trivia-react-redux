@@ -6,7 +6,10 @@ class Timer extends Component {
     super();
     this.state = {
       segundos: 30,
+      bool: false,
     };
+
+    this.boolState = this.boolState.bind(this);
   }
 
   componentDidMount() {
@@ -17,13 +20,25 @@ class Timer extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { stopTimer, showResponseAfterTime } = this.props;
+    const { stopTimer, showResponseAfterTime, addTime } = this.props;
     const zeraTime = 1;
     if (prevState.segundos === zeraTime) {
       clearInterval(this.time);
-      showResponseAfterTime();
+      showResponseAfterTime(prevState);
     }
-    if (stopTimer) clearInterval(this.time);
+    if (stopTimer) {
+      clearInterval(this.time);
+      if (prevState.bool === false) {
+        addTime(prevState.segundos);
+        this.boolState();
+      }
+    }
+  }
+
+  boolState() {
+    this.setState({
+      bool: true,
+    });
   }
 
   render() {

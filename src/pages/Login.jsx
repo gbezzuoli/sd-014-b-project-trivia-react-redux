@@ -32,7 +32,7 @@ class Login extends React.Component {
   }
 
   async handleClick() {
-    const { triviaAction, saveToken } = this.props;
+    const { triviaAction, saveToken, score } = this.props;
     const urlToken = await fetch('https://opentdb.com/api_token.php?command=request');
     const response = await urlToken.json();
     const { token } = response;
@@ -42,6 +42,16 @@ class Login extends React.Component {
     const { name, email } = this.state;
     getNameEmailAction(name, email);
     localStorage.setItem('token', token);
+    const player = {
+      name,
+      assertions: 0,
+      score,
+      gravatarEmail: email,
+    };
+    const state = {
+      player,
+    };
+    localStorage.setItem('state', JSON.stringify(state));
   }
 
   render() {
@@ -112,4 +122,8 @@ const mapDispatchToProps = (dispatch) => ({
   getNameEmailAction: (name, email) => dispatch(getNameEmail(name, email)),
 });
 
-export default connect(null, mapDispatchToProps)(Login);
+const mapStateToProps = (state) => ({
+  score: state.game.score,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

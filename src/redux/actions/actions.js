@@ -1,6 +1,7 @@
 export const ACTION_LOGIN = 'ACTION_LOGIN';
 export const SAVE_TOKEN = 'SAVE_TOKEN';
 export const GET_NAME_EMAIL = 'GET_NAME_EMAIL';
+export const ADD_SCORE = 'ADD_SCORE';
 
 export const triviaGameAction = (json) => ({
   type: ACTION_LOGIN,
@@ -20,4 +21,9 @@ export const getNameEmail = (name, email) => ({
   type: GET_NAME_EMAIL,
   name,
   email,
+});
+
+export const addScoreAction = (score) => ({
+  type: ADD_SCORE,
+  score,
 });
