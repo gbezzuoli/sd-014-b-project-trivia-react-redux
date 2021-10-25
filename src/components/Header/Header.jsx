@@ -44,9 +44,9 @@ class Header extends Component {
           <h4 data-testid="header-player-name">{name}</h4>
         </div>
         <div className="content-score">
+          Score:
+          {' '}
           <span data-testid="header-score">
-            Score:
-            {' '}
             {score}
           </span>
         </div>
