@@ -1,26 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { MD5 } from 'crypto-js';
 import '../styles/Header.css';
+import getProfilePic from '../services/getProfilePic';
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
-    this.getProfilePic = this.getProfilePic.bind(this);
-  }
-
-  getProfilePic(email) {
-    const hash = MD5(email).toString();
-    return `https://www.gravatar.com/avatar/${hash}`;
-  }
-
   render() {
     const { name, gravatarEmail, score } = this.props;
     return (
       <header className="game-header">
         <img
-          src={ this.getProfilePic(gravatarEmail) }
+          src={ getProfilePic(gravatarEmail) }
           alt="player profile pic"
           data-testid="header-profile-picture"
         />
