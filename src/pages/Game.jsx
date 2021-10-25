@@ -16,18 +16,12 @@ class Game extends Component {
   }
 
   render() {
-    const { name, avatar, questions, isGameReady, playerScore } = this.props;
+    const { questions, isGameReady } = this.props;
     return (
       <>
-        <header>
-          <img data-testid="header-profile-picture" src={ avatar } alt="" />
-          <span data-testid="header-player-name">{name}</span>
-          <span data-testid="header-score">{`Pontos: ${playerScore}`}</span>
-        </header>
         <hr />
         <main>
           {!isGameReady && <GameCard question={ questions[0] } />}
-          <button type="button" onClick={ this.setPlayer }>Entrar</button>
         </main>
       </>
     );
@@ -37,7 +31,6 @@ class Game extends Component {
 const mapStateToProps = (state) => ({
   name: state.user.name,
   email: state.user.email,
-  avatar: state.user.avatar,
   token: state.user.token,
   questions: state.game.questions,
   isGameReady: state.game.isGameReady,
