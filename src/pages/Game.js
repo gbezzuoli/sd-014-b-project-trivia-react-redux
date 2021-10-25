@@ -12,17 +12,17 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      questions: '',
+      questions: [],
       correctAnswer: '',
       wrongAnswers: [],
       alternativesArray: [],
       assertions: 0,
       score: 0,
-      count: 1,
       disable: false,
       currentTime: 30,
-      difficulty: '',
-      category: '',
+      difficulty: [],
+      category: [],
+      contador: 0,
     };
     this.requestAPI = this.requestAPI.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -56,29 +56,27 @@ class Game extends Component {
   }
 
   scoreCalculator() {
-    const { difficulty, currentTime, score } = this.state;
+    const { difficulty, currentTime, score, contador } = this.state;
     const dez = 10;
     const easy = 1;
     const medium = 2;
     const hard = 3;
-
     const scoreEasy = dez + (easy * currentTime);
     const scoreMedium = dez + (medium * currentTime);
     const scoreHard = dez + (hard * currentTime);
-
     let scoreFinal = score;
-    switch (difficulty) {
+    switch (difficulty[contador]) {
     case 'easy':
       scoreFinal += scoreEasy;
-      this.setState({ score: scoreFinal });
+      this.setState((state) => ({ score: state.score + scoreFinal }));
       return scoreFinal;
     case 'medium':
       scoreFinal += scoreMedium;
-      this.setState({ score: scoreFinal });
+      this.setState((state) => ({ score: state.score + scoreFinal }));
       return scoreFinal;
     case 'hard':
       scoreFinal += scoreHard;
-      this.setState({ score: scoreFinal });
+      this.setState((state) => ({ score: state.score + scoreFinal }));
       return scoreFinal;
     default:
       return this.state;
@@ -107,10 +105,10 @@ class Game extends Component {
   }
 
   handleClick({ target }) {
-    const { correctAnswer, count } = this.state;
+    const { correctAnswer, assertions, contador } = this.state;
     const givenAnswer = target.innerHTML;
-    if (givenAnswer === correctAnswer) {
-      this.setState({ count: count + 1 });
+    if (givenAnswer === correctAnswer[contador]) {
+      this.setState({ assertions: assertions + 1 });
       this.setScoreState(this.scoreCalculator());
     }
     this.setState({ disable: true, currentTime: 0 });
@@ -118,8 +116,8 @@ class Game extends Component {
   }
 
   shuffleQuestions() {
-    const { correctAnswer, wrongAnswers } = this.state;
-    const alternatives = [...wrongAnswers, correctAnswer];
+    const { correctAnswer, wrongAnswers, contador } = this.state;
+    const alternatives = [...wrongAnswers[contador], correctAnswer[contador]];
     const half = 0.5;
     const shuffledAlternatives = alternatives.sort(() => half - Math.random());
     this.setState({ alternativesArray: shuffledAlternatives });
@@ -127,22 +125,23 @@ class Game extends Component {
 
   async requestAPI() {
     const { token } = this.props;
-    const { count } = this.state;
     const questionData = await fetchQuestions(token);
+    console.log(questionData);
     this.setState({
-      questions: questionData.results[count],
-      correctAnswer: questionData.results[count].correct_answer,
-      wrongAnswers: questionData.results[count].incorrect_answers,
-      difficulty: questionData.results[count].difficulty,
-      category: questionData.results[count].category,
+      questions: questionData.results.map((result) => (result.question)),
+      correctAnswer: questionData.results.map((result) => (result.correct_answer)),
+      wrongAnswers: questionData.results.map((result) => (result.incorrect_answers)),
+      difficulty: questionData.results.map((result) => (result.difficulty)),
+      category: questionData.results.map((result) => (result.category)),
     });
     this.shuffleQuestions();
   }
 
   mapQuestions() {
-    const { alternativesArray, correctAnswer, disable, currentTime } = this.state;
+    const {
+      alternativesArray, correctAnswer, disable, currentTime, contador } = this.state;
     const mappedQuestions = alternativesArray.map((alternative, index) => {
-      if (alternative === correctAnswer) {
+      if (alternative === correctAnswer[contador]) {
         return (
           <button
             type="button"
@@ -173,7 +172,7 @@ class Game extends Component {
   }
 
   addStyle() {
-    const btn = document.querySelectorAll('.wrongButton');
+    const btn = document.querySelectorAll('.wrongButton'); // mudar depois
     btn.forEach((button) => {
       button.setAttribute('style', 'border: 3px solid rgb(255, 0, 0)');
     });
@@ -181,11 +180,14 @@ class Game extends Component {
     btnCorrect.setAttribute('style', 'border: 3px solid rgb(6, 240, 15)');
   }
 
-  handleNextQuestion(count) {
-    const maxNumberOfQuestions = 5;
-    if (count <= maxNumberOfQuestions) {
-      this.setState({ count: count + 1 });
-      // função que reatualiza a página
+  handleNextQuestion() {
+    const { contador, questions } = this.state;
+    this.setState({
+      currentTime: 30,
+    });
+    if (contador <= questions.length) {
+      this.setState((prev) => ({ contador: prev.contador + 1 }));
+      // funcao para atualizar a pergunta
     } else {
       // levar pra feedback
       console.log('feedback');
@@ -193,13 +195,12 @@ class Game extends Component {
   }
 
   renderNextButton() {
-    const { count } = this.state;
     return (
       <div>
         <button
-          type="submit"
+          type="button"
           data-testid="btn-next"
-          onClick={ this.handleNextQuestion(count) }
+          onClick={ this.handleNextQuestion }
         >
           Próxima
         </button>
@@ -208,16 +209,20 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, currentTime, difficulty, disable, category } = this.state;
+    const {
+      questions, currentTime, difficulty, disable, category, contador } = this.state;
     return (
       <div>
         <Header />
-        {questions
-          ? <QuestCard quest={ questions.question } cat={ category } dif={ difficulty } />
+        {questions ? <QuestCard
+          quest={ questions[contador] }
+          cat={ category[contador] }
+          dif={ difficulty[contador] }
+        />
           : <Loading /> }
         {questions ? this.mapQuestions() : <Loading />}
         <span><MyTimer time={ currentTime } /></span>
-        {disable ? this.renderNextButton() : ''}
+        {(!disable || !currentTime === 0) ? this.renderNextButton() : ''}
       </div>
     );
   }
