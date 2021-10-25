@@ -22,6 +22,7 @@ class CardGame extends React.Component {
     this.generateAnswersButtons = this.generateAnswersButtons.bind(this);
     this.defineQuestionDifficulty = this.defineQuestionDifficulty.bind(this);
     this.handleRightClick = this.handleRightClick.bind(this);
+    this.handleWrongClick = this.handleWrongClick.bind(this);
     this.saveLocalStorePlayerData = this.saveLocalStorePlayerData.bind(this);
   }
 
@@ -70,6 +71,17 @@ class CardGame extends React.Component {
     });
   }
 
+  handleWrongClick() {
+    const { increaseScore, name, email,
+      playerScore, playerAssertions } = this.props;
+    increaseScore({
+      score: playerScore,
+      assertions: playerAssertions,
+      name,
+      email,
+    });
+  }
+
   // toogleNextButton() {
   //   this.setState(({ timer }) => ({ timer: !timer }));
   // }
@@ -102,38 +114,40 @@ class CardGame extends React.Component {
     const { name, email, timer, increaseScore } = this.props;
     const randomAnswers = this.parseAnswerInObject();
     let count = 0;
-    return (randomAnswers.map((answerButton, index) => {
-      if (answerButton.correct) {
+    return (randomAnswers.length === 0
+      ? <span>loading...</span>
+      : randomAnswers.map((answerButton, index) => {
+        if (answerButton.correct) {
+          return (
+            <button
+              type="button"
+              data-testid="correct-answer"
+              onClick={ async () => {
+                await this.handleAnswerClick();
+                await this.handleRightClick();
+                await this.saveLocalStorePlayerData();
+              } }
+              disabled={ timer }
+            >
+              { answerButton.answer }
+            </button>);
+        }
+        count += 1;
         return (
           <button
+            key={ index }
             type="button"
-            data-testid="correct-answer"
+            data-testid={ `wrong-answer-${count - 1}` }
             onClick={ async () => {
               await this.handleAnswerClick();
-              await this.handleRightClick();
+              await this.handleWrongClick();
               await this.saveLocalStorePlayerData();
             } }
-            disabled={ timer }
           >
-            { answerButton.answer }
-          </button>);
-      }
-      count += 1;
-      return (
-        <button
-          key={ index }
-          type="button"
-          data-testid={ `wrong-answer-${count - 1}` }
-          onClick={ async () => {
-            await this.handleAnswerClick();
-            await increaseScore({ name, email });
-            await this.saveLocalStorePlayerData();
-          } }
-        >
-          {answerButton.answer}
-        </button>
-      );
-    }));
+            {answerButton.answer}
+          </button>
+        );
+      }));
   }
 
   defineQuestionDifficulty() {
