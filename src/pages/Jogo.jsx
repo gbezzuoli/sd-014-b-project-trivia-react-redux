@@ -6,8 +6,25 @@ import fetchToken from '../services/token';
 import { fetchQuestion } from '../redux/actions';
 
 class Jogo extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      time: 30,
+    };
+
+    this.timer = this.timer.bind(this);
+  }
+
   componentDidMount() {
     this.getQuestions();
+    this.timer();
+  }
+
+  componentDidUpdate() {
+    const { time } = this.state;
+    if (time === 0) {
+      clearInterval(this.timeCount);
+    }
   }
 
   async getQuestions() {
@@ -24,6 +41,18 @@ class Jogo extends React.Component {
     }
   }
 
+
+  timer() {
+    const { time } = this.state;
+    const magicNumber = 1000;
+    if (time > 0) {
+      this.timeCount = setInterval(() => (
+        this.setState((prevState) => ({
+          time: prevState.time - 1,
+        }))), magicNumber);
+    } else {
+      clearInterval(this.timeCount);
+
   changeColor(event) {
     if (event.target.className !== 'wrong-answer') {
       event.target.style.border = '3px solid rgb(6, 240, 15)';
@@ -35,12 +64,14 @@ class Jogo extends React.Component {
       event.target.style.border = '3px solid rgb(255, 0, 0)';
       document.querySelector('.correct-answer')
         .style.border = '3px solid rgb(6, 240, 15)';
+
     }
   }
 
   render() {
     const { questionsObj, isFetching } = this.props;
     const { results } = questionsObj;
+    const { time } = this.state;
     if (isFetching) {
       return (<h2>Loading</h2>);
     }
@@ -54,6 +85,7 @@ class Jogo extends React.Component {
           onClick={ this.changeColor }
           data-testid="correct-answer"
           type="button"
+          disabled={ (time === 0) }
           className="correct-answer"
         >
           {results[0].correct_answer}
@@ -69,6 +101,7 @@ class Jogo extends React.Component {
             { answer }
           </button>
         )) }
+        <h3>{`Tempo:${time}`}</h3>
       </div>
     );
   }
