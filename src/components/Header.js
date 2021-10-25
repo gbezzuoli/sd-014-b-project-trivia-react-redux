@@ -5,7 +5,7 @@ import md5 from 'crypto-js/md5';
 
 class Header extends Component {
   render() {
-    const { email, login } = this.props;
+    const { email, login, score = 0 } = this.props;
     const hash = md5(email).toString();
     return (
       <header>

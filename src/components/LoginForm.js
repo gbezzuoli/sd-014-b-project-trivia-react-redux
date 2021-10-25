@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import setLogin from '../redux/actions';
+import setLogin, { getToken } from '../redux/actions';
 import Buttons from './Buttons';
 import '../App.css';
 
@@ -24,12 +24,14 @@ class LoginForm extends React.Component {
   }
 
   async handleClick() {
-    const { loginSet } = this.props;
+    const { loginSet, valueToken } = this.props;
     const { login, email } = this.state;
     loginSet(login, email);
     const response = await fetch('https://opentdb.com/api_token.php?command=request');
     const apiToken = await response.json();
     const { token } = apiToken;
+    valueToken(token);
+    console.log(token);
     localStorage.setItem('token', token);
   }
 
@@ -79,10 +81,12 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToState = (dispatch) => ({
   loginSet: (login, email) => dispatch(setLogin(login, email)),
+  valueToken: (token) => dispatch(getToken(token)),
 });
 
 LoginForm.propTypes = {
   loginSet: PropTypes.func.isRequired,
+  valueToken: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToState)(LoginForm);

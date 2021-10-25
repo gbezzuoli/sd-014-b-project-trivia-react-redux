@@ -16,11 +16,16 @@ class QuestionsTrivia extends Component {
     if (loading) {
       return <Loading />;
     }
-    console.log(questionsObj || 'teste');
+    const encodeUtf8 = (string) => {
+      // função do Lucas Rodrigues Turma 08
+      const stringUTF = unescape(encodeURIComponent(string));
+      return stringUTF.replace(/&quot;|&#039;/gi, '\'');
+    };
+    console.log(questionsObj[0].category || 'teste');
     return (
       <div>
-        <p data-testid="question-category">{questionsObj[0].category}</p>
-        <p data-testid="question-text">{questionsObj[0].question}</p>
+        <p data-testid="question-category">{encodeUtf8(questionsObj[0].category)}</p>
+        <p data-testid="question-text">{encodeUtf8(questionsObj[0].question)}</p>
         <button
           data-testid="correct-answer"
           type="button"
