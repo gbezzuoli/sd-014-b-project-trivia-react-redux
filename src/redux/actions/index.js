@@ -1,6 +1,7 @@
 export const GET_QUESTIONS = 'GET_QUESTIONS';
 export const ADD_EMAIL = 'ADD_EMAIL';
 export const ADD_NAME = 'ADD_NAME';
+export const UPDATE_SCORE = 'UPDATE_SCORE';
 
 const getQuestions = (payload) => ({
   type: GET_QUESTIONS,
@@ -26,6 +27,13 @@ export function addEmail(payload) {
 export function addName(payload) {
   return {
     type: ADD_NAME,
+    payload,
+  };
+}
+
+export function updateScore(payload) {
+  return {
+    type: UPDATE_SCORE,
     payload,
   };
 }
