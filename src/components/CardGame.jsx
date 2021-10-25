@@ -2,11 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import '../css/buttonCss.css';
-import { increaseScore, refreshTimer, resetTimer, showNext } from '../redux/actions';
+import { increaseScore as increaseScoreAction,
+  resetTimer, showNext } from '../redux/actions';
 
-const QUESTION_WEIGHT = [1, 2, 3];
+const THREE = 3;
+const QUESTION_WEIGHT = [1, 2, THREE];
 const QUESTION_BASE_POINT = 10;
-
 class CardGame extends React.Component {
   constructor(props) {
     super(props);
@@ -16,13 +17,7 @@ class CardGame extends React.Component {
     this.parseAnswerInObject = this.parseAnswerInObject.bind(this);
     this.generateAnswersButtons = this.generateAnswersButtons.bind(this);
     this.defineQuestionDifficulty = this.defineQuestionDifficulty.bind(this);
-
   }
-
-  // shouldComponentUpdate(nextProps) {
-  //   const { question, timer } = this.props;
-  //   return question.question !== nextProps.question.question;
-  // }
 
   parseAnswerInObject() {
     const { question } = this.props;
@@ -58,7 +53,6 @@ class CardGame extends React.Component {
     const { toogleNextButton, increaseScore,
       countdown, playerScore, playerAssertions, player } = this.props;
     const brothers = document.querySelectorAll('button');
-    
     // getAttribute feito com base no stackoverflow
     brothers.forEach((brother) => {
       if (brother === brothers[brothers.length - 1]) {
@@ -72,8 +66,7 @@ class CardGame extends React.Component {
           score,
           assertions: playerAssertions + 1,
         });
-        localStorage.setItem('state', player);
-
+        localStorage.setItem('state', JSON.stringify(player));
       } else if (brother.getAttribute('data-testid').includes('wrong-answer')) {
         brother.classList.add('wrong-answer');
       }
@@ -124,8 +117,6 @@ class CardGame extends React.Component {
 
   render() {
     const { question: { category, question }, next, showNextBtn } = this.props;
-    // const randomAnswers = this.parseAnswerInObject();
-    // const timer = Number(document.querySelector('#timer'));
     return (
       <div>
         <h2 data-testid="question-category">{ category }</h2>
@@ -157,7 +148,7 @@ const mapStateToProps = ({ game, game: { player } }) => ({
 const mapDispatchToProps = (dispatch) => ({
   toogleNextButton: (boolean) => dispatch(showNext(boolean)),
   stopTimer: (boolean) => dispatch(resetTimer(boolean)),
-  increaseScore: (number) => dispatch(increaseScore(number)),
+  increaseScore: (number) => dispatch(increaseScoreAction(number)),
 });
 
 CardGame.propTypes = {
@@ -166,11 +157,18 @@ CardGame.propTypes = {
     question: PropTypes.string,
     correct_answer: PropTypes.string,
     incorrect_answers: PropTypes.arrayOf(PropTypes.any),
+    difficulty: PropTypes.string,
   }).isRequired,
   next: PropTypes.func.isRequired,
   timer: PropTypes.bool.isRequired,
   toogleNextButton: PropTypes.func.isRequired,
   showNextBtn: PropTypes.bool.isRequired,
+  increaseScore: PropTypes.func.isRequired,
+  countdown: PropTypes.number.isRequired,
+  playerScore: PropTypes.number.isRequired,
+  playerAssertions: PropTypes.number.isRequired,
+  player: PropTypes.objectOf(PropTypes.any).isRequired,
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardGame);

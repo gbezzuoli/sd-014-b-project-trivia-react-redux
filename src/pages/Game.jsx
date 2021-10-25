@@ -41,7 +41,7 @@ class Game extends React.Component {
     if (count < FOUR) {
       increaseCount(count + 1);
     } else {
-      localStorage.setItem('state', player);
+      localStorage.setItem('state', JSON.stringify(player));
       history.push('/result');
     }
   }
@@ -100,6 +100,7 @@ Game.propTypes = {
   resetTimer: PropTypes.func.isRequired,
   toogleNextButton: PropTypes.func.isRequired,
   showNextBtn: PropTypes.bool.isRequired,
+  player: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
