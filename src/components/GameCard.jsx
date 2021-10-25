@@ -15,9 +15,7 @@ class GameCard extends Component {
     super();
 
     this.state = {
-      questions: [],
       loading: true,
-      btnShow: false,
     };
 
     this.getQuestionsFromApi = this.getQuestionsFromApi.bind(this);
@@ -41,11 +39,8 @@ class GameCard extends Component {
   }
 
   checkedQuestions({ target }) {
-    const { questions } = this.state;
-    const { index } = this.props;
     const btnAnswers = target.dataset.testid;
     const btns = document.querySelectorAll('button');
-    console.log(btnAnswers);
     if (btnAnswers === 'correct-answer') {
       target.classList.add('correct');
     }
