@@ -36,14 +36,14 @@ class Feedback extends React.Component {
         <GameHeader />
         <h2 data-testid="feedback-text">{ this.feedbackMessage() }</h2>
         <h3 data-testid="feedback-total-question">
-          { `Você acertou ${totalAssertions} questões!` }
+          { totalAssertions }
         </h3>
         <h3 data-testid="feedback-total-score">
-          { `Um total de ${totalScore} pontos` }
+          { totalScore }
         </h3>
         <button
           type="button"
-          data-testid="ranking-btn"
+          data-testid="btn-ranking"
           onClick={ () => {
             resetScoreboard();
             this.setState({ redirectRanking: true });

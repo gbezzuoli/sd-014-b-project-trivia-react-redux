@@ -33,6 +33,14 @@ class LoginForm extends Component {
     const { email, name } = this.state;
     const { submitPlayer } = this.props;
     await fetchAPI();
+    localStorage.setItem('state', JSON.stringify(
+      { player: {
+        name,
+        assertions: 0,
+        score: 0,
+        gravatarEmail: email,
+      } },
+    ));
     this.setState({ signedIn: true });
     submitPlayer({ email, name });
   }

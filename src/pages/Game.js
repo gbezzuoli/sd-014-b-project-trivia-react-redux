@@ -82,14 +82,13 @@ class Game extends Component {
       break;
     }
     addScoreToBoard({ points });
-    localStorage.setItem('player', JSON.stringify(
-      {
+    localStorage.setItem('state', JSON.stringify({
+      player: {
         name: playerName,
         assertions: assertions + 1,
         score: scoreboard + points,
         gravatarEmail: playerEmail,
-      },
-    ));
+      } }));
   }
 
   redirectAndSendFeedback() {
@@ -110,13 +109,13 @@ class Game extends Component {
       gravatarEmail: playerEmail,
     };
     localStorage.setItem('ranking', JSON.stringify([...rankingStorage, rankingScore]));
-    localStorage.setItem('player', JSON.stringify(
-      {
+    localStorage.setItem('state', JSON.stringify(
+      { player: {
         name: playerName,
         assertions,
         score: scoreboard,
         gravatarEmail: playerEmail,
-      },
+      } },
     ));
     sendFeedback({ assertions, scoreboard });
     this.setState({ redirect: true });

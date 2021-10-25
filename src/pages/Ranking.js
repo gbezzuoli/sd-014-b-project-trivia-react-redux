@@ -17,12 +17,6 @@ class Ranking extends React.Component {
   }
 
   componentDidMount() {
-    // const testeRanking = [
-    //   { name: 'Tenobio', score: 10, picture: 'https://upload.wikimedia.org/wikipedia/en/8/8b/Purplecom.jpg' },
-    //   { name: 'Leandro', score: 50, picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/F1_yellow_flag.svg/1280px-F1_yellow_flag.svg.png' },
-    //   { name: 'Jorge', score: 25, picture: 'https://ak.picdn.net/shutterstock/videos/12523241/thumb/1.jpg' },
-    // ];
-    // localStorage.setItem('ranking', JSON.stringify(testeRanking));
     this.getRankingsFromLocalStore();
   }
 
@@ -59,7 +53,7 @@ class Ranking extends React.Component {
           return (
             <li key={ score }>
               <img src={ pictureURL } alt="Av" width="20" height="20" />
-              <span data-testid={ `player-name-${index}` }>{` ${name} - `}</span>
+              <span data-testid={ `player-name-${index}` }>{ name }</span>
               <span data-testid={ `player-score-${index}` }>{ score }</span>
             </li>
           );
@@ -79,6 +73,7 @@ class Ranking extends React.Component {
         </section>
         <button
           type="button"
+          data-testid="btn-go-home"
           onClick={ () => this.setState({ redirectLogin: true }) }
         >
           Tela Inicial
