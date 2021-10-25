@@ -16,6 +16,7 @@ class Game extends React.Component {
 
     this.srcGenerator = this.srcGenerator.bind(this);
     this.handleCounter = this.handleCounter.bind(this);
+    this.bodyFunc = this.bodyFunc.bind(this);
   }
 
   componentDidMount() {
@@ -44,12 +45,11 @@ class Game extends React.Component {
     }
   }
 
-  render() {
-    const { src, counter } = this.state;
-    const { userName, userEmail, questions } = this.props;
+  bodyFunc() {
+    const { questions } = this.props;
+    const { counter } = this.state;
     return (
       <section>
-        <Header userName={ userName } userEmail={ userEmail } src={ src } />
         <h1 data-testid="question-category">{ questions[counter].category }</h1>
         <p data-testid="question-text">{ questions[counter].question }</p>
         <GameQuestions
@@ -66,6 +66,17 @@ class Game extends React.Component {
         <br />
         <br />
         <button type="button" onClick={ this.handleCounter }>Proximo</button>
+      </section>
+    );
+  }
+
+  render() {
+    const { src } = this.state;
+    const { userName, userEmail, questions } = this.props;
+    return (
+      <section>
+        <Header userName={ userName } userEmail={ userEmail } src={ src } />
+        { questions ? this.bodyFunc() : <h1>Carregando...</h1> }
       </section>
     );
   }
