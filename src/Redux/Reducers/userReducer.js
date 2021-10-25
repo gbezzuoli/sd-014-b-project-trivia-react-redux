@@ -1,4 +1,4 @@
-import { SET_USER_DATA, SET_FEEDBACK } from '../Actions/index';
+import { SET_USER_DATA, SET_FEEDBACK, SET_BUTTON_COLLOR } from '../Actions/index';
 
 const INITIAL_STATE = {
   login: '',
@@ -8,6 +8,10 @@ const INITIAL_STATE = {
     assertions: '',
     score: 0,
     gravatarEmail: '',
+  },
+  colors: {
+    wrongColor: '',
+    rigthColor: '',
   },
 };
 
@@ -27,6 +31,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
         assertions: action.payload,
         score: action.payload,
         gravatarEmail: action.payload,
+      },
+    };
+  case SET_BUTTON_COLLOR:
+    return {
+      ...state,
+      colors: {
+        wrongColor: action.payload,
+        rigthColor: action.payload,
       },
     };
   default:
