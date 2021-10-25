@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from '../Component/Header';
 import Timer from '../Component/Timer';
+import { updateScore } from '../redux/actions';
 
 class Trivia extends Component {
   constructor() {
@@ -11,18 +12,30 @@ class Trivia extends Component {
       questionIndex: 0,
       timer: 30,
     };
-    this.handleColorClick = this.handleColorClick.bind(this);
+    this.handleAnswerClick = this.handleAnswerClick.bind(this);
     this.startTimer = this.startTimer.bind(this);
-    this.getScore = this.getScore.bind(this);
+    this.getQuestionScore = this.getQuestionScore.bind(this);
   }
 
   componentDidMount() {
+    const { userName, userEmail } = this.props;
+    const localStorageState = {
+      player: {
+        name: userName,
+        gravatarEmail: userEmail,
+        assertions: 0,
+        score: 0,
+      },
+    };
+    localStorage.setItem('state', JSON.stringify(localStorageState));
     this.startTimer();
   }
 
-  getScore() {
-    const { timer } = this.state;
-    const { receviQuestions: { difficulty } } = this.props;
+  getQuestionScore() {
+    const { timer, questionIndex } = this.state;
+    const { receviQuestions } = this.props;
+    const currentQuestion = receviQuestions[questionIndex];
+    const { difficulty } = currentQuestion;
     const baseScore = 10;
     const difficultyMultiplier = {
       easy: 1,
@@ -44,18 +57,30 @@ class Trivia extends Component {
     }
   }
 
-  // consultado o pr do grupo 9
-  handleColorClick() {
+  // >>>> consultado o pr do grupo 9
+  handleAnswerClick({ target: { value } }) {
     const getAllButtons = document.querySelectorAll('button');
+    const { dispatchUpdateScore } = this.props;
+
     getAllButtons.forEach((btn) => {
       if (btn.value === 'wrong-ans') {
         btn.style.border = '3px solid rgb(255, 0, 0)';
       }
       if (btn.value === 'correct-ans') {
         btn.style.border = '3px solid rgb(6, 240, 15)';
-        console.log(this.getScore());
       }
     });
+    // <<<< consultado o pr do grupo 9
+
+    if (value === 'correct-ans') {
+      const prevLocalStorageState = JSON.parse(localStorage.getItem('state'));
+      const newScore = prevLocalStorageState.player.score + this.getQuestionScore();
+      const newState = {
+        player: { ...prevLocalStorageState.player, score: newScore },
+      };
+      localStorage.setItem('state', JSON.stringify(newState));
+      dispatchUpdateScore(newScore);
+    }
   }
 
   render() {
@@ -71,7 +96,7 @@ class Trivia extends Component {
           <div key={ index }>
             <button
               data-testid={ `wrong-answer-${index}` }
-              onClick={ this.handleColorClick }
+              onClick={ (event) => this.handleAnswerClick(event) }
               type="button"
               disabled={ timer === 0 }
               value="wrong-ans"
@@ -82,7 +107,7 @@ class Trivia extends Component {
         ))}
         <button
           data-testid="correct-answer"
-          onClick={ this.handleColorClick }
+          onClick={ (event) => this.handleAnswerClick(event) }
           type="button"
           disabled={ timer === 0 }
           value="correct-ans"
@@ -95,17 +120,26 @@ class Trivia extends Component {
 }
 
 Trivia.propTypes = {
+  dispatchUpdateScore: PropTypes.func.isRequired,
   receviQuestions: PropTypes.arrayOf(PropTypes.shape({
     category: PropTypes.string,
+    difficulty: PropTypes.string,
     question: PropTypes.string,
-    length: PropTypes.number,
     correct_answer: PropTypes.string,
     incorrect_answers: PropTypes.arrayOf(PropTypes.string),
   })).isRequired,
+  userEmail: PropTypes.string.isRequired,
+  userName: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   receviQuestions: state.trivia.questions,
+  userName: state.player.name,
+  userEmail: state.player.gravatarEmail,
 });
 
-export default connect(mapStateToProps)(Trivia);
+const mapDispatchToProps = (dispatch) => ({
+  dispatchUpdateScore: (score) => dispatch(updateScore(score)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Trivia);

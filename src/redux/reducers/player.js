@@ -1,4 +1,4 @@
-import { ADD_EMAIL, ADD_NAME } from '../actions/index';
+import { ADD_EMAIL, ADD_NAME, UPDATE_SCORE } from '../actions/index';
 
 const INITIAL_STATE = {
   name: '',
@@ -18,6 +18,11 @@ function player(state = INITIAL_STATE, action) {
     return {
       ...state,
       gravatarEmail: action.payload,
+    };
+  case UPDATE_SCORE:
+    return {
+      ...state,
+      score: action.payload,
     };
   default:
     return state;
