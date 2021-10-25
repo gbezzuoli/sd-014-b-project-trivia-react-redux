@@ -18,6 +18,8 @@ class GameHeader extends Component {
     this.fetchGravatar();
   }
 
+  //
+
   fetchGravatar() {
     const { playerEmail } = this.props;
     const cryptoEmail = MD5(playerEmail).toString();
@@ -51,6 +53,7 @@ GameHeader.propTypes = {
 const mapStateToProps = (state) => ({
   playerName: state.player.name,
   playerEmail: state.player.email,
+  score: state.game.score,
 });
 
 export default connect(mapStateToProps, null)(GameHeader);

@@ -8,16 +8,18 @@ import WrongAnswer from '../components/WrongAnswer';
 import CorrectAnswer from '../components/CorrectAnswer';
 import GameHeader from '../components/GameHeader';
 import { fecthTrivia } from '../redux/actions';
-import { sendPlayerFeedback } from '../redux/actions/gameActions';
+import {
+  addScoreAction,
+  resetAssertionsAction,
+  sendPlayerFeedback,
+} from '../redux/actions/gameActions';
 
 class Game extends Component {
   constructor() {
     super();
     this.state = {
       questions: [],
-      assertions: 0,
       timer: 30,
-      score: 0,
       index: 0,
       next: false,
       loading: true,
@@ -49,8 +51,6 @@ class Game extends Component {
 
   answerClickHandler({ target }) {
     const { id, value } = target;
-    const { playerName, playerEmail } = this.props;
-    const { assertions, score } = this.state;
     clearInterval(this.test);
     this.setState({ next: true });
     if (id === 'incorrect') {
@@ -59,18 +59,11 @@ class Game extends Component {
       console.log('Certa resposta!');
       this.addScore(value);
     }
-    localStorage.setItem('player', JSON.stringify(
-      {
-        name: playerName,
-        assertions,
-        score,
-        gravatarEmail: playerEmail,
-      },
-    ));
   }
 
   addScore(difficulty) {
-    const { timer, score, assertions } = this.state;
+    const { timer } = this.state;
+    const { addScoreToBoard, assertions } = this.props;
     const TEN = 10;
     const THREE = 3;
     let points;
@@ -88,24 +81,36 @@ class Game extends Component {
       console.log('Ocorreu um erro');
       break;
     }
-    this.setState({ assertions: assertions + 1, score: score + points });
+    addScoreToBoard({ points, assertions });
   }
 
   redirectAndSendFeedback() {
-    const { sendFeedback } = this.props;
-    const feedbackInfo = JSON.parse(localStorage.getItem('player'));
-    const { name, assertions, score, gravatarEmail } = feedbackInfo;
-    const rankingScore = {
-      name,
-      score,
-      gravatarEmail,
-    };
+    const { sendFeedback,
+      playerEmail,
+      playerName,
+      scoreboard,
+      assertions,
+    } = this.props;
+
     if (!JSON.parse(localStorage.getItem('ranking'))) {
       localStorage.setItem('ranking', JSON.stringify([]));
     }
     const rankingStorage = JSON.parse(localStorage.getItem('ranking'));
+    const rankingScore = {
+      name: playerName,
+      score: scoreboard,
+      gravatarEmail: playerEmail,
+    };
     localStorage.setItem('ranking', JSON.stringify([...rankingStorage, rankingScore]));
-    sendFeedback({ assertions, score });
+    localStorage.setItem('player', JSON.stringify(
+      {
+        name: playerName,
+        assertions,
+        score: scoreboard,
+        gravatarEmail: playerEmail,
+      },
+    ));
+    sendFeedback({ assertions, scoreboard });
     this.setState({ redirect: true });
   }
 
@@ -157,15 +162,15 @@ class Game extends Component {
   renderQuestionsRandomAnswers() {
     const { questions, index, next, timer } = this.state;
     const MAGIC_NUMBER = 0.5;
-    const incorrectAnswers = questions[index].incorrect_answers
-      .map((wrong, i) => (
-        <WrongAnswer
-          incorrect={ wrong }
-          key={ i }
-          disabled={ !!next }
-          borderColor={ !next ? 'answer' : 'incorrectAnswer' }
-          clickAnswer={ this.answerClickHandler }
-        />));
+    // const incorrectAnswers = questions[index].incorrect_answers
+    //   .map((wrong, i) => (
+    //     <WrongAnswer
+    //       incorrect={ wrong }
+    //       key={ i }
+    //       disabled={ !!next }
+    //       borderColor={ !next ? 'answer' : 'incorrectAnswer' }
+    //       clickAnswer={ this.answerClickHandler }
+    //     />));
     const correctAnswers = (
       <CorrectAnswer
         correct={ questions[index].correct_answer }
@@ -175,7 +180,7 @@ class Game extends Component {
         borderColor={ !next ? 'answer' : 'correctAnswer' }
         clickAnswer={ this.answerClickHandler }
       />);
-    const allAnswers = [...incorrectAnswers, correctAnswers]
+    const allAnswers = [correctAnswers]
       .sort(() => Math.random() - MAGIC_NUMBER);
     return (
       <div>
@@ -185,14 +190,15 @@ class Game extends Component {
   }
 
   render() {
-    const { loading, questions, index, next, timer, score, redirect } = this.state;
+    const { loading, questions, index, next, timer, redirect } = this.state;
+    // const { scoreboard } = this.props;
     const FOUR = 4;
     if (loading) return <h1>Loading</h1>;
     if (redirect) return <Redirect to="/feedback" />;
     return (
       <div>
         <h1>{timer}</h1>
-        <GameHeader score={ score } />
+        <GameHeader />
         <TriviaQuestion
           category={ questions[index].category }
           question={ questions[index].question }
@@ -207,19 +213,26 @@ class Game extends Component {
 }
 
 Game.propTypes = {
+  addScoreToBoard: PropTypes.func.isRequired,
+  assertions: PropTypes.number.isRequired,
   playerEmail: PropTypes.string.isRequired,
   playerName: PropTypes.string.isRequired,
-  sendFeedback: PropTypes.func.isRequired,
-  // sendRanking: PropTypes.func.isRequired,
+  // resetAssertions: PropTypes.func.isRequired,
+  scoreboard: PropTypes.number.isRequired,
+  sendFeedback: PropTypes.func.isRequired, // sendRanking: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   playerName: state.player.name,
   playerEmail: state.player.email,
+  scoreboard: state.game.score,
+  assertions: state.game.assertions,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   sendFeedback: (...state) => dispatch(sendPlayerFeedback(...state)),
+  addScoreToBoard: (...state) => dispatch(addScoreAction(...state)),
+  resetAssertions: () => dispatch(resetAssertionsAction()),
   // sendRanking: (...state) => dispatch(sendPlayerRanking(...state)),
 });
 

@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import GameHeader from '../components/GameHeader';
+import { resetAssertionsAction } from '../redux/actions/gameActions';
 
 class Feedback extends React.Component {
   constructor() {
@@ -27,12 +28,12 @@ class Feedback extends React.Component {
 
   render() {
     const { redirectRanking, redirectLogin } = this.state;
-    const { totalScore, totalAssertions } = this.props;
+    const { totalScore, totalAssertions, resetScoreboard } = this.props;
     if (redirectRanking) return <Redirect to="/ranking" />;
     if (redirectLogin) return <Redirect to="/" />;
     return (
       <main>
-        <GameHeader score={ totalScore } />
+        <GameHeader />
         <h2 data-testid="feedback-text">{ this.feedbackMessage() }</h2>
         <h3 data-testid="feedback-total-question">
           { `Você acertou ${totalAssertions} questões!` }
@@ -43,14 +44,20 @@ class Feedback extends React.Component {
         <button
           type="button"
           data-testid="ranking-btn"
-          onClick={ () => this.setState({ redirectRanking: true }) }
+          onClick={ () => {
+            resetScoreboard();
+            this.setState({ redirectRanking: true });
+          } }
         >
           Ver Ranking
         </button>
         <button
           type="button"
           data-testid="btn-play-again"
-          onClick={ () => this.setState({ redirectLogin: true }) }
+          onClick={ () => {
+            resetScoreboard();
+            this.setState({ redirectLogin: true });
+          } }
         >
           Jogar novamente
         </button>
@@ -60,6 +67,7 @@ class Feedback extends React.Component {
 }
 
 Feedback.propTypes = {
+  resetScoreboard: PropTypes.func.isRequired,
   totalAssertions: PropTypes.number.isRequired,
   totalScore: PropTypes.number.isRequired,
 };
@@ -69,4 +77,8 @@ const mapStateToProps = (state) => ({ // Incluir state no parâmetro
   totalAssertions: state.feedback.assertions,
 });
 
-export default connect(mapStateToProps, null)(Feedback);
+const mapDispatchToProps = (dispatch) => ({
+  resetScoreboard: () => dispatch(resetAssertionsAction()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Feedback);

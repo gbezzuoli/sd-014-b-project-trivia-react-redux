@@ -1,11 +1,9 @@
-import { GAME_QUESTIONS, SEND_RANKING, SEND_FEEDBACK } from '../actions/gameActions';
+import { GAME_QUESTIONS, ADD_SCORE, RESET_BOARD } from '../actions/gameActions';
 
 const INITIAL_STATE = {
   questions: [],
-  timer: 30,
   score: 0,
-  ranking: {},
-  feedback: {},
+  assertions: 0,
 };
 
 const game = (state = INITIAL_STATE, action) => {
@@ -14,15 +12,17 @@ const game = (state = INITIAL_STATE, action) => {
     return {
       questions: [...state.questions, action.payload],
     };
-  case SEND_FEEDBACK:
+  case ADD_SCORE:
     return {
       ...state,
-      feedback: [...state.feedback, { ...action.payload }],
+      score: state.score + action.payload.points,
+      assertions: state.assertions + 1,
     };
-  case SEND_RANKING:
+  case RESET_BOARD:
     return {
       ...state,
-      ranking: [...state.ranking, { ...action.payload }],
+      score: 0,
+      assertions: 0,
     };
   default:
     return state;

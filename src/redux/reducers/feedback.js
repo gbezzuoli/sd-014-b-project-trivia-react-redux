@@ -14,7 +14,7 @@ const feedback = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       assertions: action.payload.assertions,
-      score: action.payload.score,
+      score: action.payload.scoreboard,
     };
   case SEND_RANKING:
     return {
